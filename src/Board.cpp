@@ -80,6 +80,7 @@ void Board::setFrames() {
 }
 
 void Board::setArrows(bool *directions, Location location) {
+    //TODO handle directions
     if (directions[Up]) {
         m_arrows[Up].setPosition(sf::Vector2f(m_matrix[location.row][location.col].getPosition().x - RECT_SIZE / 2,
                                               m_matrix[location.row][location.col].getPosition().y - RECT_SIZE / 2));
