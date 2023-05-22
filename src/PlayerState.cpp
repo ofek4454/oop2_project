@@ -8,7 +8,9 @@
 void PlayerState::handleHover(const sf::Event::MouseMoveEvent &event) {
     for (auto &warrior: m_warriors) {
         if (warrior.getGlobalBounds().contains(event.x, event.y)) {
-            //TODO handle hover
+            warrior.setHighlighted(true);
+        } else {
+            warrior.setHighlighted(false);
         }
     }
 }
@@ -28,10 +30,9 @@ bool *PlayerState::checkAvailableLocations(Location location) {
             isOnPlayer = true;
         }
     }
-    if(!isOnPlayer) {
+    if (!isOnPlayer) {
         return nullptr;
     }
-    std::cout << " here";
     bool *locations = new bool[4];
     locations[0] = true;
     locations[1] = true;
@@ -54,7 +55,34 @@ bool *PlayerState::checkAvailableLocations(Location location) {
     }
 
     return locations;
-
-
 }
+
+void PlayerState::move(Direction direction, Location selectedLocation) {
+    auto warrior = getWarrior(selectedLocation);
+    if (direction == Up) {
+        warrior->setLocation(Location(selectedLocation.row - 1, selectedLocation.col));
+        warrior->setSpriteLocation(sf::Vector2f(0, -RECT_SIZE));
+    }
+    if (direction == Down) {
+        warrior->setLocation(Location(selectedLocation.row + 1, selectedLocation.col));
+        warrior->setSpriteLocation(sf::Vector2f(0, RECT_SIZE));
+    }
+    if (direction == Left) {
+        warrior->setLocation(Location(selectedLocation.row, selectedLocation.col - 1));
+        warrior->setSpriteLocation(sf::Vector2f(-RECT_SIZE, 0));
+    }
+    if (direction == Right) {
+        warrior->setLocation(Location(selectedLocation.row , selectedLocation.col + 1));
+        warrior->setSpriteLocation(sf::Vector2f(RECT_SIZE, 0));
+    }
+}
+
+Warrior *PlayerState::getWarrior(const Location location) {
+    for (int i = 0; i < m_warriors.size(); i++) {
+        if (m_warriors[i].getLocation() == location) {
+            return &m_warriors[i];
+        }
+    }
+}
+
 

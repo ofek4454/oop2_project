@@ -32,7 +32,8 @@ enum Direction{
     Up,
     Down,
     Left,
-    Right
+    Right,
+    Non_Direction,
 };
 
 const sf::Color GRAY_COLOR = sf::Color(181, 193, 105);

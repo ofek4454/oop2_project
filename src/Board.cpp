@@ -79,21 +79,50 @@ void Board::setFrames() {
     m_boardFrame[4].setFillColor(GRAY_COLOR);
 }
 
-void Board::setArrows(bool *directions, Location location) {
-    //TODO handle directions
+void Board::setArrows(bool *directions, Location location,bool set) {
+    if(!set){
+        for (auto &spr: m_arrows) {
+            spr.setPosition(sf::Vector2f(-1000,-1000));
+        }
+        return;
+    }
     if (directions[Up]) {
-        m_arrows[Up].setPosition(sf::Vector2f(m_matrix[location.row][location.col].getPosition().x - RECT_SIZE / 2,
+        m_arrows[Up].setPosition(sf::Vector2f(m_matrix[location.row - 1][location.col].getPosition().x - RECT_SIZE / 2,
                                               m_matrix[location.row][location.col].getPosition().y - RECT_SIZE / 2));
         m_arrows[Up].setRotation(-90);
         m_arrows[Up].setColor(sf::Color(255, 255, 255, 100));
     }
     if (directions[Down]) {
         m_arrows[Down].setPosition(
-                sf::Vector2f(m_matrix[location.row][location.col].getPosition().x + RECT_SIZE / 2,
+                sf::Vector2f(m_matrix[location.row - 1][location.col].getPosition().x + RECT_SIZE / 2,
                              m_matrix[location.row][location.col].getPosition().y + RECT_SIZE / 2));
-        m_arrows[Down].setRotation(-90);
+        m_arrows[Down].setRotation(90);
         m_arrows[Down].setColor(sf::Color(255, 255, 255, 100));
     }
+    if (directions[Right]) {
+        m_arrows[Right].setPosition(
+                sf::Vector2f(m_matrix[location.row - 1][location.col].getPosition().x + RECT_SIZE / 2,
+                             m_matrix[location.row][location.col].getPosition().y - RECT_SIZE / 2));
+        m_arrows[Right].setRotation(0);
+        m_arrows[Right].setColor(sf::Color(255, 255, 255, 100));
+    }
+    if (directions[Left]) {
+        m_arrows[Left].setPosition(
+                sf::Vector2f(m_matrix[location.row - 1][location.col].getPosition().x - RECT_SIZE / 2,
+                             m_matrix[location.row][location.col].getPosition().y + RECT_SIZE / 2));
+        m_arrows[Left].setRotation(180);
+        m_arrows[Left].setColor(sf::Color(255, 255, 255, 100));
+    }
+}
+
+Direction Board::getDirection(const sf::Vector2f pos) const {
+    Direction dir = Non_Direction;
+    for(int i = 0; i < m_arrows.size(); i++){
+        if(m_arrows[i].getGlobalBounds().contains(pos)) {
+            dir = static_cast<Direction>(i);
+        }
+    }
+    return dir;
 }
 
 
