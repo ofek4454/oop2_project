@@ -19,7 +19,7 @@ void Controller::eventsHandler() {
             if (event.type == sf::Event::Closed) m_window->close();
             if (event.type == sf::Event::MouseButtonReleased) clickHandler(event.mouseButton);
             if (event.type == sf::Event::MouseMoved) m_p1->handleHover(event.mouseMove);
-
+        
             checkCollision();
             print();
         }

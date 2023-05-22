@@ -24,8 +24,8 @@ private:
 
     bool m_isMoving = false;
     Location m_selectedPlayerLocation;
-
     void checkCollision();
+
 };
 
 
