@@ -4,6 +4,7 @@
 #include "WindowManager.h"
 #include "EnemyState.h"
 #include "UserState.h"
+#include "iostream"
 
 class Controller {
 public:
@@ -12,12 +13,13 @@ public:
 private:
     void print();
     void eventsHandler();
+    void clickHandler(sf::Event::MouseButtonEvent event);
+
     sf::RenderWindow *m_window;
     Board m_board;
-    std::unique_ptr<PlayerState> m_enemy;
-    std::unique_ptr<PlayerState> m_user;
+    std::unique_ptr<PlayerState> m_p1;
+    std::unique_ptr<PlayerState> m_p2;
 
-    sf::Vector2f m_playerChosen;
 };
 
 

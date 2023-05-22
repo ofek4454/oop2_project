@@ -4,7 +4,7 @@
 class Weapon {
 public:
     Weapon() = default;
-    ~Weapon() = default;
+    virtual ~Weapon() = default;
     void draw();
     virtual void fight(const Weapon& other) = 0;
     void setSpriteLoc(sf::Vector2f pos) {m_weapon_sprite.setPosition(pos);}

@@ -10,7 +10,7 @@ const int NUM_OF_TEXTURES = 16;
 
 const int BOARD_SIZE = 8;
 
-const float rect_size = (std::min(WINDOW_WIDTH,WINDOW_HEIGHT) * 0.7) / BOARD_SIZE;
+const float RECT_SIZE = (std::min(WINDOW_WIDTH,WINDOW_HEIGHT) * 0.7) / BOARD_SIZE;
 
 
 enum Weapons_t{
@@ -26,3 +26,6 @@ enum Textures{
     Warriors,
     Rps,
 };
+
+const sf::Color GRAY_COLOR = sf::Color(181, 193, 105);
+const sf::Color GREEN_COLOR = sf::Color(181, 221, 94);

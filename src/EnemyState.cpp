@@ -19,20 +19,22 @@ void EnemyState::init(const std::array<std::array<sf::RectangleShape, BOARD_SIZE
 }
 
 void EnemyState::setFlagAndHole() {
-    sf::RenderWindow *window = WindowManager::instance().getWindow();
+    // TODO get from firebase
 
-    while(window->isOpen()) {
-        sf::Event event;
-        while(window->waitEvent(event)) {
-            if(event.type == sf::Event::Closed) {
-                window->close();
-            }
-            if(event.type == sf::Event::MouseButtonReleased) {
-            }
-            handleHover(event.mouseMove);
-
-        }
-    }
+//    sf::RenderWindow *window = WindowManager::instance().getWindow();
+//
+//    while(window->isOpen()) {
+//        sf::Event event;
+//        while(window->waitEvent(event)) {
+//            if(event.type == sf::Event::Closed) {
+//                window->close();
+//            }
+//            if(event.type == sf::Event::MouseButtonReleased) {
+//            }
+//            handleHover(event.mouseMove);
+//
+//        }
+//    }
 }
 
 

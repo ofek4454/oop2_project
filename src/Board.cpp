@@ -2,20 +2,20 @@
 
 Board::Board() {
 
-    float x = WINDOW_WIDTH / 3 - rect_size * BOARD_SIZE / 2;
-    float y = WINDOW_HEIGHT / 2 - rect_size * BOARD_SIZE / 2.2;
+    float x = (WINDOW_WIDTH*0.75-BOARD_SIZE*RECT_SIZE)/2 + RECT_SIZE/2;
+    float y = WINDOW_HEIGHT/2 - RECT_SIZE*(BOARD_SIZE/2) + RECT_SIZE/2;
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             auto rect = sf::RectangleShape();
-            rect.setSize(sf::Vector2f(rect_size, rect_size));
-            rect.setFillColor((i + j) % 2 == 0 ? sf::Color(181, 221, 94) : sf::Color(181, 193, 105));
+            rect.setSize(sf::Vector2f(RECT_SIZE, RECT_SIZE));
+            rect.setFillColor((i + j) % 2 == 0 ? GREEN_COLOR : GRAY_COLOR);
             rect.setPosition(sf::Vector2f(x, y));
-            rect.setOrigin(rect_size / 2, rect_size / 2);
+            rect.setOrigin(RECT_SIZE / 2, RECT_SIZE / 2);
             m_matrix[i][j] = rect;
-            x += rect_size;
+            x += RECT_SIZE;
         }
-        y += rect_size;
-        x = WINDOW_WIDTH / 3 - rect_size * BOARD_SIZE / 2;
+        y += RECT_SIZE;
+        x = (WINDOW_WIDTH*0.75-BOARD_SIZE*RECT_SIZE)/2 + RECT_SIZE/2;
     }
 
     setFrames();
@@ -30,6 +30,7 @@ void Board::print() {
             window->draw(rect);
         }
     }
+
     for (auto &frame: m_boardFrame) {
         window->draw(frame);
     }
@@ -41,30 +42,31 @@ const std::array<std::array<sf::RectangleShape, BOARD_SIZE>, BOARD_SIZE> &Board:
 }
 
 void Board::setFrames() {
-    m_boardFrame[0].setSize(sf::Vector2f(rect_size * 8, rect_size * 8));
-    m_boardFrame[0].setPosition(sf::Vector2f(m_matrix[0][0].getPosition().x - m_matrix[0][0].getLocalBounds().width / 2,
-                                             m_matrix[0][0].getPosition().y -
-                                             m_matrix[0][0].getGlobalBounds().height / 2));
+    // board white frame
+    m_boardFrame[0].setSize(sf::Vector2f(RECT_SIZE * 8, RECT_SIZE * 8));
+    m_boardFrame[0].setPosition(sf::Vector2f(m_matrix[0][0].getPosition().x - RECT_SIZE/2,
+                                             m_matrix[0][0].getPosition().y - RECT_SIZE/2));
     m_boardFrame[0].setFillColor(sf::Color::Transparent);
-    m_boardFrame[0].setOutlineColor(sf::Color(220, 252, 200));
+    m_boardFrame[0].setOutlineColor(sf::Color(255,255,255,150));
     m_boardFrame[0].setOutlineThickness(2);
 
-    m_boardFrame[1].setSize(sf::Vector2f(rect_size * 12, WINDOW_HEIGHT * 0.95));
-    m_boardFrame[1].setPosition(sf::Vector2f(50, 20));
+    // window frame
+    m_boardFrame[1].setSize(sf::Vector2f(WINDOW_WIDTH*0.95, WINDOW_HEIGHT * 0.95));
+    m_boardFrame[1].setPosition(sf::Vector2f(WINDOW_WIDTH*0.025, WINDOW_HEIGHT * 0.025));
     m_boardFrame[1].setFillColor(sf::Color::Transparent);
-    m_boardFrame[1].setOutlineColor(sf::Color(181, 193, 105));
+    m_boardFrame[1].setOutlineColor(GRAY_COLOR);
     m_boardFrame[1].setOutlineThickness(10);
 
-    float y = 20;
-    for (int i = 2; i < 5; i++) {
-        m_boardFrame[i].setSize(sf::Vector2f((WINDOW_HEIGHT * 0.6), (WINDOW_HEIGHT * 0.95) / 3));
-        m_boardFrame[i].setPosition(
-                sf::Vector2f(m_boardFrame[1].getPosition().x + m_boardFrame[1].getGlobalBounds().width, y));
-        m_boardFrame[i].setFillColor(sf::Color::Transparent);
-        m_boardFrame[i].setOutlineColor(sf::Color(181, 193, 105));
-        m_boardFrame[i].setOutlineThickness(10);
-        y += m_boardFrame[i].getGlobalBounds().height - 20;
-    }
+    // game info frame
+    m_boardFrame[2].setSize(sf::Vector2f(WINDOW_WIDTH*0.20 ,10));
+    m_boardFrame[2].setPosition(sf::Vector2f(WINDOW_WIDTH*0.775, WINDOW_HEIGHT*0.355));
+    m_boardFrame[2].setFillColor(GRAY_COLOR);
+    m_boardFrame[3].setSize(sf::Vector2f(WINDOW_WIDTH*0.20 ,10));
+    m_boardFrame[3].setPosition(sf::Vector2f(WINDOW_WIDTH*0.775, WINDOW_HEIGHT*0.685));
+    m_boardFrame[3].setFillColor(GRAY_COLOR);
 
-
+    m_boardFrame[4].setSize(sf::Vector2f(10 ,WINDOW_HEIGHT*0.95));
+    m_boardFrame[4].setPosition(sf::Vector2f(WINDOW_WIDTH*0.775, WINDOW_HEIGHT*0.025));
+    m_boardFrame[4].setFillColor(GRAY_COLOR);
 }
+
