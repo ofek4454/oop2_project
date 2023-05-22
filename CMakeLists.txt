@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.20)
 
-project (oop2_project)
+project (oop2_project_)
 
 set (MY_AUTHORS "Ofek_Gorgi-Bark_Kobi")
 
@@ -21,7 +21,7 @@ endif ()
 
 if(APPLE)
 
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/oop2_project.app/Contents/MacOS)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/oop2_project_.app/Contents/MacOS)
 
     add_executable (${CMAKE_PROJECT_NAME} MACOSX_BUNDLE "" main.cpp )
 
@@ -48,7 +48,7 @@ endif()
 
 if(WIN32)
 
-    add_executable (${CMAKE_PROJECT_NAME} "" main.cpp)
+    add_executable (${CMAKE_PROJECT_NAME} "" main.cpp utils/Location.h utils/Location.cpp)
 
     target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-fsanitize=address>)
 

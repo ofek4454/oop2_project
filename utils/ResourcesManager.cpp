@@ -13,6 +13,7 @@ ResourcesManager &ResourcesManager::instance() {
 ResourcesManager::ResourcesManager() {
     m_texture[Warriors].loadFromFile("warriors2.png");
     m_texture[Rps].loadFromFile("weapons.png");
+    m_texture[Arrow].loadFromFile("arrow.png");
     m_background.setSize(sf::Vector2f (WINDOW_WIDTH, WINDOW_HEIGHT));
     m_background.setFillColor(sf::Color(181, 221, 94));
 

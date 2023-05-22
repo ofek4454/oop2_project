@@ -25,6 +25,14 @@ enum Weapons_t{
 enum Textures{
     Warriors,
     Rps,
+    Arrow,
+};
+
+enum Direction{
+    Up,
+    Down,
+    Left,
+    Right
 };
 
 const sf::Color GRAY_COLOR = sf::Color(181, 193, 105);

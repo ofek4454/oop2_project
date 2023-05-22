@@ -35,9 +35,14 @@ void Controller::print() {
 }
 
 void Controller::clickHandler(sf::Event::MouseButtonEvent event) {
-    sf::FloatRect rect_size = m_board.getMatrix()[0][0].getGlobalBounds();
-    int row = (event.y-rect_size.top)/rect_size.height;
-    int col = (event.x-rect_size.left)/rect_size.width;
-
-    std::cout << "row: " << row << " col: " << col << "\n";
+    if (m_board.getBoardBounds().contains(event.x, event.y)) {
+        sf::FloatRect rect_size = m_board.getMatrix()[0][0].getGlobalBounds();
+        int row = (event.y - rect_size.top) / rect_size.height;
+        int col = (event.x - rect_size.left) / rect_size.width;
+        auto bool_arr = m_p1->checkAvailableLocations(Location(row, col));
+        if (bool_arr) {
+            m_board.setArrows(bool_arr, Location(row, col));
+        } else
+            return;
+    }
 }
