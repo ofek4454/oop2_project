@@ -38,8 +38,8 @@ void Warrior::setHighlighted(bool isHighlighted) {
 }
 
 void Warrior::setIntRect(int counter) {
-    int arr[6] = {0, IMAGE_WIDTH, IMAGE_WIDTH * 2, IMAGE_WIDTH * 2, IMAGE_WIDTH,0};
-    m_sprite.setTextureRect(sf::IntRect(arr[counter], m_sprite.getTextureRect().top, IMAGE_WIDTH, IMAGE_HEIGHT));
+
+    m_sprite.setTextureRect(sf::IntRect(MOVING_ANIMATION_ARR[counter], 0, IMAGE_WIDTH, IMAGE_HEIGHT));
 }
 
 
