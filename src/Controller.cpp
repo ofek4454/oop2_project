@@ -19,10 +19,13 @@ void Controller::eventsHandler() {
             if (event.type == sf::Event::Closed) m_window->close();
             if (event.type == sf::Event::MouseButtonReleased) clickHandler(event.mouseButton);
             if (event.type == sf::Event::MouseMoved) m_p1->handleHover(event.mouseMove);
-        
+
             checkCollision();
-            print();
         }
+        if (m_isAnimating)
+            handleAnimation();
+
+        print();
     }
 }
 
@@ -38,14 +41,10 @@ void Controller::print() {
 
 void Controller::clickHandler(sf::Event::MouseButtonEvent &event) {
     if (m_isMoving) {
-        auto dir = m_board.getDirection(sf::Vector2f(event.x, event.y));
-        if (dir != Non_Direction) {
-            m_p1->move(dir, m_selectedPlayerLocation);
-        }
+        m_direction = m_board.getDirection(sf::Vector2f(event.x, event.y));
         m_board.setArrows();
-        m_selectedPlayerLocation = Location(-1, -1);
         m_isMoving = false;
-        return;
+        m_isAnimating = true;
     }
     if (m_board.getBoardBounds().contains(event.x, event.y)) {
         sf::FloatRect rect_size = m_board.getMatrix()[0][0].getGlobalBounds();
@@ -63,11 +62,23 @@ void Controller::clickHandler(sf::Event::MouseButtonEvent &event) {
 void Controller::checkCollision() {
     auto p1_vec = m_p1->getAllWarriors();
     auto p2_vec = m_p2->getAllWarriors();
-    for(auto &p1 :*p1_vec) {
-        for(auto &p2 :*p2_vec) {
+    for (auto &p1: *p1_vec) {
+        for (auto &p2: *p2_vec) {
             if (p1.getGlobalBounds().intersects(p2.getGlobalBounds())) {
                 p1.getWeapon()->get()->fight(**p2.getWeapon());
             }
         }
     }
+}
+
+void Controller::handleAnimation() {
+    auto time = m_clock.getElapsedTime().asSeconds();
+    if (time > 0.15) {
+        m_clock.restart().asSeconds();
+        if (m_p1->move(m_direction, m_selectedPlayerLocation)) {
+            std::cout << "here";
+            m_isAnimating = false;
+        }
+    }
+
 }

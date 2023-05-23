@@ -18,8 +18,16 @@ public:
     void setLocation(Location location) {m_location = location;}
     void setSpriteLocation(const sf::Vector2f &offset);
     void setHighlighted(bool isHighlighted);
+    void setIntRect();
+
+    void resetAnimation();
+
 private:
     Location m_location;
     std::unique_ptr<Weapon> m_weapon;
     sf::Sprite m_sprite;
+
+    int m_rectwidth = 0;
+    int m_rectheight = 100;
+    bool m_half = false;
 };

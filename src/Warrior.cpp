@@ -1,14 +1,15 @@
 #include "Warrior.h"
 #include "cstdlib"
 
-Warrior::Warrior(const sf::Vector2f pos, const bool isMine,Location location) : m_weapon(std::make_unique<Undefined>(isMine)),
-                                                                                 m_location(location){
+Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location) : m_weapon(
+        std::make_unique<Undefined>(isMine)),
+                                                                                 m_location(location) {
     auto texture = ResourcesManager::instance().getWarriorTexture(Warriors);
     m_sprite.setTexture(*texture);
-    m_sprite.setPosition(sf::Vector2f(pos.x,pos.y + 30));
+    m_sprite.setPosition(sf::Vector2f(pos.x, pos.y + 30));
     m_sprite.setTextureRect(isMine ? sf::IntRect(0, 100, 160, 140) : sf::IntRect(0, 856, 160, 140));
     m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2, m_sprite.getLocalBounds().height / 2);
-    m_sprite.setScale(0.8,0.8);
+    m_sprite.setScale(0.8, 0.8);
 
     if (isMine) {
         m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y - 20));
@@ -30,10 +31,29 @@ void Warrior::setSpriteLocation(const sf::Vector2f &offset) {
 }
 
 void Warrior::setHighlighted(bool isHighlighted) {
-    if(isHighlighted){
-        m_sprite.setScale(0.9,0.9);
-    }
-    else{
+    if (isHighlighted) {
+        m_sprite.setScale(0.9, 0.9);
+    } else {
         m_sprite.setScale(0.8, 0.8);
     }
+}
+
+void Warrior::setIntRect() {
+    if (m_rectwidth >= 480) {
+        m_half = true;
+    }
+    if (m_half) {
+        m_rectwidth -= 160;
+        m_rectheight += 20;
+    } else {
+        m_rectwidth += 160;
+        m_rectheight -= 20;
+    }
+        m_sprite.setTextureRect(sf::IntRect(m_rectwidth, m_rectheight, 160, 140));
+}
+
+void Warrior::resetAnimation() {
+    m_rectwidth = 0;
+    m_rectheight = 100;
+    m_half = false;
 }

@@ -57,11 +57,18 @@ bool *PlayerState::checkAvailableLocations(Location location) {
     return locations;
 }
 
-void PlayerState::move(Direction direction, Location selectedLocation) {
+bool PlayerState::move(Direction direction, Location selectedLocation) {
     auto warrior = getWarrior(selectedLocation);
     if (direction == Up) {
-        warrior->setLocation(Location(selectedLocation.row - 1, selectedLocation.col));
-        warrior->setSpriteLocation(sf::Vector2f(0, -RECT_SIZE));
+        if (counter == 6) {
+            warrior->resetAnimation();
+            counter = 0;
+            warrior->setLocation(Location(selectedLocation.row - 1, selectedLocation.col));
+            return true;
+        }
+        counter++;
+        warrior->setSpriteLocation(sf::Vector2f(0, m_pixelOffset));
+        warrior->setIntRect();
     }
     if (direction == Down) {
         warrior->setLocation(Location(selectedLocation.row + 1, selectedLocation.col));
@@ -72,9 +79,10 @@ void PlayerState::move(Direction direction, Location selectedLocation) {
         warrior->setSpriteLocation(sf::Vector2f(-RECT_SIZE, 0));
     }
     if (direction == Right) {
-        warrior->setLocation(Location(selectedLocation.row , selectedLocation.col + 1));
+        warrior->setLocation(Location(selectedLocation.row, selectedLocation.col + 1));
         warrior->setSpriteLocation(sf::Vector2f(RECT_SIZE, 0));
     }
+    return false;
 }
 
 Warrior *PlayerState::getWarrior(const Location location) {
