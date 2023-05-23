@@ -20,7 +20,7 @@ public:
 protected:
     std::vector<Warrior> m_warriors;
 private:
-    float m_pixelOffset = RECT_SIZE / 6;
+    float m_pixelOffset = RECT_SIZE / IMAGE_COUNT;
     PlayerModel m_player;
 
 };

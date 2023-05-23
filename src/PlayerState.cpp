@@ -74,7 +74,7 @@ bool PlayerState::move(Direction direction, Location selectedLocation) {
     }
     warrior->setIntRect(imageCounter);
     imageCounter++;
-    if(imageCounter == 6)
+    if(imageCounter == IMAGE_COUNT)
     {
         imageCounter = 0;
         warrior->setLocation(direction);

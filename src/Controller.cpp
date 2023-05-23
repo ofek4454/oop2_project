@@ -67,7 +67,6 @@ void Controller::checkCollision() {
     for (auto &p1: *p1_vec) {
         for (auto &p2: *p2_vec) {
             if (p1.getLocation() == p2.getLocation()){
-                std::cout << " sadas\n";
                 p1.getWeapon()->get()->fight(**p2.getWeapon());
             }
         }
@@ -77,7 +76,7 @@ void Controller::checkCollision() {
 void Controller::handleAnimation() {
     static sf::Clock clock;
     auto time = clock.getElapsedTime().asSeconds();
-    if (time > 0.15) {
+    if (time > 0.025) {
         clock.restart().asSeconds();
         if (m_p1->move(m_direction, m_selectedPlayerLocation)) {
             m_isAnimating = false;
