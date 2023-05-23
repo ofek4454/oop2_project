@@ -64,13 +64,10 @@ void Controller::clickHandler(sf::Event::MouseButtonEvent &event) {
 void Controller::checkCollision() {
     auto p1_vec = m_p1->getAllWarriors();
     auto p2_vec = m_p2->getAllWarriors();
-    for (auto &p1: *p1_vec) {
-        for (auto &p2: *p2_vec) {
-            if (p1.getLocation() == p2.getLocation()){
+    for (auto &p1: *p1_vec)
+        for (auto &p2: *p2_vec)
+            if (p1.getLocation() == p2.getLocation())
                 p1.getWeapon()->get()->fight(**p2.getWeapon());
-            }
-        }
-    }
 }
 
 void Controller::handleAnimation() {
@@ -125,4 +122,5 @@ void Controller::initFlagAndHole() {
         }
         print();
     }
+    // TODO fetch enemy hole and flag
 }

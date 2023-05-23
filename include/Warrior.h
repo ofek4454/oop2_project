@@ -26,9 +26,12 @@ public:
     void setAsFlag();
     void setAsHole();
 
+    bool canMove() const {return m_canMove;}
+
 private:
     Location m_location;
     std::unique_ptr<Weapon> m_weapon;
     sf::Sprite m_sprite;
     sf::IntRect m_initialIntRect;
+    bool m_canMove = true;
 };

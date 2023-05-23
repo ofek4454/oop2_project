@@ -38,7 +38,6 @@ void Warrior::setHighlighted(bool isHighlighted) {
 }
 
 void Warrior::setIntRect(int counter) {
-
     m_sprite.setTextureRect(sf::IntRect(MOVING_ANIMATION_ARR[counter], 0, IMAGE_WIDTH, IMAGE_HEIGHT));
 }
 
@@ -64,6 +63,7 @@ void Warrior::setLocation(Direction direction) {
 }
 
 void Warrior::setTextureFlag(bool isHighlighted) {
+    if(!m_canMove) return;
     if (isHighlighted){
         m_sprite.setTextureRect(sf::IntRect(0, IMAGE_HEIGHT*4, IMAGE_WIDTH, IMAGE_HEIGHT));
         m_weapon.get()->setSpriteLoc(sf::Vector2f(-100,-100));
@@ -76,7 +76,7 @@ void Warrior::setTextureFlag(bool isHighlighted) {
 }
 
 void Warrior::setTextureHole(bool isHighlighted) {
-
+    if(!m_canMove) return;
     if (isHighlighted){
         m_sprite.setTextureRect(sf::IntRect(IMAGE_WIDTH*2, IMAGE_HEIGHT*4, IMAGE_WIDTH, IMAGE_HEIGHT));
         m_weapon.get()->setSpriteLoc(sf::Vector2f(-100,-100));
@@ -88,15 +88,19 @@ void Warrior::setTextureHole(bool isHighlighted) {
 }
 
 void Warrior::setAsFlag() {
+    if(!m_canMove) return;
     std::unique_ptr<Weapon> flag = std::make_unique<Flag>();
     m_weapon.reset(flag.release());
     m_sprite.setTextureRect(sf::IntRect(0, IMAGE_HEIGHT*4, IMAGE_WIDTH, IMAGE_HEIGHT));
     m_initialIntRect = m_sprite.getTextureRect();
+    m_canMove = false;
 }
 
 void Warrior::setAsHole() {
+    if(!m_canMove) return;
     std::unique_ptr<Weapon> hole = std::make_unique<Hole>();
     m_weapon.reset(hole.release());
     m_sprite.setTextureRect(sf::IntRect(IMAGE_WIDTH*2, IMAGE_HEIGHT*4, IMAGE_WIDTH, IMAGE_HEIGHT));
     m_initialIntRect = m_sprite.getTextureRect();
+    m_canMove = false;
 }

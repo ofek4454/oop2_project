@@ -14,16 +14,13 @@ void PlayerState::print() {
 }
 
 bool *PlayerState::checkAvailableLocations(Location location) {
-    bool isOnPlayer = false;
-    for (auto &warrior: m_warriors) {
-        if (warrior.getLocation() == location) {
-            isOnPlayer = true;
-        }
-    }
-    if (!isOnPlayer) {
+    Warrior *warrior = getWarrior(location);
+
+    if (warrior == NULL || !warrior->canMove())
         return nullptr;
-    }
+
     bool *locations = new bool[4];
+
     locations[0] = true;
     locations[1] = true;
     locations[2] = true;
@@ -73,6 +70,7 @@ Warrior *PlayerState::getWarrior(const Location location) {
     for (int i = 0; i < m_warriors.size(); i++)
         if (m_warriors[i].getLocation() == location)
             return &m_warriors[i];
+    return NULL;
 }
 
 void PlayerState::setAsFlag(const int row, const int col) {
