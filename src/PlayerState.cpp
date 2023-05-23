@@ -5,9 +5,9 @@
 #include "PlayerState.h"
 #include "iostream"
 
-void PlayerState::handleHover(const sf::Event::MouseMoveEvent &event) {
+void PlayerState::handleHover(const int row, const int col) {
     for (auto &warrior: m_warriors) {
-        if (warrior.getGlobalBounds().contains(event.x, event.y)) {
+        if (warrior.getLocation() == Location(row, col)) {
             warrior.setHighlighted(true);
         } else {
             warrior.setHighlighted(false);
@@ -58,29 +58,27 @@ bool *PlayerState::checkAvailableLocations(Location location) {
 }
 
 bool PlayerState::move(Direction direction, Location selectedLocation) {
+    static int imageCounter = 0;
     auto warrior = getWarrior(selectedLocation);
     if (direction == Up) {
-        if (counter == 6) {
-            warrior->resetAnimation();
-            counter = 0;
-            warrior->setLocation(Location(selectedLocation.row - 1, selectedLocation.col));
-            return true;
-        }
-        counter++;
-        warrior->setSpriteLocation(sf::Vector2f(0, m_pixelOffset));
-        warrior->setIntRect();
+        warrior->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset));
     }
     if (direction == Down) {
-        warrior->setLocation(Location(selectedLocation.row + 1, selectedLocation.col));
-        warrior->setSpriteLocation(sf::Vector2f(0, RECT_SIZE));
+        warrior->setSpriteLocation(sf::Vector2f(0, +m_pixelOffset));
     }
     if (direction == Left) {
-        warrior->setLocation(Location(selectedLocation.row, selectedLocation.col - 1));
-        warrior->setSpriteLocation(sf::Vector2f(-RECT_SIZE, 0));
+        warrior->setSpriteLocation(sf::Vector2f(-m_pixelOffset, 0));
     }
     if (direction == Right) {
-        warrior->setLocation(Location(selectedLocation.row, selectedLocation.col + 1));
-        warrior->setSpriteLocation(sf::Vector2f(RECT_SIZE, 0));
+        warrior->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0));
+    }
+    warrior->setIntRect(imageCounter);
+    imageCounter++;
+    if(imageCounter == 6)
+    {
+        imageCounter = 0;
+        warrior->setLocation(direction);
+        return true;
     }
     return false;
 }

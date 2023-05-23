@@ -16,12 +16,11 @@ public:
     bool move(Direction direction,Location selectedLocation);
     Warrior* getWarrior(const Location location);
     std::vector<Warrior>* getAllWarriors() { return &m_warriors;}
-    void handleHover(const sf::Event::MouseMoveEvent &event);
+    void handleHover(const int row, const int col);
 protected:
     std::vector<Warrior> m_warriors;
 private:
-    int counter = 0;
-    float m_pixelOffset = -(RECT_SIZE / 6);
+    float m_pixelOffset = RECT_SIZE / 6;
     PlayerModel m_player;
 
 };

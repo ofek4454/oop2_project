@@ -7,11 +7,16 @@ void EnemyState::init(const std::array<std::array<sf::RectangleShape, BOARD_SIZE
     float x = matrix[0][0].getPosition().x;
     float y = matrix[0][0].getPosition().y - 30;
 
-    for(int i = 0; i < BOARD_SIZE*2; i++) {
-        m_warriors.emplace_back(sf::Vector2f(x,y) ,false);
-        x+=matrix[0][0].getGlobalBounds().width;
+    int row = 0,col = 0;
+    for(int i = 0; i < BOARD_SIZE*2; i++,col++) {
+        if(i == BOARD_SIZE){
+            row++;
+            col = 0;
+        }
+        m_warriors.emplace_back(sf::Vector2f(x,y) ,false,Location(row,col));
+        x+=RECT_SIZE;
         if(i== BOARD_SIZE - 1) {
-            y += matrix[0][0].getGlobalBounds().height;
+            y += RECT_SIZE;
             x = matrix[0][0].getPosition().x;
         }
     }

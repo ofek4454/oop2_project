@@ -37,7 +37,6 @@ void UserState::setFlagAndHole() {
             }
             if(event.type == sf::Event::MouseButtonReleased) {
             }
-            handleHover(event.mouseMove);
 
         }
     }

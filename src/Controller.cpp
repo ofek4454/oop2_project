@@ -18,7 +18,7 @@ void Controller::eventsHandler() {
         while (m_window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) m_window->close();
             if (event.type == sf::Event::MouseButtonReleased) clickHandler(event.mouseButton);
-            if (event.type == sf::Event::MouseMoved) m_p1->handleHover(event.mouseMove);
+            if (event.type == sf::Event::MouseMoved) handleHover(event.mouseMove);
 
             checkCollision();
         }
@@ -44,7 +44,9 @@ void Controller::clickHandler(sf::Event::MouseButtonEvent &event) {
         m_direction = m_board.getDirection(sf::Vector2f(event.x, event.y));
         m_board.setArrows();
         m_isMoving = false;
-        m_isAnimating = true;
+        if(m_direction != Non_Direction){
+            m_isAnimating = true;
+        }
     }
     if (m_board.getBoardBounds().contains(event.x, event.y)) {
         sf::FloatRect rect_size = m_board.getMatrix()[0][0].getGlobalBounds();
@@ -64,7 +66,8 @@ void Controller::checkCollision() {
     auto p2_vec = m_p2->getAllWarriors();
     for (auto &p1: *p1_vec) {
         for (auto &p2: *p2_vec) {
-            if (p1.getGlobalBounds().intersects(p2.getGlobalBounds())) {
+            if (p1.getLocation() == p2.getLocation()){
+                std::cout << " sadas\n";
                 p1.getWeapon()->get()->fight(**p2.getWeapon());
             }
         }
@@ -72,13 +75,22 @@ void Controller::checkCollision() {
 }
 
 void Controller::handleAnimation() {
-    auto time = m_clock.getElapsedTime().asSeconds();
+    static sf::Clock clock;
+    auto time = clock.getElapsedTime().asSeconds();
     if (time > 0.15) {
-        m_clock.restart().asSeconds();
+        clock.restart().asSeconds();
         if (m_p1->move(m_direction, m_selectedPlayerLocation)) {
-            std::cout << "here";
             m_isAnimating = false;
         }
     }
 
+}
+
+void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
+    if (m_board.getBoardBounds().contains(event.x, event.y)) {
+        sf::FloatRect rect_size = m_board.getMatrix()[0][0].getGlobalBounds();
+        int row = (event.y - rect_size.top) / rect_size.height;
+        int col = (event.x - rect_size.left) / rect_size.width;
+        m_p1->handleHover(row, col);
+    }
 }

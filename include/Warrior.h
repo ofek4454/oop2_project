@@ -15,19 +15,15 @@ public:
     std::unique_ptr<Weapon>* getWeapon(){return &m_weapon;}
     void draw();
     Location getLocation() const {return m_location;}
-    void setLocation(Location location) {m_location = location;}
+    void setLocation(Direction direction);
     void setSpriteLocation(const sf::Vector2f &offset);
     void setHighlighted(bool isHighlighted);
-    void setIntRect();
+    void setIntRect(int counter);
 
-    void resetAnimation();
 
 private:
     Location m_location;
     std::unique_ptr<Weapon> m_weapon;
     sf::Sprite m_sprite;
 
-    int m_rectwidth = 0;
-    int m_rectheight = 100;
-    bool m_half = false;
 };

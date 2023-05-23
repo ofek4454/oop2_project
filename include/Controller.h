@@ -21,14 +21,13 @@ private:
     Board m_board;
     std::unique_ptr<PlayerState> m_p1;
     std::unique_ptr<PlayerState> m_p2;
-    sf::Clock m_clock;
 
     Direction m_direction;
     bool m_isMoving = false;
     bool m_isAnimating = false;
     Location m_selectedPlayerLocation;
     void checkCollision();
-
+    void handleHover(sf::Event::MouseMoveEvent &event);
     void handleAnimation();
 };
 

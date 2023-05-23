@@ -12,6 +12,10 @@ const int BOARD_SIZE = 8;
 
 const float RECT_SIZE = (std::min(WINDOW_WIDTH,WINDOW_HEIGHT) * 0.7) / BOARD_SIZE;
 
+const int IMAGE_WIDTH = 480 / 3;
+
+const int IMAGE_HEIGHT = 1260 / 5;
+
 
 enum Weapons_t{
     Rock_t,
