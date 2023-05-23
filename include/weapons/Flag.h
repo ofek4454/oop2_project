@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Weapon.h"
+
 class Flag : public Weapon{
 public:
-    Flag(){}
+    Flag();
     ~Flag() = default;
     virtual bool fight(Weapon& other) override {}
     virtual bool fight(Scissors& other) override {}

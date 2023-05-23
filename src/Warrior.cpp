@@ -1,9 +1,10 @@
 #include "Warrior.h"
 #include "cstdlib"
+#include "Flag.h"
+#include "Hole.h"
 
-Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location) : m_weapon(
-        std::make_unique<Undefined>(isMine)),
-                                                                                 m_location(location) {
+Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location)
+    : m_weapon(std::make_unique<Undefined>(isMine)), m_location(location) {
     auto texture = ResourcesManager::instance().getWarriorTexture(Warriors);
     m_sprite.setTexture(*texture);
     m_sprite.setPosition(sf::Vector2f(pos.x, pos.y));
@@ -11,18 +12,16 @@ Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location) :
     m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2, m_sprite.getLocalBounds().height / 2);
     m_sprite.setScale(0.8, 0.8);
 
-    if (isMine) {
-        m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y ));
-    }
-}
+    m_initialIntRect = m_sprite.getTextureRect();
 
-sf::FloatRect Warrior::getGlobalBounds() const {
-    return m_sprite.getGlobalBounds();
+    if (isMine)
+        m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y+10));
 }
 
 void Warrior::draw() {
     auto window = WindowManager::instance().getWindow();
     window->draw(m_sprite);
+    m_weapon->draw();
 }
 
 void Warrior::setSpriteLocation(const sf::Vector2f &offset) {
@@ -40,7 +39,7 @@ void Warrior::setHighlighted(bool isHighlighted) {
 
 void Warrior::setIntRect(int counter) {
     int arr[6] = {0, IMAGE_WIDTH, IMAGE_WIDTH * 2, IMAGE_WIDTH * 2, IMAGE_WIDTH,0};
-    m_sprite.setTextureRect(sf::IntRect(arr[counter], 0, IMAGE_WIDTH, IMAGE_HEIGHT));
+    m_sprite.setTextureRect(sf::IntRect(arr[counter], m_sprite.getTextureRect().top, IMAGE_WIDTH, IMAGE_HEIGHT));
 }
 
 
@@ -62,4 +61,42 @@ void Warrior::setLocation(Direction direction) {
         case Direction::Non_Direction:
             break;
     }
+}
+
+void Warrior::setTextureFlag(bool isHighlighted) {
+    if (isHighlighted){
+        m_sprite.setTextureRect(sf::IntRect(0, IMAGE_HEIGHT*4, IMAGE_WIDTH, IMAGE_HEIGHT));
+        m_weapon.get()->setSpriteLoc(sf::Vector2f(-100,-100));
+    }
+    else{
+        m_sprite.setTextureRect(m_initialIntRect);
+        m_weapon.get()->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y+10));
+    }
+
+}
+
+void Warrior::setTextureHole(bool isHighlighted) {
+
+    if (isHighlighted){
+        m_sprite.setTextureRect(sf::IntRect(IMAGE_WIDTH*2, IMAGE_HEIGHT*4, IMAGE_WIDTH, IMAGE_HEIGHT));
+        m_weapon.get()->setSpriteLoc(sf::Vector2f(-100,-100));
+    }
+    else{
+        m_sprite.setTextureRect(m_initialIntRect);
+        m_weapon.get()->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y+10));
+    }
+}
+
+void Warrior::setAsFlag() {
+    std::unique_ptr<Weapon> flag = std::make_unique<Flag>();
+    m_weapon.reset(flag.release());
+    m_sprite.setTextureRect(sf::IntRect(0, IMAGE_HEIGHT*4, IMAGE_WIDTH, IMAGE_HEIGHT));
+    m_initialIntRect = m_sprite.getTextureRect();
+}
+
+void Warrior::setAsHole() {
+    std::unique_ptr<Weapon> hole = std::make_unique<Hole>();
+    m_weapon.reset(hole.release());
+    m_sprite.setTextureRect(sf::IntRect(IMAGE_WIDTH*2, IMAGE_HEIGHT*4, IMAGE_WIDTH, IMAGE_HEIGHT));
+    m_initialIntRect = m_sprite.getTextureRect();
 }

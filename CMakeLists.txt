@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.20)
 
-project (oop2_project_)
+project (oop2_project)
 
 set (MY_AUTHORS "Ofek_Gorgi-Bark_Kobi")
 
@@ -21,7 +21,7 @@ endif ()
 
 if(APPLE)
 
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/oop2_project_.app/Contents/MacOS)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS)
 
     add_executable (${CMAKE_PROJECT_NAME} MACOSX_BUNDLE "" main.cpp )
 

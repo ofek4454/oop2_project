@@ -6,12 +6,14 @@
 #include "Undefined.h"
 #include "Location.h"
 
+class Flag;
+class Hole;
+
 class Warrior {
 public:
 
     Warrior(const sf::Vector2f pos,bool isMine,Location location = Location(-1,-1));
 
-    sf::FloatRect getGlobalBounds() const;
     std::unique_ptr<Weapon>* getWeapon(){return &m_weapon;}
     void draw();
     Location getLocation() const {return m_location;}
@@ -19,11 +21,14 @@ public:
     void setSpriteLocation(const sf::Vector2f &offset);
     void setHighlighted(bool isHighlighted);
     void setIntRect(int counter);
-
+    void setTextureFlag(bool isHighlighted);
+    void setTextureHole(bool isHighlighted);
+    void setAsFlag();
+    void setAsHole();
 
 private:
     Location m_location;
     std::unique_ptr<Weapon> m_weapon;
     sf::Sprite m_sprite;
-
+    sf::IntRect m_initialIntRect;
 };

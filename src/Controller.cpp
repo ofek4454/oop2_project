@@ -8,6 +8,7 @@ Controller::Controller() : m_window(WindowManager::instance().getWindow()), m_p1
                            m_p2(std::make_unique<EnemyState>()) {
     m_p1->init(m_board.getMatrix());
     m_p2->init(m_board.getMatrix());
+    initFlagAndHole();
     eventsHandler();
 }
 
@@ -19,7 +20,6 @@ void Controller::eventsHandler() {
             if (event.type == sf::Event::Closed) m_window->close();
             if (event.type == sf::Event::MouseButtonReleased) clickHandler(event.mouseButton);
             if (event.type == sf::Event::MouseMoved) handleHover(event.mouseMove);
-
             checkCollision();
         }
         if (m_isAnimating)
@@ -92,5 +92,38 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
         int row = (event.y - rect_size.top) / rect_size.height;
         int col = (event.x - rect_size.left) / rect_size.width;
         m_p1->handleHover(row, col);
+    }
+}
+
+void Controller::initFlagAndHole() {
+    bool flagChoosed = false;
+    while (m_window->isOpen()) {
+        sf::Event event;
+        while (m_window->pollEvent(event)) {
+            if (event.type == sf::Event::Closed) m_window->close();
+            if (event.type == sf::Event::MouseButtonReleased) {
+                if(!m_board.getBoardBounds().contains(event.mouseButton.x,event.mouseButton.y)) continue;
+                sf::FloatRect rect_size = m_board.getMatrix()[0][0].getGlobalBounds();
+                int row = (event.mouseButton.y - rect_size.top) / rect_size.height;
+                int col = (event.mouseButton.x - rect_size.left) / rect_size.width;
+                if(row < BOARD_SIZE-2) continue;
+                if(!flagChoosed){
+                    m_p1->setAsFlag(row,col);
+                    flagChoosed= true;
+                } else{
+                    m_p1->setAsHole(row,col);
+                    return;
+                }
+            }
+            if (event.type == sf::Event::MouseMoved) {
+                if(!m_board.getBoardBounds().contains(event.mouseMove.x,event.mouseMove.y)) continue;
+                sf::FloatRect rect_size = m_board.getMatrix()[0][0].getGlobalBounds();
+                int row = (event.mouseMove.y - rect_size.top) / rect_size.height;
+                int col = (event.mouseMove.x - rect_size.left) / rect_size.width;
+                if(!flagChoosed) m_p1->hoverFlag(row,col);
+                else m_p1->hoverHole(row,col);
+            }
+        }
+        print();
     }
 }

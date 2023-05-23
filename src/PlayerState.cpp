@@ -1,26 +1,16 @@
-//
-// Created by Bar Kobi on 18/05/2023.
-//
 
 #include "PlayerState.h"
 #include "iostream"
 
 void PlayerState::handleHover(const int row, const int col) {
-    for (auto &warrior: m_warriors) {
-        if (warrior.getLocation() == Location(row, col)) {
-            warrior.setHighlighted(true);
-        } else {
-            warrior.setHighlighted(false);
-        }
-    }
+    for (auto &warrior: m_warriors)
+        warrior.setHighlighted(warrior.getLocation() == Location(row, col));
 }
 
 
 void PlayerState::print() {
-    for (auto &warrior: m_warriors) {
+    for (auto &warrior: m_warriors)
         warrior.draw();
-        warrior.getWeapon()->get()->draw();
-    }
 }
 
 bool *PlayerState::checkAvailableLocations(Location location) {
@@ -60,22 +50,18 @@ bool *PlayerState::checkAvailableLocations(Location location) {
 bool PlayerState::move(Direction direction, Location selectedLocation) {
     static int imageCounter = 0;
     auto warrior = getWarrior(selectedLocation);
-    if (direction == Up) {
+    if (direction == Up)
         warrior->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset));
-    }
-    if (direction == Down) {
+    if (direction == Down)
         warrior->setSpriteLocation(sf::Vector2f(0, +m_pixelOffset));
-    }
-    if (direction == Left) {
+    if (direction == Left)
         warrior->setSpriteLocation(sf::Vector2f(-m_pixelOffset, 0));
-    }
-    if (direction == Right) {
+    if (direction == Right)
         warrior->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0));
-    }
+
     warrior->setIntRect(imageCounter);
     imageCounter++;
-    if(imageCounter == 6)
-    {
+    if(imageCounter == 6){
         imageCounter = 0;
         warrior->setLocation(direction);
         return true;
@@ -84,11 +70,19 @@ bool PlayerState::move(Direction direction, Location selectedLocation) {
 }
 
 Warrior *PlayerState::getWarrior(const Location location) {
-    for (int i = 0; i < m_warriors.size(); i++) {
-        if (m_warriors[i].getLocation() == location) {
+    for (int i = 0; i < m_warriors.size(); i++)
+        if (m_warriors[i].getLocation() == location)
             return &m_warriors[i];
-        }
-    }
+}
+
+void PlayerState::setAsFlag(const int row, const int col) {
+    Warrior* warrior = getWarrior(Location(row,col));
+    warrior->setAsFlag();
+}
+
+void PlayerState::setAsHole(const int row, const int col) {
+    Warrior* warrior = getWarrior(Location(row,col));
+    warrior->setAsHole();
 }
 
 

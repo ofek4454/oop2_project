@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Weapon.h"
+
 class Hole : public Weapon{
 public:
-    Hole() : Weapon() {}
+    Hole();
     ~Hole() = default;
     virtual bool fight(Weapon& other) override {}
     virtual bool fight(Scissors& other) override {}

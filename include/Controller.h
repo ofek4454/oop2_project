@@ -29,6 +29,7 @@ private:
     void checkCollision();
     void handleHover(sf::Event::MouseMoveEvent &event);
     void handleAnimation();
+    void initFlagAndHole();
 };
 
 
