@@ -8,6 +8,7 @@ class Paper;
 class Undefined;
 class Flag;
 class Hole;
+class Warrior;
 
 class Weapon {
 public:
@@ -25,8 +26,12 @@ public:
     virtual bool fight(Undefined& other) = 0;
     virtual bool fight(Flag& other) = 0;
 
+    void setOwner(Warrior *warrior);
+
 protected:
     sf::Sprite m_weapon_sprite;
+    Warrior *m_warrior;
+
 };
 
 

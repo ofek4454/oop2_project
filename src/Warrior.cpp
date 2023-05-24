@@ -1,21 +1,26 @@
 #include "Warrior.h"
-#include "cstdlib"
 #include "Flag.h"
 #include "Hole.h"
+#include "Rock.h"
+#include "Paper.h"
+#include "Scissors.h"
+#include "Weapon.h"
 
 Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location)
-    : m_weapon(std::make_unique<Undefined>(isMine)), m_location(location) {
-    auto texture = ResourcesManager::instance().getWarriorTexture(Warriors);
+    : m_weapon(std::make_unique<Undefined>(isMine)) , m_location(location) {
+
+    auto texture = ResourcesManager::instance().getTexture(Warriors);
     m_sprite.setTexture(*texture);
     m_sprite.setPosition(sf::Vector2f(pos.x, pos.y));
     m_sprite.setTextureRect(isMine ? sf::IntRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT) : sf::IntRect(0, IMAGE_HEIGHT * 3, IMAGE_WIDTH, IMAGE_HEIGHT));
     m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2, m_sprite.getLocalBounds().height / 2);
     m_sprite.setScale(0.8, 0.8);
-
     m_initialIntRect = m_sprite.getTextureRect();
 
     if (isMine)
         m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y+10));
+
+    m_weapon->setOwner(this);
 }
 
 void Warrior::draw() {
@@ -103,4 +108,25 @@ void Warrior::setAsHole() {
     m_sprite.setTextureRect(sf::IntRect(IMAGE_WIDTH*2, IMAGE_HEIGHT*4, IMAGE_WIDTH, IMAGE_HEIGHT));
     m_initialIntRect = m_sprite.getTextureRect();
     m_canMove = false;
+}
+
+void Warrior::setWeapon(Weapons_t weapon, Weapon &otherToFight) {
+    std::unique_ptr<Weapon> new_weapon;
+
+    switch (weapon){
+        case Rock_t:{
+            new_weapon = std::make_unique<Rock>();
+            break;
+        }
+        case Paper_t:{
+            new_weapon = std::make_unique<Paper>();
+            break;
+        }
+        case Scissors_t:{
+            new_weapon = std::make_unique<Scissors>();
+            break;
+        }
+    }
+    new_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y+10));
+    m_weapon.reset(new_weapon.release());
 }

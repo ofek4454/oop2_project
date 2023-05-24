@@ -2,6 +2,7 @@
 #include <iostream>
 
 Board::Board() {
+
     float x = (WINDOW_WIDTH * 0.775 - BOARD_SIZE * RECT_SIZE) / 2 + RECT_SIZE / 2;
     float y = WINDOW_HEIGHT / 2 - RECT_SIZE * (BOARD_SIZE / 2) + RECT_SIZE / 2;
     for (int i = 0; i < BOARD_SIZE; i++) {
@@ -19,7 +20,7 @@ Board::Board() {
     }
 
     for (auto &spr: m_arrows) {
-        spr.setTexture(*ResourcesManager::instance().getWarriorTexture(Arrow));
+        spr.setTexture(*ResourcesManager::instance().getTexture(Arrow));
         spr.setScale(RECT_SIZE / 1024, RECT_SIZE / 1024);
         spr.setColor(sf::Color::Transparent);
     }
@@ -81,9 +82,8 @@ void Board::setFrames() {
 
 void Board::setArrows(bool *directions, Location location,bool set) {
     if(!set){
-        for (auto &spr: m_arrows) {
+        for (auto &spr: m_arrows)
             spr.setPosition(sf::Vector2f(-1000,-1000));
-        }
         return;
     }
     if (directions[Up]) {

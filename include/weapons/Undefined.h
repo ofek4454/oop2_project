@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Weapon.h"
+#include "WindowManager.h"
+
 class Undefined : public Weapon{
 public:
     Undefined(bool isMine);
@@ -14,6 +16,13 @@ public:
     virtual bool fight(Undefined& other) override {std::cout << "Undefined fight" << std::endl; return false;}
     virtual bool fight(Flag& other) override {}
 
+private:
+    void chooseWeapon(Weapon &other);
+    void initChooseBox();
+
+    sf::RectangleShape m_ChooseBoxRect;
+    sf::Sprite m_weapons_textures[3];
+    sf::Text m_ChooseWeaponText;
 };
 
 

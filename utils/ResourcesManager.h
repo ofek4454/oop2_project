@@ -7,10 +7,12 @@ class ResourcesManager {
 public:
     static ResourcesManager &instance();
 
-    sf::Texture *getWarriorTexture(Textures);
+    sf::Texture *getTexture(Textures);
     sf::RectangleShape *getBackground();
+    sf::Font *getFont();
 private:
     ResourcesManager();
     sf::Texture m_texture[NUM_OF_TEXTURES];
     sf::RectangleShape m_background;
+    sf::Font m_font;
 };

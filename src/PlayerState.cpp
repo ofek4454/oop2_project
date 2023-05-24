@@ -7,7 +7,6 @@ void PlayerState::handleHover(const int row, const int col) {
         warrior.setHighlighted(warrior.getLocation() == Location(row, col));
 }
 
-
 void PlayerState::print() {
     for (auto &warrior: m_warriors)
         warrior.draw();
@@ -20,11 +19,11 @@ bool *PlayerState::checkAvailableLocations(Location location) {
         return nullptr;
 
     bool *locations = new bool[4];
-
     locations[0] = true;
     locations[1] = true;
     locations[2] = true;
     locations[3] = true;
+
     for (int i = 0; i < m_warriors.size(); i++) {
         auto warrior_loc = m_warriors[i].getLocation();
         if (warrior_loc == location)

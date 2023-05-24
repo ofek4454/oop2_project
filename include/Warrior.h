@@ -8,6 +8,7 @@
 
 class Flag;
 class Hole;
+class Weapon;
 
 class Warrior {
 public:
@@ -25,8 +26,8 @@ public:
     void setTextureHole(bool isHighlighted);
     void setAsFlag();
     void setAsHole();
-
     bool canMove() const {return m_canMove;}
+    void setWeapon(Weapons_t weapon, Weapon &otherToFight);
 
 private:
     Location m_location;
