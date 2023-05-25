@@ -19,6 +19,8 @@ Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location)
 
     if (isMine)
         m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y+10));
+    else
+        m_weapon->setSpriteLoc(sf::Vector2f(-1000,-1000));
 
     m_weapon->setOwner(this);
 }

@@ -33,7 +33,7 @@ private:
     void handlemoveAnimation();
     void handleAnimation();
     void initFlagAndHole();
-    void animateFight(sf::Texture *fightTexture);
+    void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames);
 };
 
 

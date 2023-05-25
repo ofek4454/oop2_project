@@ -27,7 +27,7 @@ void Undefined::fight(Weapon &other) {
 void Undefined::chooseWeapon(Weapon &other) {
     auto window = WindowManager::instance().getWindow();
     sf::Texture bg;
-    bg.update(*window);
+    bg.loadFromImage(window->capture());
     sf::Sprite background(bg);
     initChooseBox();
     while (window->isOpen()) {

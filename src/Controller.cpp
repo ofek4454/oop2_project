@@ -132,7 +132,7 @@ void Controller::handleEvents() {
         auto event = EventLoop::instance().popEvent();
         switch (event.getEventType()){
             case FightPaperPaper:{
-                animateFight(ResourcesManager::instance().getTexture(PaperPaper));
+                animateFight(ResourcesManager::instance().getTexture(PaperPaper), 453, 63, 3);
             }
             default:
                 break;
@@ -140,28 +140,27 @@ void Controller::handleEvents() {
     }
 }
 
-void Controller::animateFight(sf::Texture *fightTexture) {
-    int frameCounter = 0;
+void Controller::animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames) {
+    float frameWidth = width/frames;
+    int frameX = 0;
     sf::Clock fightAnimationClock;
     sf::Texture bg;
-    bg.update(*m_window);
+    bg.loadFromImage(m_window->capture());
     sf::Sprite background(bg);
     sf::Sprite fightSprite(*fightTexture);
 
     auto boardBounds = m_board.getBoardBounds();
     fightSprite.setPosition(boardBounds.left + boardBounds.width/2 , boardBounds.top + boardBounds.height/2);
-    fightSprite.setOrigin(70,43.5);
+    fightSprite.setOrigin(frameWidth/2,height);
     fightSprite.setScale(2,2);
-    while(frameCounter < 980){
-        if(fightAnimationClock.getElapsedTime().asSeconds() < 0.15) continue;
-        fightAnimationClock.restart();
-        fightSprite.setTextureRect(sf::IntRect(frameCounter,0,140,87));
+    while(frameX < width){
+        fightSprite.setTextureRect(sf::IntRect(frameX,0,frameWidth,height));
         m_window->clear();
         m_window->draw(background);
         m_window->draw(fightSprite);
         m_window->display();
-        frameCounter+= 140;
+        if(fightAnimationClock.getElapsedTime().asSeconds() < 1) continue;
+        fightAnimationClock.restart();
+        frameX+= frameWidth;
     }
-
-
 }
