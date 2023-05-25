@@ -18,13 +18,13 @@ public:
     void setSpriteLoc(sf::Vector2f pos) {m_weapon_sprite.setPosition(pos);}
     void moveWeapon(sf::Vector2f offset);
 
-    virtual bool fight(Weapon& other) = 0;
-    virtual bool fight(Scissors& other) = 0;
-    virtual bool fight(Paper& other) = 0;
-    virtual bool fight(Rock& other) = 0;
-    virtual bool fight(Hole& other) = 0;
-    virtual bool fight(Undefined& other) = 0;
-    virtual bool fight(Flag& other) = 0;
+    virtual void fight(Weapon& other) = 0;
+    virtual void fight(Scissors& other) = 0;
+    virtual void fight(Paper& other) = 0;
+    virtual void fight(Rock& other) = 0;
+    virtual void fight(Hole& other) = 0;
+    virtual void fight(Undefined& other) = 0;
+    virtual void fight(Flag& other) = 0;
 
     void setOwner(Warrior *warrior);
     void lose();

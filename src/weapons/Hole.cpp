@@ -15,14 +15,21 @@ Hole::Hole() {
     m_weapon_sprite.setColor(sf::Color::Transparent);
 }
 
-bool Hole::fight(Scissors& other){
+void Hole::fight(Scissors& other){
     other.lose();
 }
 
-bool Hole::fight(Paper& other){
+void Hole::fight(Paper& other){
     other.lose();
 }
 
-bool Hole::fight(Rock& other){
+void Hole::fight(Rock& other){
     other.lose();
+}
+
+void Hole::fight(Weapon& other){
+    if (&other == this)
+        return;
+
+    other.fight(*this);
 }

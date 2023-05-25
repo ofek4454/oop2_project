@@ -16,28 +16,35 @@ Scissors::Scissors(){
 
 }
 
-bool Scissors::fight(Scissors& other) {
+void Scissors::fight(Scissors& other) {
     Event event(FightScissorsScissors);
     EventLoop::instance().addEvent(event);
 }
 
-bool Scissors::fight(Paper& other) {
+void Scissors::fight(Paper& other) {
     Event event(FightPaperScissors);
     EventLoop::instance().addEvent(event);
     other.lose();
 }
 
-bool Scissors::fight(Rock& other) {
+void Scissors::fight(Rock& other) {
     Event event(FightRockScissors);
     EventLoop::instance().addEvent(event);
     lose();
 }
 
-bool Scissors::fight(Hole& other) {
+void Scissors::fight(Hole& other) {
     lose();
 }
 
-bool Scissors::fight(Flag& other) {
+void Scissors::fight(Flag& other) {
     Event event(Lose);
     EventLoop::instance().addEvent(event);
+}
+
+void Scissors::fight(Weapon &other) {
+    if (&other == this)
+        return;
+
+    other.fight(*this);
 }

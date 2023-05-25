@@ -9,7 +9,8 @@
 class PlayerState {
 public:
     friend class PlayerModel;
-    PlayerState() {}
+    PlayerState();
+    virtual ~PlayerState() = 0;
     virtual void init(const std::array<std::array<sf::RectangleShape, BOARD_SIZE>, BOARD_SIZE> &matrix) = 0;
     void print();
     bool* checkAvailableLocations(Location location);
@@ -19,10 +20,11 @@ public:
     void handleHover(const int row, const int col);
 
     virtual void hoverFlag(const int row, const int col) = 0;
+    virtual void hoverHole(const int row, const int col) = 0;
+
     void setAsFlag(const int row, const int col);
     void setAsHole(const int row, const int col);
-    virtual void hoverHole(const int row, const int col) = 0;
-    void updateFlagAnimation(Location location);
+//    void updateFlagAnimation(Location location);
 
 protected:
     std::vector<Warrior> m_warriors;

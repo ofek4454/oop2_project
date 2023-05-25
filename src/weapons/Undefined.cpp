@@ -17,9 +17,9 @@ Undefined::Undefined(bool isMine){
     }
 }
 
-bool Undefined::fight(Weapon &other) {
+void Undefined::fight(Weapon &other) {
     if (&other == this)
-        return false;
+        return;
 
     chooseWeapon(other);
 }
@@ -27,7 +27,7 @@ bool Undefined::fight(Weapon &other) {
 void Undefined::chooseWeapon(Weapon &other) {
     auto window = WindowManager::instance().getWindow();
     sf::Texture bg;
-    bg.loadFromImage(window->capture());
+    bg.update(*window);
     sf::Sprite background(bg);
     initChooseBox();
     while (window->isOpen()) {

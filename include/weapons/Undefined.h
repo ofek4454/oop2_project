@@ -8,13 +8,13 @@ public:
     Undefined(bool isMine);
 
     ~Undefined() = default;
-    virtual bool fight(Weapon& other) override;
-    virtual bool fight(Scissors& other) override {}
-    virtual bool fight(Paper& other) override {}
-    virtual bool fight(Rock& other) override {}
-    virtual bool fight(Hole& other) override {}
-    virtual bool fight(Undefined& other) override {}
-    virtual bool fight(Flag& other) override {}
+    virtual void fight(Weapon& other) override;
+    virtual void fight(Scissors& other) override {}
+    virtual void fight(Paper& other) override {}
+    virtual void fight(Rock& other) override {}
+    virtual void fight(Hole& other) override {}
+    virtual void fight(Undefined& other) override {}
+    virtual void fight(Flag& other) override {}
 
 private:
     void chooseWeapon(Weapon &other);

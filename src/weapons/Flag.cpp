@@ -15,24 +15,29 @@ Flag::Flag() {
     m_weapon_sprite.setColor(sf::Color::Transparent);
 }
 
-bool Flag::fight(Rock &other) {
+void Flag::fight(Rock &other) {
     Event event(Won);
     EventLoop::instance().addEvent(event);
 }
 
-bool Flag::fight(Paper &other) {
+void Flag::fight(Paper &other) {
     Event event(Won);
     EventLoop::instance().addEvent(event);
 }
 
-bool Flag::fight(Scissors &other) {
+void Flag::fight(Scissors &other) {
     Event event(Won);
     EventLoop::instance().addEvent(event);
 }
 
-bool Flag::fight(Weapon &other) {
+void Flag::fight(Weapon &other) {
     if (&other == this)
-        return false;
+        return;
 
     other.fight(*this);
+}
+
+void Flag::fight(Undefined &other){
+    Event event(Won);
+    EventLoop::instance().addEvent(event);
 }

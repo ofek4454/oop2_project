@@ -15,28 +15,36 @@ Rock::Rock(){
     m_weapon_sprite.setTextureRect(sf::IntRect(110, 116, 55,58));
 }
 
- bool Rock::fight(Scissors& other){
+ void Rock::fight(Scissors& other){
     Event event(FightScissorsRock);
     EventLoop::instance().addEvent(event);
     other.lose();
 }
 
- bool Rock::fight(Paper& other){
+ void Rock::fight(Paper& other){
      Event event(FightPaperRock);
      EventLoop::instance().addEvent(event);
      lose();
 }
 
- bool Rock::fight(Rock& other){
+ void Rock::fight(Rock& other){
      Event event(FightRockRock);
      EventLoop::instance().addEvent(event);
+
 }
 
- bool Rock::fight(Hole& other){
+ void Rock::fight(Hole& other){
     lose();
 }
 
- bool Rock::fight(Flag& other){
+ void Rock::fight(Flag& other){
      Event event(Lose);
      EventLoop::instance().addEvent(event);
+}
+
+void Rock::fight(Weapon &other) {
+    if (&other == this)
+        return;
+
+    other.fight(*this);
 }

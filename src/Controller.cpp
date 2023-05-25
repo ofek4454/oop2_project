@@ -134,6 +134,8 @@ void Controller::handleEvents() {
             case FightPaperPaper:{
                 animateFight(ResourcesManager::instance().getTexture(PaperPaper));
             }
+            default:
+                break;
         }
     }
 }
@@ -142,9 +144,14 @@ void Controller::animateFight(sf::Texture *fightTexture) {
     int frameCounter = 0;
     sf::Clock fightAnimationClock;
     sf::Texture bg;
-    bg.loadFromImage(m_window->capture());
+    bg.update(*m_window);
     sf::Sprite background(bg);
     sf::Sprite fightSprite(*fightTexture);
+
+    auto boardBounds = m_board.getBoardBounds();
+    fightSprite.setPosition(boardBounds.left + boardBounds.width/2 , boardBounds.top + boardBounds.height/2);
+    fightSprite.setOrigin(70,43.5);
+    fightSprite.setScale(2,2);
     while(frameCounter < 980){
         if(fightAnimationClock.getElapsedTime().asSeconds() < 0.15) continue;
         fightAnimationClock.restart();
