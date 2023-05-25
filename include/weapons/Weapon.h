@@ -27,6 +27,7 @@ public:
     virtual bool fight(Flag& other) = 0;
 
     void setOwner(Warrior *warrior);
+    void lose();
 
 protected:
     sf::Sprite m_weapon_sprite;

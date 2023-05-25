@@ -5,8 +5,7 @@
 #include "EnemyState.h"
 #include "UserState.h"
 #include "iostream"
-
-
+#include "EventLoop.h"
 
 class Controller {
 public:
@@ -14,8 +13,9 @@ public:
 
 private:
     void print();
-    void eventsHandler();
+    void run();
     void clickHandler(sf::Event::MouseButtonEvent& event);
+    void handleEvents();
 
     sf::RenderWindow *m_window;
     Board m_board;

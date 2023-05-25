@@ -129,4 +129,9 @@ void Warrior::setWeapon(Weapons_t weapon, Weapon &otherToFight) {
     }
     new_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y+10));
     m_weapon.reset(new_weapon.release());
+    otherToFight.fight(*m_weapon.get());
+}
+
+void Warrior::lose() {
+    m_needToDelete = true;
 }

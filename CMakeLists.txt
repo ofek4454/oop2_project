@@ -48,7 +48,7 @@ endif()
 
 if(WIN32)
 
-    add_executable (${CMAKE_PROJECT_NAME} "" main.cpp utils/Location.h utils/Location.cpp)
+    add_executable (${CMAKE_PROJECT_NAME} "" main.cpp utils/Location.h utils/Location.cpp src/events/Event.cpp include/events/Event.h src/events/EventLoop.cpp include/events/EventLoop.h)
 
     target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-fsanitize=address>)
 

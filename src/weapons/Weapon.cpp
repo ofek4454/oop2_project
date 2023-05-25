@@ -15,3 +15,7 @@ void Weapon::moveWeapon(sf::Vector2f offset) {
 void Weapon::setOwner(Warrior *warrior) {
     m_warrior = warrior;
 }
+
+void Weapon::lose() {
+    m_warrior->lose();
+}

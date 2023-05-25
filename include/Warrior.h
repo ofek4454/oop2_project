@@ -29,10 +29,13 @@ public:
     bool canMove() const {return m_canMove;}
     void setWeapon(Weapons_t weapon, Weapon &otherToFight);
 
+    void lose();
+
 private:
     Location m_location;
     std::unique_ptr<Weapon> m_weapon;
     sf::Sprite m_sprite;
     sf::IntRect m_initialIntRect;
     bool m_canMove = true;
+    bool m_needToDelete = false;
 };

@@ -14,3 +14,15 @@ Hole::Hole() {
     m_weapon_sprite.setTexture(*weapon);
     m_weapon_sprite.setColor(sf::Color::Transparent);
 }
+
+bool Hole::fight(Scissors& other){
+    other.lose();
+}
+
+bool Hole::fight(Paper& other){
+    other.lose();
+}
+
+bool Hole::fight(Rock& other){
+    other.lose();
+}

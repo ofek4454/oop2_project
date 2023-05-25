@@ -9,10 +9,10 @@ Controller::Controller() : m_window(WindowManager::instance().getWindow()), m_p1
     m_p1->init(m_board.getMatrix());
     m_p2->init(m_board.getMatrix());
     initFlagAndHole();
-    eventsHandler();
+    run();
 }
 
-void Controller::eventsHandler() {
+void Controller::run() {
     print();
     while (m_window->isOpen()) {
         sf::Event event;
@@ -20,11 +20,13 @@ void Controller::eventsHandler() {
             if (event.type == sf::Event::Closed) m_window->close();
             if (event.type == sf::Event::MouseButtonReleased) clickHandler(event.mouseButton);
             if (event.type == sf::Event::MouseMoved) handleHover(event.mouseMove);
-            checkCollision();
         }
+        handleEvents();
+
         if (m_isAnimating)
             handleAnimation();
 
+        checkCollision();
         print();
     }
 }
@@ -79,7 +81,6 @@ void Controller::handleAnimation() {
             m_isAnimating = false;
         }
     }
-
 }
 
 void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
@@ -123,4 +124,10 @@ void Controller::initFlagAndHole() {
         print();
     }
     // TODO fetch enemy hole and flag
+}
+
+void Controller::handleEvents() {
+    while(EventLoop::instance().hasEvent()){
+        auto event = EventLoop::instance().popEvent();
+    }
 }
