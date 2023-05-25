@@ -9,8 +9,8 @@
 class PlayerState {
 public:
     friend class PlayerModel;
-    PlayerState();
-    virtual ~PlayerState() = 0;
+    PlayerState() = default;
+    virtual ~PlayerState() = default;
     virtual void init(const std::array<std::array<sf::RectangleShape, BOARD_SIZE>, BOARD_SIZE> &matrix) = 0;
     void print();
     bool* checkAvailableLocations(Location location);
