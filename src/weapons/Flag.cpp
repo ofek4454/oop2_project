@@ -29,3 +29,10 @@ bool Flag::fight(Scissors &other) {
     Event event(Won);
     EventLoop::instance().addEvent(event);
 }
+
+bool Flag::fight(Weapon &other) {
+    if (&other == this)
+        return false;
+
+    other.fight(*this);
+}

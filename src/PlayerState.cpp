@@ -82,4 +82,14 @@ void PlayerState::setAsHole(const int row, const int col) {
     warrior->setAsHole();
 }
 
+void PlayerState::updateFlagAnimation(Location location) {
+    static int imgCounter = 0;
+    auto warrior = getWarrior(location);
+    warrior->setIntRect(imgCounter);
+    imgCounter++;
+    if(imgCounter == IMAGE_COUNT){
+        imgCounter = 0;
+    }
+}
+
 

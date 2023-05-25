@@ -68,8 +68,9 @@ void Controller::checkCollision() {
     auto p2_vec = m_p2->getAllWarriors();
     for (auto &p1: *p1_vec)
         for (auto &p2: *p2_vec)
-            if (p1.getLocation() == p2.getLocation())
+            if (p1.getLocation() == p2.getLocation()){
                 p1.getWeapon()->get()->fight(**p2.getWeapon());
+            }
 }
 
 void Controller::handleAnimation() {
@@ -129,5 +130,31 @@ void Controller::initFlagAndHole() {
 void Controller::handleEvents() {
     while(EventLoop::instance().hasEvent()){
         auto event = EventLoop::instance().popEvent();
+        switch (event.getEventType()){
+            case FightPaperPaper:{
+                animateFight(ResourcesManager::instance().getTexture(PaperPaper));
+            }
+        }
     }
+}
+
+void Controller::animateFight(sf::Texture *fightTexture) {
+    int frameCounter = 0;
+    sf::Clock fightAnimationClock;
+    sf::Texture bg;
+    bg.loadFromImage(m_window->capture());
+    sf::Sprite background(bg);
+    sf::Sprite fightSprite(*fightTexture);
+    while(frameCounter < 980){
+        if(fightAnimationClock.getElapsedTime().asSeconds() < 0.15) continue;
+        fightAnimationClock.restart();
+        fightSprite.setTextureRect(sf::IntRect(frameCounter,0,140,87));
+        m_window->clear();
+        m_window->draw(background);
+        m_window->draw(fightSprite);
+        m_window->display();
+        frameCounter+= 140;
+    }
+
+
 }

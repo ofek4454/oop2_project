@@ -35,6 +35,7 @@ enum Textures{
     Warriors,
     Rps,
     Arrow,
+    PaperPaper,
 };
 
 enum Direction{
@@ -45,6 +46,20 @@ enum Direction{
     Non_Direction,
 };
 
+enum EventType_t{
+    Won,
+    Lose,
+    TimeOver,
+    FightRockPaper,
+    FightRockScissors,
+    FightRockRock,
+    FightPaperRock,
+    FightPaperScissors,
+    FightPaperPaper,
+    FightScissorsRock,
+    FightScissorsPaper,
+    FightScissorsScissors,
+};
 const sf::Color GRAY_COLOR = sf::Color(181, 193, 105);
 const sf::Color GREEN_COLOR = sf::Color(181, 221, 94);
 const sf::Color DARK_GREEN_COLOR = sf::Color(103, 133, 39,120);

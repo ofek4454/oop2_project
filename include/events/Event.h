@@ -1,20 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Consts.h"
 // event types
-enum EventType_t{
-    Won,
-    Lose,
-    TimeOver,
-    FightRockPaper,
-    FightRockScissors,
-    FightRockRock,
-    FightPaperRock,
-    FightPaperScissors,
-    FightPaperPaper,
-    FightScissorsRock,
-    FightScissorsPaper,
-    FightScissorsScissors,
-};
+
 
 /**
  * Event class for creating events in the game

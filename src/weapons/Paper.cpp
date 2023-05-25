@@ -40,3 +40,10 @@ bool Paper::fight(Flag& other){
     Event event(Lose);
     EventLoop::instance().addEvent(event);
 }
+
+bool Paper::fight(Weapon &other) {
+    if (&other == this)
+        return false;
+
+    other.fight(*this);
+}

@@ -22,6 +22,7 @@ public:
     void setAsFlag(const int row, const int col);
     void setAsHole(const int row, const int col);
     virtual void hoverHole(const int row, const int col) = 0;
+    void updateFlagAnimation(Location location);
 
 protected:
     std::vector<Warrior> m_warriors;
