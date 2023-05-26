@@ -87,28 +87,28 @@ void Board::setArrows(bool *directions, Location location,bool set) {
         return;
     }
     if (directions[Up]) {
-        m_arrows[Up].setPosition(sf::Vector2f(m_matrix[location.row - 1][location.col].getPosition().x - RECT_SIZE / 2,
-                                              m_matrix[location.row][location.col].getPosition().y - RECT_SIZE / 2));
+        m_arrows[Up].setPosition(sf::Vector2f(m_matrix[location.row][location.col].getPosition().x - RECT_SIZE / 2,
+                                              m_matrix[location.row - 1][location.col].getPosition().y + RECT_SIZE / 2));
         m_arrows[Up].setRotation(-90);
         m_arrows[Up].setColor(sf::Color(255, 255, 255, 100));
     }
     if (directions[Down]) {
         m_arrows[Down].setPosition(
-                sf::Vector2f(m_matrix[location.row - 1][location.col].getPosition().x + RECT_SIZE / 2,
-                             m_matrix[location.row][location.col].getPosition().y + RECT_SIZE / 2));
+                sf::Vector2f(m_matrix[location.row][location.col].getPosition().x + RECT_SIZE / 2,
+                             m_matrix[location.row + 1][location.col].getPosition().y - RECT_SIZE / 2));
         m_arrows[Down].setRotation(90);
         m_arrows[Down].setColor(sf::Color(255, 255, 255, 100));
     }
     if (directions[Right]) {
         m_arrows[Right].setPosition(
-                sf::Vector2f(m_matrix[location.row - 1][location.col].getPosition().x + RECT_SIZE / 2,
+                sf::Vector2f(m_matrix[location.row][location.col + 1].getPosition().x - RECT_SIZE / 2,
                              m_matrix[location.row][location.col].getPosition().y - RECT_SIZE / 2));
         m_arrows[Right].setRotation(0);
         m_arrows[Right].setColor(sf::Color(255, 255, 255, 100));
     }
     if (directions[Left]) {
         m_arrows[Left].setPosition(
-                sf::Vector2f(m_matrix[location.row - 1][location.col].getPosition().x - RECT_SIZE / 2,
+                sf::Vector2f(m_matrix[location.row][location.col - 1].getPosition().x + RECT_SIZE / 2,
                              m_matrix[location.row][location.col].getPosition().y + RECT_SIZE / 2));
         m_arrows[Left].setRotation(180);
         m_arrows[Left].setColor(sf::Color(255, 255, 255, 100));

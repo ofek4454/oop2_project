@@ -28,7 +28,7 @@ bool *PlayerState::checkAvailableLocations(Location location) {
         auto warrior_loc = m_warriors[i]->getLocation();
         if (warrior_loc == location)
             continue;
-        if (location.row < 0 || (location.row - 1 == warrior_loc.row && location.col == warrior_loc.col))
+        if (location.row <= 0 || (location.row - 1 == warrior_loc.row && location.col == warrior_loc.col))
             locations[Up] = false;
         if (location.col - 1 < 0 || (location.row == warrior_loc.row && location.col - 1 == warrior_loc.col))
             locations[Left] = false;
