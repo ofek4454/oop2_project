@@ -11,11 +11,16 @@ Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location)
 
     auto texture = ResourcesManager::instance().getTexture(Warriors);
     m_sprite.setTexture(*texture);
+    m_shadow.setTexture(*texture);
     m_sprite.setPosition(sf::Vector2f(pos.x, pos.y));
     m_sprite.setTextureRect(isMine ? sf::IntRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT) : sf::IntRect(0, IMAGE_HEIGHT * 3, IMAGE_WIDTH, IMAGE_HEIGHT));
     m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2, m_sprite.getLocalBounds().height / 2);
     m_sprite.setScale(0.8, 0.8);
     m_initialIntRect = m_sprite.getTextureRect();
+    m_shadow.setColor(sf::Color(0, 0, 0, 30)); // Set shadow color and transparency
+    m_shadow.setScale(0.65,0.4);
+    m_shadow.setPosition(m_sprite.getPosition().x - RECT_SIZE / 2 - 30, m_sprite.getPosition().y - RECT_SIZE / 2 + 30);
+    m_shadow.setTextureRect(sf::IntRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT));
 
     if (isMine)
         m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y+10));
@@ -27,12 +32,15 @@ Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location)
 
 void Warrior::draw() {
     auto window = WindowManager::instance().getWindow();
+    window->draw(m_shadow);
     window->draw(m_sprite);
     m_weapon->draw();
 }
 
 void Warrior::setSpriteLocation(const sf::Vector2f &offset) {
     m_sprite.move(offset);
+    m_shadow.move(offset);
+    m_shadow.move(sf::Vector2f(-2,5));
     m_weapon->moveWeapon(offset);
 }
 
@@ -67,6 +75,7 @@ void Warrior::setLocation(Direction_t direction) {
         case Direction_t::Non_Direction:
             break;
     }
+    m_shadow.setPosition(m_sprite.getPosition().x - RECT_SIZE / 2 - 30, m_sprite.getPosition().y - RECT_SIZE / 2 + 30);
 }
 
 void Warrior::setTextureFlag(bool isHighlighted) {

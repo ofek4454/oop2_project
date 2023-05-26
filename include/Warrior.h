@@ -36,6 +36,7 @@ private:
     Location m_location;
     std::unique_ptr<Weapon> m_weapon;
     sf::Sprite m_sprite;
+    sf::Sprite m_shadow;
     sf::IntRect m_initialIntRect;
     bool m_isMine;
     bool m_canMove = true;

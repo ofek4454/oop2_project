@@ -8,7 +8,7 @@ Controller::Controller() : m_window(WindowManager::instance().getWindow()), m_p1
                            m_p2(std::make_unique<EnemyState>()) {
     m_p1->init(m_board.getMatrix());
     m_p2->init(m_board.getMatrix());
-//    initFlagAndHole();
+    initFlagAndHole();
     run();
 }
 
