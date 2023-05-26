@@ -28,6 +28,7 @@ public:
     void setAsHole();
     bool canMove() const {return m_canMove;}
     void setWeapon(Weapons_t weapon, Weapon &otherToFight);
+    bool isNeedToBeDeleted() {return m_needToDelete;}
 
     void lose();
 

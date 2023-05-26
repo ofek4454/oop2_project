@@ -21,7 +21,7 @@ void Undefined::fight(Weapon &other) {
     if (&other == this)
         return;
 
-    chooseWeapon(other);
+    other.fight(*this);
 }
 
 void Undefined::chooseWeapon(Weapon &other) {

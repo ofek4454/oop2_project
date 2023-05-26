@@ -71,6 +71,9 @@ void Controller::checkCollision() {
             if (p1.getLocation() == p2.getLocation()){
                 p1.getWeapon()->get()->fight(**p2.getWeapon());
             }
+
+    m_p1->checkDeletion();
+    m_p2->checkDeletion();
 }
 
 void Controller::handleAnimation() {

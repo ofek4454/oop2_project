@@ -22,6 +22,7 @@ public:
     virtual void hoverFlag(const int row, const int col) = 0;
     virtual void hoverHole(const int row, const int col) = 0;
 
+    void checkDeletion();
     void setAsFlag(const int row, const int col);
     void setAsHole(const int row, const int col);
 //    void updateFlagAnimation(Location location);

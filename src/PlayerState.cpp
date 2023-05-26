@@ -82,6 +82,10 @@ void PlayerState::setAsHole(const int row, const int col) {
     warrior->setAsHole();
 }
 
+void PlayerState::checkDeletion() {
+    std::erase_if(m_warriors, [](auto &obj) {return obj.isNeedToBeDeleted();});
+}
+
 //void PlayerState::updateFlagAnimation(Location location) {
 //    static int imgCounter = 0;
 //    auto warrior = getWarrior(location);
