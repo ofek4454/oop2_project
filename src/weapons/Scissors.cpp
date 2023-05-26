@@ -8,6 +8,7 @@
 #include "Hole.h"
 #include "Flag.h"
 #include "Undefined.h"
+#include "Warrior.h"
 
 Scissors::Scissors(){
     auto weapon = ResourcesManager::instance().getTexture(Rps);
@@ -19,7 +20,8 @@ Scissors::Scissors(){
 void Scissors::fight(Scissors& other) {
     Event event(FightSS);
     EventLoop::instance().addEvent(event);
-    // TODO make Undefined
+    m_warrior->setWeapon(Undefined_t);
+    other.m_warrior->setWeapon(Undefined_t);
 }
 
 void Scissors::fight(Paper& other) {

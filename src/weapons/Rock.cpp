@@ -8,6 +8,7 @@
 #include "Flag.h"
 #include "Scissors.h"
 #include "Undefined.h"
+#include "Warrior.h"
 
 Rock::Rock(){
     auto weapon = ResourcesManager::instance().getTexture(Rps);
@@ -30,7 +31,8 @@ Rock::Rock(){
  void Rock::fight(Rock& other){
      Event event(FightRR);
      EventLoop::instance().addEvent(event);
-     // TODO make Undefined
+     m_warrior->setWeapon(Undefined_t);
+     other.m_warrior->setWeapon(Undefined_t);
 
 }
 

@@ -7,7 +7,7 @@
 #include "Weapon.h"
 
 Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location)
-    : m_weapon(std::make_unique<Undefined>(isMine)) , m_location(location) {
+    : m_weapon(std::make_unique<Undefined>(isMine)) , m_location(location) , m_isMine(isMine){
 
     auto texture = ResourcesManager::instance().getTexture(Warriors);
     m_sprite.setTexture(*texture);
@@ -128,6 +128,9 @@ void Warrior::setWeapon(Weapons_t weapon) {
             new_weapon = std::make_unique<Scissors>();
             break;
         }
+        case Undefined_t:
+            new_weapon = std::make_unique<Undefined>(m_isMine);
+
         default:
             break;
     }

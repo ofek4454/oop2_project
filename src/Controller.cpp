@@ -163,7 +163,8 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width,const i
     int frameX = 0;
     sf::Clock fightAnimationClock;
     sf::Texture bg;
-    bg.loadFromImage(m_window->capture());
+    bg.create(WINDOW_WIDTH,WINDOW_HEIGHT);
+    bg.update(*m_window);
     sf::Sprite background(bg);
     sf::Sprite fightSprite(*fightTexture);
 
@@ -181,4 +182,7 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width,const i
         fightAnimationClock.restart();
         frameX+= frameWidth;
     }
+    m_window->clear();
+    m_window->draw(background);
+    m_window->display();
 }

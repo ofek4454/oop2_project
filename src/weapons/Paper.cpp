@@ -8,6 +8,7 @@
 #include "Scissors.h"
 #include "Rock.h"
 #include "Undefined.h"
+#include "Warrior.h"
 
 Paper::Paper(){
     auto weapon = ResourcesManager::instance().getTexture(Rps);
@@ -24,7 +25,8 @@ void Paper::fight(Scissors& other){
 void Paper::fight(Paper& other){
     Event event(FightPP);
     EventLoop::instance().addEvent(event);
-    //TODO make Undefined
+    m_warrior->setWeapon(Undefined_t);
+    other.m_warrior->setWeapon(Undefined_t);
 }
 
 void Paper::fight(Rock& other){
