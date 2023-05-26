@@ -14,7 +14,7 @@ public:
     virtual void fight(Rock& other) override;
     virtual void fight(Hole& other) override;
     virtual void fight(Flag& other) override;
-    virtual void fight(Undefined& other) override {}
+    virtual void fight(Undefined& other) override;
 private:
 
 };

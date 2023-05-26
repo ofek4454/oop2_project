@@ -43,6 +43,10 @@ Rock::Rock(){
      EventLoop::instance().addEvent(event);
 }
 
+void Rock::fight(Undefined& other){
+    other.chooseWeapon();
+}
+
 void Rock::fight(Weapon &other) {
     if (&other == this)
         return;

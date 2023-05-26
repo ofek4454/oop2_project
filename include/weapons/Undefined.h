@@ -16,8 +16,8 @@ public:
     virtual void fight(Undefined& other) override;
     virtual void fight(Flag& other) override;
 
-private:
     void chooseWeapon();
+private:
     void initChooseBox();
 
     sf::RectangleShape m_ChooseBoxRect;

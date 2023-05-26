@@ -177,7 +177,7 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width,const i
         m_window->draw(background);
         m_window->draw(fightSprite);
         m_window->display();
-        if(fightAnimationClock.getElapsedTime().asSeconds() < 1) continue;
+        if(fightAnimationClock.getElapsedTime().asSeconds() < 0.5) continue;
         fightAnimationClock.restart();
         frameX+= frameWidth;
     }

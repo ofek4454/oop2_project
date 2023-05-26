@@ -28,6 +28,10 @@ void Scissors::fight(Paper& other) {
     other.lose();
 }
 
+void Scissors::fight(Undefined& other){
+    other.chooseWeapon();
+}
+
 void Scissors::fight(Rock& other) {
     Event event(FightRS, P2Won);
     EventLoop::instance().addEvent(event);

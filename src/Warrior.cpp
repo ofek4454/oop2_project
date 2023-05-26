@@ -7,7 +7,7 @@
 #include "Weapon.h"
 
 Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location)
-    : m_weapon(std::make_unique<Paper>()) , m_location(location) {
+    : m_weapon(std::make_unique<Undefined>(isMine)) , m_location(location) {
 
     auto texture = ResourcesManager::instance().getTexture(Warriors);
     m_sprite.setTexture(*texture);

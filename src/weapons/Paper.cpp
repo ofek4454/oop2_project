@@ -33,6 +33,10 @@ void Paper::fight(Rock& other){
     other.lose();
 }
 
+void Paper::fight(Undefined& other){
+    other.chooseWeapon();
+}
+
 void Paper::fight(Hole& other){
     lose();
 }

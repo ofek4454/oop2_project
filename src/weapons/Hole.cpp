@@ -27,6 +27,10 @@ void Hole::fight(Rock& other){
     other.lose();
 }
 
+void Hole::fight(Undefined& other){
+    other.lose();
+}
+
 void Hole::fight(Weapon& other){
     if (&other == this)
         return;
