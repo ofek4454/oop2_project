@@ -14,7 +14,7 @@ class Warrior {
 public:
 
     Warrior(const sf::Vector2f pos,bool isMine,Location location = Location(-1,-1));
-
+    ~Warrior() = default;
     std::unique_ptr<Weapon>* getWeapon(){return &m_weapon;}
     void draw();
     Location getLocation() const {return m_location;}

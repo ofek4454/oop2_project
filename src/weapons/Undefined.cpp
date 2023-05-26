@@ -59,6 +59,7 @@ void Undefined::chooseWeapon() {
                 for(int i=0 ; i<3 ; i++)
                     if(m_weapons_textures[i].getGlobalBounds().contains(event.mouseButton.x,event.mouseButton.y)){
                         m_warrior->setWeapon(Weapons_t(i));
+                        window->clear();
                         return;
                     }
             }

@@ -8,7 +8,7 @@ Controller::Controller() : m_window(WindowManager::instance().getWindow()), m_p1
                            m_p2(std::make_unique<EnemyState>()) {
     m_p1->init(m_board.getMatrix());
     m_p2->init(m_board.getMatrix());
-    initFlagAndHole();
+//    initFlagAndHole();
     run();
 }
 
@@ -67,8 +67,8 @@ void Controller::checkCollision() {
     auto p2_vec = m_p2->getAllWarriors();
     for (auto &p1: *p1_vec)
         for (auto &p2: *p2_vec)
-            if (p1.getLocation() == p2.getLocation()){
-                p2.getWeapon()->get()->fight(**p1.getWeapon());
+            if (p1->getLocation() == p2->getLocation()){
+                p2->getWeapon()->get()->fight(**p1->getWeapon());
             }
 
     m_p1->checkDeletion();
@@ -177,7 +177,7 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width,const i
         m_window->draw(background);
         m_window->draw(fightSprite);
         m_window->display();
-        if(fightAnimationClock.getElapsedTime().asSeconds() < 0.5) continue;
+        if(fightAnimationClock.getElapsedTime().asSeconds() < 0.2) continue;
         fightAnimationClock.restart();
         frameX+= frameWidth;
     }

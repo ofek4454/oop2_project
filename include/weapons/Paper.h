@@ -7,7 +7,6 @@
 class Paper : public Weapon{
 public:
     Paper();
-    ~Paper() = default;
 
     virtual void fight(Weapon& other) override;
     virtual void fight(Scissors& other) override;

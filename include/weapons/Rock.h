@@ -7,7 +7,6 @@
 class Rock : public Weapon{
 public:
     Rock();
-    ~Rock() = default;
     virtual void fight(Weapon& other) override;
     virtual void fight(Scissors& other) override;
     virtual void fight(Paper& other) override;

@@ -16,6 +16,7 @@ ResourcesManager::ResourcesManager() {
     m_texture[Arrow].loadFromFile("arrow.png");
     m_texture[PaperPaper].loadFromFile("tieP.png");
     m_texture[RockRock].loadFromFile("tieR.png");
+    m_texture[ScissorsScissors].loadFromFile("tieS.png");
     m_texture[BluePR].loadFromFile("bluePR.png");
     m_texture[BlueRS].loadFromFile("blueRS.png");
     m_texture[BlueSP].loadFromFile("blueSP.png");

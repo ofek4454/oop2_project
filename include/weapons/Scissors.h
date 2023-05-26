@@ -7,7 +7,6 @@
 class Scissors : public Weapon{
 public:
     Scissors();
-    ~Scissors() = default;
     virtual void fight(Weapon& other) override;
     virtual void fight(Scissors& other) override;
     virtual void fight(Paper& other) override;
@@ -20,7 +19,6 @@ public:
 
     sf::Sprite* getSprite() {return &m_weapon_sprite;}
 private:
-    sf::Sprite m_weapon_sprite;
 };
 
 

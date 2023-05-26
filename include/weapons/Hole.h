@@ -5,7 +5,6 @@
 class Hole : public Weapon{
 public:
     Hole();
-    ~Hole() = default;
     virtual void fight(Weapon& other) override;
     virtual void fight(Scissors& other) override;
     virtual void fight(Paper& other) override;

@@ -4,18 +4,18 @@
 
 void PlayerState::handleHover(const int row, const int col) {
     for (auto &warrior: m_warriors)
-        warrior.setHighlighted(warrior.getLocation() == Location(row, col));
+        warrior->setHighlighted(warrior->getLocation() == Location(row, col));
 }
 
 void PlayerState::print() {
     for (auto &warrior: m_warriors)
-        warrior.draw();
+        warrior->draw();
 }
 
 bool *PlayerState::checkAvailableLocations(Location location) {
-    Warrior *warrior = getWarrior(location);
+    auto warrior = getWarrior(location);
 
-    if (warrior == NULL || !warrior->canMove())
+    if (warrior == NULL || !warrior->get()->canMove())
         return nullptr;
 
     bool *locations = new bool[4];
@@ -25,7 +25,7 @@ bool *PlayerState::checkAvailableLocations(Location location) {
     locations[3] = true;
 
     for (int i = 0; i < m_warriors.size(); i++) {
-        auto warrior_loc = m_warriors[i].getLocation();
+        auto warrior_loc = m_warriors[i]->getLocation();
         if (warrior_loc == location)
             continue;
         if (location.row < 0 || (location.row - 1 == warrior_loc.row && location.col == warrior_loc.col))
@@ -47,43 +47,43 @@ bool PlayerState::move(Direction_t direction, Location selectedLocation) {
     static int imageCounter = 0;
     auto warrior = getWarrior(selectedLocation);
     if (direction == Up)
-        warrior->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset));
+        warrior->get()->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset));
     if (direction == Down)
-        warrior->setSpriteLocation(sf::Vector2f(0, +m_pixelOffset));
+        warrior->get()->setSpriteLocation(sf::Vector2f(0, +m_pixelOffset));
     if (direction == Left)
-        warrior->setSpriteLocation(sf::Vector2f(-m_pixelOffset, 0));
+        warrior->get()->setSpriteLocation(sf::Vector2f(-m_pixelOffset, 0));
     if (direction == Right)
-        warrior->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0));
+        warrior->get()->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0));
 
-    warrior->setIntRect(imageCounter);
+    warrior->get()->setIntRect(imageCounter);
     imageCounter++;
     if(imageCounter == IMAGE_COUNT){
         imageCounter = 0;
-        warrior->setLocation(direction);
+        warrior->get()->setLocation(direction);
         return true;
     }
     return false;
 }
 
-Warrior *PlayerState::getWarrior(const Location location) {
+std::unique_ptr<Warrior> *PlayerState::getWarrior(const Location location) {
     for (int i = 0; i < m_warriors.size(); i++)
-        if (m_warriors[i].getLocation() == location)
+        if (m_warriors[i]->getLocation() == location)
             return &m_warriors[i];
     return NULL;
 }
 
 void PlayerState::setAsFlag(const int row, const int col) {
-    Warrior* warrior = getWarrior(Location(row,col));
-    warrior->setAsFlag();
+    auto warrior = getWarrior(Location(row,col));
+    warrior->get()->setAsFlag();
 }
 
 void PlayerState::setAsHole(const int row, const int col) {
-    Warrior* warrior = getWarrior(Location(row,col));
-    warrior->setAsHole();
+    auto warrior = getWarrior(Location(row,col));
+    warrior->get()->setAsHole();
 }
 
 void PlayerState::checkDeletion() {
-    std::erase_if(m_warriors, [](auto &obj) {return obj.isNeedToBeDeleted();});
+    std::erase_if(m_warriors,[](auto& warrior) {return warrior->isNeedToBeDeleted();});
 }
 
 //void PlayerState::updateFlagAnimation(Location location) {
