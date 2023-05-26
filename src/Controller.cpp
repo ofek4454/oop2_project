@@ -148,7 +148,7 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width,const i
     bg.loadFromImage(m_window->capture());
     sf::Sprite background(bg);
     sf::Sprite fightSprite(*fightTexture);
-
+///
     auto boardBounds = m_board.getBoardBounds();
     fightSprite.setPosition(boardBounds.left + boardBounds.width/2 , boardBounds.top + boardBounds.height/2);
     fightSprite.setOrigin(frameWidth/2,height);
