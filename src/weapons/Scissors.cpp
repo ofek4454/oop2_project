@@ -17,18 +17,19 @@ Scissors::Scissors(){
 }
 
 void Scissors::fight(Scissors& other) {
-    Event event(FightScissorsScissors);
+    Event event(FightSS);
     EventLoop::instance().addEvent(event);
+    // TODO make Undefined
 }
 
 void Scissors::fight(Paper& other) {
-    Event event(FightPaperScissors);
+    Event event(FightPS, P1Won);
     EventLoop::instance().addEvent(event);
     other.lose();
 }
 
 void Scissors::fight(Rock& other) {
-    Event event(FightRockScissors);
+    Event event(FightRS, P2Won);
     EventLoop::instance().addEvent(event);
     lose();
 }
@@ -38,7 +39,7 @@ void Scissors::fight(Hole& other) {
 }
 
 void Scissors::fight(Flag& other) {
-    Event event(Lose);
+    Event event(Won);
     EventLoop::instance().addEvent(event);
 }
 

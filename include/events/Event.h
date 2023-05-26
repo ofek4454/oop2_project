@@ -9,8 +9,10 @@
  */
 class Event{
 public:
-    Event(EventType_t type);
+    Event(EventType_t type, Winner_t winner = Tie);
     EventType_t getEventType() const;
+    Winner_t getWinner() const;
 private:
     EventType_t m_eventType;
+    Winner_t m_winner;
 };

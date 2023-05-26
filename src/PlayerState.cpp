@@ -43,7 +43,7 @@ bool *PlayerState::checkAvailableLocations(Location location) {
     return locations;
 }
 
-bool PlayerState::move(Direction direction, Location selectedLocation) {
+bool PlayerState::move(Direction_t direction, Location selectedLocation) {
     static int imageCounter = 0;
     auto warrior = getWarrior(selectedLocation);
     if (direction == Up)

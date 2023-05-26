@@ -7,7 +7,7 @@ class ResourcesManager {
 public:
     static ResourcesManager &instance();
 
-    sf::Texture *getTexture(Textures);
+    sf::Texture *getTexture(Textures_t);
     sf::RectangleShape *getBackground();
     sf::Font *getFont();
 private:

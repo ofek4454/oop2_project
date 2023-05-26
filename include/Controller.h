@@ -22,8 +22,9 @@ private:
     Board m_board;
     std::unique_ptr<PlayerState> m_p1;
     std::unique_ptr<PlayerState> m_p2;
+    Turn_t m_turn = P1;
 
-    Direction m_direction;
+    Direction_t m_direction;
     bool m_isMoving = false;
     bool m_isAnimating = false;
     Location m_flagLocation;

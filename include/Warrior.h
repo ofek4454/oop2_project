@@ -18,7 +18,7 @@ public:
     std::unique_ptr<Weapon>* getWeapon(){return &m_weapon;}
     void draw();
     Location getLocation() const {return m_location;}
-    void setLocation(Direction direction);
+    void setLocation(Direction_t direction);
     void setSpriteLocation(const sf::Vector2f &offset);
     void setHighlighted(bool isHighlighted);
     void setIntRect(int counter);
@@ -27,7 +27,7 @@ public:
     void setAsFlag();
     void setAsHole();
     bool canMove() const {return m_canMove;}
-    void setWeapon(Weapons_t weapon, Weapon &otherToFight);
+    void setWeapon(Weapons_t weapon);
     bool isNeedToBeDeleted() {return m_needToDelete;}
 
     void lose();

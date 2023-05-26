@@ -16,17 +16,17 @@ Flag::Flag() {
 }
 
 void Flag::fight(Rock &other) {
-    Event event(Won);
+    Event event(Lose);
     EventLoop::instance().addEvent(event);
 }
 
 void Flag::fight(Paper &other) {
-    Event event(Won);
+    Event event(Lose);
     EventLoop::instance().addEvent(event);
 }
 
 void Flag::fight(Scissors &other) {
-    Event event(Won);
+    Event event(Lose);
     EventLoop::instance().addEvent(event);
 }
 
@@ -38,6 +38,6 @@ void Flag::fight(Weapon &other) {
 }
 
 void Flag::fight(Undefined &other){
-    Event event(Won);
+    Event event(Lose);
     EventLoop::instance().addEvent(event);
 }

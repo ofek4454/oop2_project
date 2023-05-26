@@ -1,6 +1,7 @@
 
 #include "Undefined.h"
 #include "Warrior.h"
+#include "EventLoop.h"
 
 Undefined::Undefined(bool isMine){
     if(isMine){
@@ -24,7 +25,26 @@ void Undefined::fight(Weapon &other) {
     other.fight(*this);
 }
 
-void Undefined::chooseWeapon(Weapon &other) {
+void Undefined::fight(Scissors& other){
+    chooseWeapon();
+}
+
+void Undefined::fight(Paper& other){chooseWeapon();}
+
+void Undefined::fight(Rock& other){chooseWeapon();}
+
+void Undefined::fight(Undefined& other){chooseWeapon();}
+
+void Undefined::fight(Hole& other){
+    lose();
+}
+
+void Undefined::fight(Flag& other){
+    Event event(Won);
+    EventLoop::instance().addEvent(event);
+}
+
+void Undefined::chooseWeapon() {
     auto window = WindowManager::instance().getWindow();
     sf::Texture bg;
     bg.loadFromImage(window->capture());
@@ -38,7 +58,7 @@ void Undefined::chooseWeapon(Weapon &other) {
             if (event.type == sf::Event::MouseButtonReleased) {
                 for(int i=0 ; i<3 ; i++)
                     if(m_weapons_textures[i].getGlobalBounds().contains(event.mouseButton.x,event.mouseButton.y)){
-                        m_warrior->setWeapon(Weapons_t(i), other);
+                        m_warrior->setWeapon(Weapons_t(i));
                         return;
                     }
             }

@@ -115,11 +115,11 @@ void Board::setArrows(bool *directions, Location location,bool set) {
     }
 }
 
-Direction Board::getDirection(const sf::Vector2f pos) const {
-    Direction dir = Non_Direction;
+Direction_t Board::getDirection(const sf::Vector2f pos) const {
+    Direction_t dir = Non_Direction;
     for(int i = 0; i < m_arrows.size(); i++){
         if(m_arrows[i].getGlobalBounds().contains(pos)) {
-            dir = static_cast<Direction>(i);
+            dir = Direction_t(i);
         }
     }
     return dir;

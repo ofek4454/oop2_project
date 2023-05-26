@@ -15,7 +15,7 @@ public:
     const std::array<std::array<sf::RectangleShape,BOARD_SIZE>,BOARD_SIZE> &getMatrix() const;
     sf::FloatRect getBoardBounds() const {return m_boardFrame[0].getGlobalBounds();}
     void setArrows(bool* directions = nullptr,Location location = Location(0,0),bool set = false);
-    Direction getDirection(const sf::Vector2f pos) const;
+    Direction_t getDirection(const sf::Vector2f pos) const;
 private:
     void setFrames();
     std::array<std::array<sf::RectangleShape,BOARD_SIZE>,BOARD_SIZE> m_matrix;

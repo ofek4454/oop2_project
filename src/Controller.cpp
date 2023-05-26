@@ -23,8 +23,7 @@ void Controller::run() {
         }
         handleEvents();
 
-        if (m_isAnimating)
-            handleAnimation();
+        handleAnimation();
 
         checkCollision();
         print();
@@ -69,7 +68,7 @@ void Controller::checkCollision() {
     for (auto &p1: *p1_vec)
         for (auto &p2: *p2_vec)
             if (p1.getLocation() == p2.getLocation()){
-                p1.getWeapon()->get()->fight(**p2.getWeapon());
+                p2.getWeapon()->get()->fight(**p1.getWeapon());
             }
 
     m_p1->checkDeletion();
@@ -77,6 +76,7 @@ void Controller::checkCollision() {
 }
 
 void Controller::handleAnimation() {
+    if (!m_isAnimating) return;
     static sf::Clock clock;
     auto time = clock.getElapsedTime().asSeconds();
     if (time > 0.025) {
@@ -134,9 +134,24 @@ void Controller::handleEvents() {
     while(EventLoop::instance().hasEvent()){
         auto event = EventLoop::instance().popEvent();
         switch (event.getEventType()){
-            case FightPaperPaper:{
+            case FightRP:
+                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BluePR : RedPR ), 980, 84, 7);
+                break;
+            case FightRS:
+                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueRS : RedRS ), 994, 93, 7);
+                break;
+            case FightRR:
+                animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3);
+                break;
+            case FightPS:
+                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP ), 900, 96, 6);
+                break;
+            case FightPP:
                 animateFight(ResourcesManager::instance().getTexture(PaperPaper), 453, 63, 3);
-            }
+                break;
+            case FightSS:
+                animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3);
+                break;
             default:
                 break;
         }
@@ -151,7 +166,7 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width,const i
     bg.loadFromImage(m_window->capture());
     sf::Sprite background(bg);
     sf::Sprite fightSprite(*fightTexture);
-///
+
     auto boardBounds = m_board.getBoardBounds();
     fightSprite.setPosition(boardBounds.left + boardBounds.width/2 , boardBounds.top + boardBounds.height/2);
     fightSprite.setOrigin(frameWidth/2,height);

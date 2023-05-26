@@ -16,18 +16,19 @@ Paper::Paper(){
 }
 
 void Paper::fight(Scissors& other){
-    Event event(FightScissorsPaper);
+    Event event(FightPS, P2Won);
     EventLoop::instance().addEvent(event);
     lose();
 }
 
 void Paper::fight(Paper& other){
-    Event event(FightPaperPaper);
+    Event event(FightPP);
     EventLoop::instance().addEvent(event);
+    //TODO make Undefined
 }
 
 void Paper::fight(Rock& other){
-    Event event(FightRockPaper);
+    Event event(FightRP, P1Won);
     EventLoop::instance().addEvent(event);
     other.lose();
 }
@@ -37,7 +38,7 @@ void Paper::fight(Hole& other){
 }
 
 void Paper::fight(Flag& other){
-    Event event(Lose);
+    Event event(Won);
     EventLoop::instance().addEvent(event);
 }
 

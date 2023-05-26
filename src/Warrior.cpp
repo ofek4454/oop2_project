@@ -50,21 +50,21 @@ void Warrior::setIntRect(int counter) {
 
 
 
-void Warrior::setLocation(Direction direction) {
+void Warrior::setLocation(Direction_t direction) {
     switch (direction) {
-        case Direction::Up:
+        case Direction_t::Up:
             m_location = Location(m_location.row - 1, m_location.col);
             break;
-        case Direction::Down:
+        case Direction_t::Down:
             m_location = Location(m_location.row + 1, m_location.col);
             break;
-        case Direction::Left:
+        case Direction_t::Left:
             m_location = Location(m_location.row, m_location.col - 1);
             break;
-        case Direction::Right:
+        case Direction_t::Right:
             m_location = Location(m_location.row, m_location.col + 1);
             break;
-        case Direction::Non_Direction:
+        case Direction_t::Non_Direction:
             break;
     }
 }
@@ -97,7 +97,7 @@ void Warrior::setTextureHole(bool isHighlighted) {
 void Warrior::setAsFlag() {
     if(!m_canMove) return;
     std::unique_ptr<Weapon> flag = std::make_unique<Flag>();
-    m_weapon.reset(flag.release());
+    m_weapon = std::move(flag);
     m_sprite.setTextureRect(sf::IntRect(0, IMAGE_HEIGHT*4, IMAGE_WIDTH, IMAGE_HEIGHT));
     m_initialIntRect = m_sprite.getTextureRect();
     m_canMove = false;
@@ -106,13 +106,13 @@ void Warrior::setAsFlag() {
 void Warrior::setAsHole() {
     if(!m_canMove) return;
     std::unique_ptr<Weapon> hole = std::make_unique<Hole>();
-    m_weapon.reset(hole.release());
+    m_weapon = std::move(hole);
     m_sprite.setTextureRect(sf::IntRect(IMAGE_WIDTH*2, IMAGE_HEIGHT*4, IMAGE_WIDTH, IMAGE_HEIGHT));
     m_initialIntRect = m_sprite.getTextureRect();
     m_canMove = false;
 }
 
-void Warrior::setWeapon(Weapons_t weapon, Weapon &otherToFight) {
+void Warrior::setWeapon(Weapons_t weapon) {
     std::unique_ptr<Weapon> new_weapon;
 
     switch (weapon){
@@ -128,10 +128,12 @@ void Warrior::setWeapon(Weapons_t weapon, Weapon &otherToFight) {
             new_weapon = std::make_unique<Scissors>();
             break;
         }
+        default:
+            break;
     }
     new_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y+10));
-    m_weapon.reset(new_weapon.release());
-    otherToFight.fight(*m_weapon.get());
+    new_weapon->setOwner(this);
+    m_weapon = std::move(new_weapon);
 }
 
 void Warrior::lose() {

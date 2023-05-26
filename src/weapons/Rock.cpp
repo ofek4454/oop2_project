@@ -16,20 +16,21 @@ Rock::Rock(){
 }
 
  void Rock::fight(Scissors& other){
-    Event event(FightScissorsRock);
+    Event event(FightRS, P1Won);
     EventLoop::instance().addEvent(event);
     other.lose();
 }
 
  void Rock::fight(Paper& other){
-     Event event(FightPaperRock);
+     Event event(FightRP, P2Won);
      EventLoop::instance().addEvent(event);
      lose();
 }
 
  void Rock::fight(Rock& other){
-     Event event(FightRockRock);
+     Event event(FightRR);
      EventLoop::instance().addEvent(event);
+     // TODO make Undefined
 
 }
 
@@ -38,7 +39,7 @@ Rock::Rock(){
 }
 
  void Rock::fight(Flag& other){
-     Event event(Lose);
+     Event event(Won);
      EventLoop::instance().addEvent(event);
 }
 

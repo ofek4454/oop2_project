@@ -31,14 +31,22 @@ enum Weapons_t{
     Undefined_t,
 };
 
-enum Textures{
+enum Textures_t{
     Warriors,
     Rps,
     Arrow,
     PaperPaper,
+    RockRock,
+    ScissorsScissors,
+    BluePR,
+    BlueRS,
+    BlueSP,
+    RedPR,
+    RedRS,
+    RedSP,
 };
 
-enum Direction{
+enum Direction_t {
     Up,
     Down,
     Left,
@@ -50,16 +58,25 @@ enum EventType_t{
     Won,
     Lose,
     TimeOver,
-    FightRockPaper,
-    FightRockScissors,
-    FightRockRock,
-    FightPaperRock,
-    FightPaperScissors,
-    FightPaperPaper,
-    FightScissorsRock,
-    FightScissorsPaper,
-    FightScissorsScissors,
+    FightRP,
+    FightRS,
+    FightRR,
+    FightPS,
+    FightPP,
+    FightSS,
 };
+
+enum Turn_t{
+    P1,
+    P2,
+};
+
+enum Winner_t{
+    P1Won,
+    P2Won,
+    Tie,
+};
+
 const sf::Color GRAY_COLOR = sf::Color(181, 193, 105);
 const sf::Color GREEN_COLOR = sf::Color(181, 221, 94);
 const sf::Color DARK_GREEN_COLOR = sf::Color(103, 133, 39,120);
