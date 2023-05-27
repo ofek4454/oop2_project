@@ -46,6 +46,7 @@ void Undefined::fight(Flag& other){
 
 void Undefined::chooseWeapon() {
     auto window = WindowManager::instance().getWindow();
+
     sf::Texture bg;
     bg.create(WINDOW_WIDTH,WINDOW_HEIGHT);
     bg.update(*window);

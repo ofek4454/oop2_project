@@ -51,7 +51,7 @@ bool PlayerState::move(Direction_t direction, Location selectedLocation) {
     if (direction == Up)
         warrior->get()->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset),sf::Vector2f(shadowOffsetx, shadowOffsety));
     if (direction == Down)
-        warrior->get()->setSpriteLocation(sf::Vector2f(0, +m_pixelOffset),sf::Vector2f(sf::Vector2f(shadowOffsetx, -shadowOffsety)));
+        warrior->get()->setSpriteLocation(sf::Vector2f(0, +m_pixelOffset),sf::Vector2f(sf::Vector2f(shadowOffsetx * 0.5, -shadowOffsety * 0.8)));
     if (direction == Left)
         warrior->get()->setSpriteLocation(sf::Vector2f(-m_pixelOffset, 0),sf::Vector2f(sf::Vector2f(-shadowOffsetx, 0)));
     if (direction == Right)
