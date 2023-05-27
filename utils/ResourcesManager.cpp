@@ -23,6 +23,7 @@ ResourcesManager::ResourcesManager() {
     m_texture[RedPR].loadFromFile("redPR.png");
     m_texture[RedRS].loadFromFile("redRS.png");
     m_texture[RedSP].loadFromFile("redSP.png");
+    m_texture[Background].loadFromFile("background.png");
 
     m_background.setSize(sf::Vector2f (WINDOW_WIDTH, WINDOW_HEIGHT));
     m_background.setFillColor(sf::Color(181, 221, 94));

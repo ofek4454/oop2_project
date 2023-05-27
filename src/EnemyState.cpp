@@ -1,7 +1,7 @@
 
 #include "EnemyState.h"
 #include "Rock.h"
-EnemyState::EnemyState() : PlayerState() {}
+EnemyState::EnemyState(const std::string& name,const std::string& id) : PlayerState(name,id) {}
 
 void EnemyState::init(const std::array<std::array<sf::RectangleShape, BOARD_SIZE>, BOARD_SIZE> &matrix) {
     float x = matrix[0][0].getPosition().x;

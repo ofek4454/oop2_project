@@ -9,7 +9,7 @@
 
 class Controller {
 public:
-    Controller() ;
+    Controller(std::unique_ptr<PlayerState> p1,std::unique_ptr<PlayerState> p2) ;
 
 private:
     void print();

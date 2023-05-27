@@ -4,7 +4,7 @@
 
 class UserState : public PlayerState{
 public:
-    UserState();
+    UserState(const std::string& name,const std::string& id);
     ~UserState() = default;
     virtual void init(const std::array<std::array<sf::RectangleShape, BOARD_SIZE>, BOARD_SIZE> &matrix);
 

@@ -2,6 +2,7 @@
 #include "PlayerState.h"
 #include "iostream"
 
+PlayerState::PlayerState(const std::string& name,const std::string& id) : m_player(name,id){}
 void PlayerState::handleHover(const int row, const int col) {
     for (auto &warrior: m_warriors)
         warrior->setHighlighted(warrior->getLocation() == Location(row, col));
@@ -14,7 +15,6 @@ void PlayerState::print() {
 
 bool *PlayerState::checkAvailableLocations(Location location) {
     auto warrior = getWarrior(location);
-
     if (warrior == NULL || !warrior->get()->canMove())
         return nullptr;
 

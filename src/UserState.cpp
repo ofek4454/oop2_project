@@ -5,7 +5,7 @@
 #include "UserState.h"
 #include "Rock.h"
 
-UserState::UserState() : PlayerState(){}
+UserState::UserState(const std::string& name,const std::string& id) : PlayerState(name,id){}
 
 void UserState::init(const std::array<std::array<sf::RectangleShape, BOARD_SIZE>, BOARD_SIZE> &matrix) {
     float x = matrix[BOARD_SIZE-1][0].getPosition().x;

@@ -8,6 +8,8 @@ const int NUM_OF_TEXTURES = 16;
 
 // Board Size
 
+const int MENU_BUTTONS = 5;
+
 const int IMAGE_COUNT = 25;
 
 const int BOARD_SIZE = 8;
@@ -44,6 +46,7 @@ enum Textures_t{
     RedPR,
     RedRS,
     RedSP,
+    Background,
 };
 
 enum Direction_t {

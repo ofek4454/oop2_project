@@ -4,7 +4,7 @@
 
 class PlayerModel{
 public:
-    PlayerModel() : m_name("ofek"),m_uid("123456"){}
+    PlayerModel(const std::string& name,const std::string& id) : m_name(name),m_uid(id){}
 private:
     std::string m_uid, m_name;
 };
