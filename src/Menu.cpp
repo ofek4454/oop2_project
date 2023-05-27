@@ -1,6 +1,6 @@
 #include "Menu.h"
 #include "WindowManager.h"
-
+#include "Controller.h"
 
 Menu::Menu() : m_window(WindowManager::instance().getWindow()) {
     m_font = *ResourcesManager::instance().getFont();
@@ -78,11 +78,14 @@ void Menu::handleClick(sf::Event::MouseButtonEvent &click) {
         if (m_menuButtons[i].getGlobalBounds().contains(m_window->mapPixelToCoords({click.x, click.y}))) {
             switch (i) {
                 case 0: {
-                    getName();
-//                    Controller controller;
+                    getName(true);
+                    m_p1 = std::make_unique<UserState>(m_p1Name,"123456");
+                    m_p2 = std::make_unique<EnemyState>(m_p2Name,"123456");
+                    Controller(&m_p1,&m_p2);
                     break;
                 }
                 case 1: {
+                    getName(false);
                     break;
                 }
                 case 2: {
@@ -102,7 +105,7 @@ void Menu::handleClick(sf::Event::MouseButtonEvent &click) {
     }
 }
 
-void Menu::getName() {
+void Menu::getName(bool isP1) {
     std::string input;
     printNameInput();
     sf::Event event;
@@ -127,7 +130,10 @@ void Menu::getName() {
 
         printNameInput();
     }
-    m_p1Name = input;
+    if(isP1)
+        m_p1Name = input;
+    else
+        m_p2Name = input;
 
 }
 

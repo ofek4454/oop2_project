@@ -4,8 +4,8 @@
 
 #include "Controller.h"
 
-Controller::Controller(std::unique_ptr<PlayerState> p1,std::unique_ptr<PlayerState> p2) : m_window(WindowManager::instance().getWindow()), m_p1(p1.get()),
-                           m_p2(p2.get()) {
+Controller::Controller(std::unique_ptr<PlayerState>* p1,std::unique_ptr<PlayerState>* p2) : m_window(WindowManager::instance().getWindow()), m_p1(p1->get()),
+                           m_p2(p2->get()) {
     m_p1->init(m_board.getMatrix());
     m_p2->init(m_board.getMatrix());
     initFlagAndHole();

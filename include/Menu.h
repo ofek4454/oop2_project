@@ -2,7 +2,8 @@
 
 #include "SFML/Graphics.hpp"
 #include "Consts.h"
-#include "PlayerState.h"
+#include "EnemyState.h"
+#include "UserState.h"
 
 class Menu{
 public:
@@ -23,11 +24,11 @@ private:
     sf::RectangleShape m_background;
 
     std::string m_p1Name;
-    std::string m_p2Name;
+    std::string m_p2Name = "zona";
 
     std::unique_ptr<PlayerState> m_p1;
     std::unique_ptr<PlayerState> m_p2;
 
 
-    void getName();
+    void getName(bool isP1);
 };
