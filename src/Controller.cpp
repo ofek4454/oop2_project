@@ -8,6 +8,7 @@ Controller::Controller(std::unique_ptr<PlayerState>* p1,std::unique_ptr<PlayerSt
                            m_p2(p2->get()) {
     m_p1->init(m_board.getMatrix());
     m_p2->init(m_board.getMatrix());
+    initNames();
     initFlagAndHole();
     run();
 }
@@ -34,8 +35,11 @@ void Controller::print() {
     m_window->clear();
     m_window->draw(*ResourcesManager::instance().getBackground());
     m_board.print();
+    m_window->draw(m_p1Name);
+    m_window->draw(m_p2Name);
     m_p1->print();
     m_p2->print();
+
 
     m_window->display();
 }
@@ -185,4 +189,21 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width,const i
     m_window->clear();
     m_window->draw(background);
     m_window->display();
+}
+
+void Controller::initNames() {
+    m_p1Name.setFont(*ResourcesManager::instance().getFont());
+    m_p2Name.setFont(*ResourcesManager::instance().getFont());
+    m_p1Name.setCharacterSize(WINDOW_HEIGHT*0.05);
+    m_p2Name.setCharacterSize(WINDOW_HEIGHT*0.05);
+    m_p1Name.setFillColor(sf::Color::Blue);
+    m_p2Name.setFillColor(sf::Color::Red);
+    m_p1Name.setString(m_p1->getPlayerModel().m_name);
+    m_p2Name.setString(m_p2->getPlayerModel().m_name);
+    m_p1Name.setOrigin(m_p1Name.getGlobalBounds().width/2,m_p1Name.getGlobalBounds().height/2);
+    m_p2Name.setOrigin(m_p2Name.getGlobalBounds().width/2,m_p2Name.getGlobalBounds().height/2);
+    m_p1Name.setPosition(m_board.getBoardBounds().left+m_board.getBoardBounds().width/2 ,
+                         m_board.getBoardBounds().top+m_board.getBoardBounds().height + m_p1Name.getGlobalBounds().height);
+    m_p2Name.setPosition(m_board.getBoardBounds().left+m_board.getBoardBounds().width/2 ,
+                         m_board.getBoardBounds().top - m_p2Name.getGlobalBounds().height - RECT_SIZE/2);
 }

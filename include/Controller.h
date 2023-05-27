@@ -16,9 +16,11 @@ private:
     void run();
     void clickHandler(sf::Event::MouseButtonEvent& event);
     void handleEvents();
+    void initNames();
 
     sf::RenderWindow *m_window;
     sf::Texture m_fightTexture;
+    sf::Text m_p1Name, m_p2Name;
     Board m_board;
     std::unique_ptr<PlayerState> m_p1;
     std::unique_ptr<PlayerState> m_p2;

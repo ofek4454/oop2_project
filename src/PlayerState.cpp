@@ -94,6 +94,10 @@ void PlayerState::checkDeletion() {
     std::erase_if(m_warriors,[](auto& warrior) {return warrior->isNeedToBeDeleted();});
 }
 
+const PlayerModel &PlayerState::getPlayerModel() const {
+    return m_player;
+}
+
 //void PlayerState::updateFlagAnimation(Location location) {
 //    static int imgCounter = 0;
 //    auto warrior = getWarrior(location);

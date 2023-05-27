@@ -19,6 +19,7 @@ public:
     std::unique_ptr<Warrior>* getWarrior(const Location location);
     std::vector<std::unique_ptr<Warrior>>* getAllWarriors() { return &m_warriors;}
     void handleHover(const int row, const int col);
+    const PlayerModel &getPlayerModel() const;
 
     virtual void hoverFlag(const int row, const int col) = 0;
     virtual void hoverHole(const int row, const int col) = 0;
