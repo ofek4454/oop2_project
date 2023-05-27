@@ -45,22 +45,30 @@ bool *PlayerState::checkAvailableLocations(Location location) {
 
 bool PlayerState::move(Direction_t direction, Location selectedLocation) {
     static int imageCounter = 0;
+    static float shadowOffsetx = -1;
+    static int shadowOffsety = 4;
     auto warrior = getWarrior(selectedLocation);
     if (direction == Up)
-        warrior->get()->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset));
+        warrior->get()->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset),sf::Vector2f(shadowOffsetx, shadowOffsety));
     if (direction == Down)
-        warrior->get()->setSpriteLocation(sf::Vector2f(0, +m_pixelOffset));
+        warrior->get()->setSpriteLocation(sf::Vector2f(0, +m_pixelOffset),sf::Vector2f(sf::Vector2f(shadowOffsetx, -shadowOffsety)));
     if (direction == Left)
-        warrior->get()->setSpriteLocation(sf::Vector2f(-m_pixelOffset, 0));
+        warrior->get()->setSpriteLocation(sf::Vector2f(-m_pixelOffset, 0),sf::Vector2f(sf::Vector2f(-shadowOffsetx, 0)));
     if (direction == Right)
-        warrior->get()->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0));
+        warrior->get()->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0),sf::Vector2f(sf::Vector2f(shadowOffsetx, 0)));
 
     warrior->get()->setIntRect(imageCounter);
     imageCounter++;
     if(imageCounter == IMAGE_COUNT){
+        shadowOffsetx = -1;
+        shadowOffsety = 4;
         imageCounter = 0;
         warrior->get()->setLocation(direction);
         return true;
+    }
+    if(imageCounter == 12){
+        shadowOffsetx = 3.7;
+        shadowOffsety = -12;
     }
     return false;
 }

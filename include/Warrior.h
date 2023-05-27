@@ -19,7 +19,7 @@ public:
     void draw();
     Location getLocation() const {return m_location;}
     void setLocation(Direction_t direction);
-    void setSpriteLocation(const sf::Vector2f &offset);
+    void setSpriteLocation(const sf::Vector2f &offset,const sf::Vector2f &shadowoffset);
     void setHighlighted(bool isHighlighted);
     void setIntRect(int counter);
     void setTextureFlag(bool isHighlighted);
