@@ -36,6 +36,8 @@ void UserState::hoverHole(const int row, const int col) {
         warrior->setTextureHole(warrior->getLocation() == Location(row, col));
 }
 
-void UserState::makeTurn() {
+void UserState::doTurn() {
+    auto window = WindowManager::instance().getWindow();
+
 
 }

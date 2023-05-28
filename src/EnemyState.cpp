@@ -42,9 +42,10 @@ void EnemyState::setFlagAndHole() {
 //    }
 }
 
-void EnemyState::makeTurn() {
-    // TODO play enemy
+void EnemyState::doTurn() {
+
 }
+
 
 
 

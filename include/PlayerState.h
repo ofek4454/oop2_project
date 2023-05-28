@@ -13,6 +13,11 @@ public:
     PlayerState(const std::string& name,const std::string& id);
     virtual ~PlayerState() = default;
     virtual void init(const std::array<std::array<sf::RectangleShape, BOARD_SIZE>, BOARD_SIZE> &matrix) = 0;
+    virtual void hoverFlag(const int row, const int col) = 0;
+    virtual void hoverHole(const int row, const int col) = 0;
+    virtual void doTurn() = 0;
+
+
     void print();
     bool* checkAvailableLocations(Location location);
     bool move(Direction_t direction,Location selectedLocation);
@@ -21,10 +26,6 @@ public:
     void handleHover(const int row, const int col);
     const PlayerModel &getPlayerModel() const;
 
-    virtual void hoverFlag(const int row, const int col) = 0;
-    virtual void hoverHole(const int row, const int col) = 0;
-
-    virtual void makeTurn() = 0;
 
     void checkDeletion();
     void setAsFlag(const int row, const int col);
@@ -33,6 +34,7 @@ public:
 
 protected:
     std::vector<std::unique_ptr<Warrior>> m_warriors;
+    bool m_playerChose = false;
 private:
     float m_pixelOffset = RECT_SIZE / IMAGE_COUNT;
     PlayerModel m_player;

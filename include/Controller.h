@@ -10,10 +10,11 @@
 class Controller {
 public:
     Controller(std::unique_ptr<PlayerState>* p1,std::unique_ptr<PlayerState>* p2) ;
+    ~Controller() = default;
+    void run();
 
 private:
     void print();
-    void run();
     void clickHandler(sf::Event::MouseButtonEvent& event);
     void handleEvents();
     void initNames();

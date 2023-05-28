@@ -2,7 +2,7 @@
 #include "EnterNameScreen.h"
 
 Menu::Menu() : m_window(WindowManager::instance().getWindow()) {
-    int starting_y = WINDOW_HEIGHT* 0.3;
+    int starting_y = WINDOW_HEIGHT * 0.3;
     int starting_x = WINDOW_WIDTH / 2;
     m_background.setSize(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
     m_background.setTexture(ResourcesManager::instance().getTexture(Background));
@@ -23,18 +23,22 @@ Menu::Menu() : m_window(WindowManager::instance().getWindow()) {
 
 void Menu::handleEvents() {
     print();
-    while (m_window->isOpen()) {
-        sf::Event event;
-        while (m_window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                m_window->close();
-            if (event.type == sf::Event::MouseButtonReleased)
-                handleClick(event.mouseButton);
-            if (event.type == sf::Event::MouseMoved)
-                handleHover(event.mouseMove);
-        }
-        print();
-    }
+
+    WindowManager::instance().eventHandler(
+            [this](auto move, auto exit) {
+                handleHover(move);
+                return false;
+            },
+            [this](auto click, auto exit) {
+                handleClick(click);
+                return false;
+            },
+            [](auto key, auto exit) {return false;},
+            [](auto type, auto exit) {return false;},
+            [this](auto exit) {
+                print();
+            }
+    );
 
 }
 
@@ -71,10 +75,10 @@ void Menu::handleClick(sf::Event::MouseButtonEvent &click) {
                     break;
                 }
                 case 2: {
-
+                    break;
                 }
                 case 3: {
-
+                    break;
                 }
                 case 4: {
                     m_window->close();

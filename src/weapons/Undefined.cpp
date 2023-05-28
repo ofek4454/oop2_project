@@ -52,36 +52,38 @@ void Undefined::chooseWeapon() {
     bg.update(*window);
     sf::Sprite background(bg);
     initChooseBox();
-    while (window->isOpen()) {
-        window->clear();
-        sf::Event event;
-        while (window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) window->close();
-            if (event.type == sf::Event::MouseButtonReleased) {
+
+    WindowManager::instance().eventHandler(
+            [this](auto move, auto exit) {
+                for(auto &texture : m_weapons_textures)
+                    if(texture.getGlobalBounds().contains(move.x, move.y))
+                        texture.setScale(3.5,3.5);
+                    else
+                        texture.setScale(3,3);
+                return false;
+            },
+            [this, window, background](auto click, auto &exit) {
                 for(int i=0 ; i<3 ; i++)
-                    if(m_weapons_textures[i].getGlobalBounds().contains(event.mouseButton.x,event.mouseButton.y)){
+                    if(m_weapons_textures[i].getGlobalBounds().contains(click.x,click.y)){
                         m_warrior->setWeapon(Weapons_t(i));
                         window->clear();
                         window->draw(background);
                         window->display();
-                        return;
+                        exit = true;
                     }
+                return false;
+            },
+            [](auto key, auto exit) {return false;},
+            [](auto type, auto exit) {return false;},
+            [this, window, background](auto exit) {
+                window->draw(background);
+                window->draw(m_ChooseBoxRect);
+                for(const auto &texture : m_weapons_textures)
+                    window->draw(texture);
+                window->draw(m_ChooseWeaponText);
+                window->display();
             }
-            if (event.type == sf::Event::MouseMoved) {
-                for(auto &texture : m_weapons_textures)
-                    if(texture.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
-                        texture.setScale(3.5,3.5);
-                    else
-                        texture.setScale(3,3);
-            }
-        }
-        window->draw(background);
-        window->draw(m_ChooseBoxRect);
-        for(const auto &texture : m_weapons_textures)
-            window->draw(texture);
-        window->draw(m_ChooseWeaponText);
-        window->display();
-    }
+    );
 }
 
 void Undefined::initChooseBox() {

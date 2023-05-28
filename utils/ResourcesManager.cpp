@@ -12,6 +12,7 @@ ResourcesManager &ResourcesManager::instance() {
 
 ResourcesManager::ResourcesManager() {
     m_texture[Warriors].loadFromFile("warriors2.png");
+    m_texture[Warriors].setSmooth(true);
     m_texture[Rps].loadFromFile("weapons.png");
     m_texture[Arrow].loadFromFile("arrow.png");
     m_texture[PaperPaper].loadFromFile("tieP.png");

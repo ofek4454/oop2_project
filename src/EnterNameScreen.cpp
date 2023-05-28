@@ -26,43 +26,47 @@ void EnterNameScreen::init() {
 
 void EnterNameScreen::handleEvents() {
     print();
-    while(m_window->isOpen()){
-        sf::Event event;
-        while (m_window->pollEvent(event)){
-            if (event.type == sf::Event::Closed)
-                m_window->close();
-            if(event.type == event.KeyPressed && event.key.code == sf::Keyboard::Enter){
-                std::unique_ptr<PlayerState> p1;
-                std::unique_ptr<PlayerState> p2;
-                if(m_mode == Create){
-                    // TODO Create room
-                    p1 = std::make_unique<UserState>(m_name,"uid");
-                    p2 = std::make_unique<EnemyState>("enemy", "uid");
-                } else {
-                    // TODO Join room
-                    p2 = std::make_unique<UserState>(m_name,"uid");
-                    p1 = std::make_unique<EnemyState>("enemy", "uid");
+
+    WindowManager::instance().eventHandler(
+            [](auto move, auto exit) {return false;},
+            [](auto click, auto exit) {return false;},
+            [this](auto key, auto exit) {
+                if(key.code == sf::Keyboard::Enter){
+                    std::unique_ptr<PlayerState> p1;
+                    std::unique_ptr<PlayerState> p2;
+                    if(m_mode == Create){
+                        // TODO Create room
+                        p1 = std::make_unique<UserState>(m_name,"uid");
+                        p2 = std::make_unique<EnemyState>("enemy", "uid");
+                    } else {
+                        // TODO Join room
+                        p2 = std::make_unique<UserState>(m_name,"uid");
+                        p1 = std::make_unique<EnemyState>("enemy", "uid");
+                    }
+                    auto controller = Controller(&p1,&p2);
+                    controller.run();
                 }
-                Controller(&p1,&p2);
-            }
-            if(event.type == event.KeyPressed && event.key.code == sf::Keyboard::BackSpace){
-                if (!m_name.empty()){
-                    m_name.pop_back();
-                    m_nameText.setString(m_name);
-                    print();
+                if(key.code == sf::Keyboard::BackSpace){
+                    if (!m_name.empty()){
+                        m_name.pop_back();
+                        m_nameText.setString(m_name);
+                        print();
+                    }
+                    return true;
                 }
-                continue;
-            }
-            if (event.type == sf::Event::TextEntered){
-                if (event.text.unicode == '\b')
-                    continue;
+                return false;
+            },
+            [this](auto type, auto exit) {
+                if (type.unicode == '\b')
+                    return true;
                 if (m_name.size() < 20)
-                    m_name += event.text.unicode;
+                    m_name += type.unicode;
                 m_nameText.setString(m_name);
                 print();
-            }
-        }
-    }
+                return false;
+            },
+            [this](auto exit) {}
+    );
 }
 
 void EnterNameScreen::print() {

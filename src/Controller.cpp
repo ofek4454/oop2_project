@@ -4,31 +4,35 @@
 
 #include "Controller.h"
 
-Controller::Controller(std::unique_ptr<PlayerState>* p1,std::unique_ptr<PlayerState>* p2) : m_window(WindowManager::instance().getWindow()), m_p1(p1->get()),
-                           m_p2(p2->get()) {
+Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerState> *p2) : m_window(
+        WindowManager::instance().getWindow()), m_p1(p1->get()),
+                                                                                             m_p2(p2->get()) {
     m_p1->init(m_board.getMatrix());
     m_p2->init(m_board.getMatrix());
     initNames();
     initFlagAndHole();
-    run();
 }
 
 void Controller::run() {
     print();
-    while (m_window->isOpen()) {
-        sf::Event event;
-        while (m_window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) m_window->close();
-            if (event.type == sf::Event::MouseButtonReleased) clickHandler(event.mouseButton);
-            if (event.type == sf::Event::MouseMoved) handleHover(event.mouseMove);
-        }
-        handleEvents();
-
-        handleAnimation();
-
-        checkCollision();
-        print();
-    }
+    WindowManager::instance().eventHandler(
+            [this](auto move,auto exit) {
+                handleHover(move);
+                return false;
+            },
+            [this](auto click,auto exit) {
+                clickHandler(click);
+                return false;
+            },
+            [](auto key, auto exit) {return false;},
+            [](auto type, auto exit) {return false;},
+            [this](auto exit) {
+                handleEvents();
+                handleAnimation();
+                checkCollision();
+                print();
+            }
+    );
 }
 
 void Controller::print() {
@@ -48,7 +52,7 @@ void Controller::clickHandler(sf::Event::MouseButtonEvent &event) {
         m_direction = m_board.getDirection(sf::Vector2f(event.x, event.y));
         m_board.setArrows();
         m_isMoving = false;
-        if(m_direction != Non_Direction){
+        if (m_direction != Non_Direction) {
             m_isAnimating = true;
         }
     }
@@ -70,7 +74,7 @@ void Controller::checkCollision() {
     auto p2_vec = m_p2->getAllWarriors();
     for (auto &p1: *p1_vec)
         for (auto &p2: *p2_vec)
-            if (p1->getLocation() == p2->getLocation()){
+            if (p1->getLocation() == p2->getLocation()) {
                 p2->getWeapon()->get()->fight(**p1->getWeapon());
             }
 
@@ -101,53 +105,58 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
 
 void Controller::initFlagAndHole() {
     bool flagChoosed = false;
-    while (m_window->isOpen()) {
-        sf::Event event;
-        while (m_window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) m_window->close();
-            if (event.type == sf::Event::MouseButtonReleased) {
-                if(!m_board.getBoardBounds().contains(event.mouseButton.x,event.mouseButton.y)) continue;
+    WindowManager::instance().eventHandler(
+            [this, &flagChoosed](auto move, auto exit) {
+                if (!m_board.getBoardBounds().contains(move.x, move.y)) return true;
                 sf::FloatRect rect_size = m_board.getMatrix()[0][0].getGlobalBounds();
-                int row = (event.mouseButton.y - rect_size.top) / rect_size.height;
-                int col = (event.mouseButton.x - rect_size.left) / rect_size.width;
-                if(row < BOARD_SIZE-2) continue;
-                if(!flagChoosed){
-                    m_p1->setAsFlag(row,col);
-                    flagChoosed= true;
-                } else{
-                    m_p1->setAsHole(row,col);
-                    return;
+                int row = (move.y - rect_size.top) / rect_size.height;
+                int col = (move.x - rect_size.left) / rect_size.width;
+                if (!flagChoosed) m_p1->hoverFlag(row, col);
+                else m_p1->hoverHole(row, col);
+                return false;
+            },
+            [this, &flagChoosed](auto click, auto &exit) {
+                if (!m_board.getBoardBounds().contains(click.x, click.y)) return true;
+                sf::FloatRect rect_size = m_board.getMatrix()[0][0].getGlobalBounds();
+                int row = (click.y - rect_size.top) / rect_size.height;
+                int col = (click.x - rect_size.left) / rect_size.width;
+                if (row < BOARD_SIZE - 2) return true;
+                if (!flagChoosed) {
+                    m_p1->setAsFlag(row, col);
+                    flagChoosed = true;
+                } else {
+                    m_p1->setAsHole(row, col);
+                    exit = true;
+                    return false;
                 }
+            },
+            [](auto key, auto exit) {return false;},
+            [](auto type, auto &exit) {return false;},
+            [this](auto exit) {
+                print();
             }
-            if (event.type == sf::Event::MouseMoved) {
-                if(!m_board.getBoardBounds().contains(event.mouseMove.x,event.mouseMove.y)) continue;
-                sf::FloatRect rect_size = m_board.getMatrix()[0][0].getGlobalBounds();
-                int row = (event.mouseMove.y - rect_size.top) / rect_size.height;
-                int col = (event.mouseMove.x - rect_size.left) / rect_size.width;
-                if(!flagChoosed) m_p1->hoverFlag(row,col);
-                else m_p1->hoverHole(row,col);
-            }
-        }
-        print();
-    }
+    );
     // TODO fetch enemy hole and flag
 }
 
 void Controller::handleEvents() {
-    while(EventLoop::instance().hasEvent()){
+    while (EventLoop::instance().hasEvent()) {
         auto event = EventLoop::instance().popEvent();
-        switch (event.getEventType()){
+        switch (event.getEventType()) {
             case FightRP:
-                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BluePR : RedPR ), 980, 84, 7);
+                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BluePR : RedPR), 980,
+                             84, 7);
                 break;
             case FightRS:
-                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueRS : RedRS ), 994, 93, 7);
+                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueRS : RedRS), 994,
+                             93, 7);
                 break;
             case FightRR:
                 animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3);
                 break;
             case FightPS:
-                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP ), 900, 96, 6);
+                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP), 900,
+                             96, 6);
                 break;
             case FightPP:
                 animateFight(ResourcesManager::instance().getTexture(PaperPaper), 453, 63, 3);
@@ -161,31 +170,31 @@ void Controller::handleEvents() {
     }
 }
 
-void Controller::animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames) {
-    float frameWidth = width/frames;
+void Controller::animateFight(sf::Texture *fightTexture, const int width, const int height, const int frames) {
+    float frameWidth = width / frames;
     int frameX = 0;
     int frameCounter = 1;
     sf::Clock fightAnimationClock;
     sf::Texture bg;
-    bg.create(WINDOW_WIDTH,WINDOW_HEIGHT);
+    bg.create(WINDOW_WIDTH, WINDOW_HEIGHT);
     bg.update(*m_window);
     sf::Sprite background(bg);
     sf::Sprite fightSprite(*fightTexture);
 
     auto boardBounds = m_board.getBoardBounds();
-    fightSprite.setPosition(boardBounds.left + boardBounds.width/2 , boardBounds.top + boardBounds.height/2);
-    fightSprite.setOrigin(frameWidth/2,height);
-    fightSprite.setScale(2,2);
-    while(frameX < width){
-        fightSprite.setTextureRect(sf::IntRect(frameX,0,frameWidth,height));
+    fightSprite.setPosition(boardBounds.left + boardBounds.width / 2, boardBounds.top + boardBounds.height / 2);
+    fightSprite.setOrigin(frameWidth / 2, height);
+    fightSprite.setScale(2, 2);
+    while (frameX < width) {
+        fightSprite.setTextureRect(sf::IntRect(frameX, 0, frameWidth, height));
         m_window->clear();
         m_window->draw(background);
         m_window->draw(fightSprite);
         m_window->display();
-        if(fightAnimationClock.getElapsedTime().asSeconds() < 0.009) continue;
+        if (fightAnimationClock.getElapsedTime().asSeconds() < 0.009) continue;
         fightAnimationClock.restart();
-        if(frameCounter % 30 == 0){
-            frameX+= frameWidth;
+        if (frameCounter % 30 == 0) {
+            frameX += frameWidth;
         }
         frameCounter++;
     }
@@ -203,10 +212,11 @@ void Controller::initNames() {
     m_p2Name.setFillColor(sf::Color::Red);
     m_p1Name.setString(m_p1->getPlayerModel().m_name);
     m_p2Name.setString(m_p2->getPlayerModel().m_name);
-    m_p1Name.setOrigin(m_p1Name.getGlobalBounds().width/2,m_p1Name.getGlobalBounds().height/2);
-    m_p2Name.setOrigin(m_p2Name.getGlobalBounds().width/2,m_p2Name.getGlobalBounds().height/2);
-    m_p1Name.setPosition(m_board.getBoardBounds().left+m_board.getBoardBounds().width/2 ,
-                         m_board.getBoardBounds().top+m_board.getBoardBounds().height + m_p1Name.getGlobalBounds().height);
-    m_p2Name.setPosition(m_board.getBoardBounds().left+m_board.getBoardBounds().width/2 ,
-                         m_board.getBoardBounds().top - m_p2Name.getGlobalBounds().height - RECT_SIZE/2);
+    m_p1Name.setOrigin(m_p1Name.getGlobalBounds().width / 2, m_p1Name.getGlobalBounds().height / 2);
+    m_p2Name.setOrigin(m_p2Name.getGlobalBounds().width / 2, m_p2Name.getGlobalBounds().height / 2);
+    m_p1Name.setPosition(m_board.getBoardBounds().left + m_board.getBoardBounds().width / 2,
+                         m_board.getBoardBounds().top + m_board.getBoardBounds().height +
+                         m_p1Name.getGlobalBounds().height);
+    m_p2Name.setPosition(m_board.getBoardBounds().left + m_board.getBoardBounds().width / 2,
+                         m_board.getBoardBounds().top - m_p2Name.getGlobalBounds().height - RECT_SIZE / 2);
 }
