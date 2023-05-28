@@ -16,18 +16,18 @@ Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerS
 void Controller::run() {
     print();
     WindowManager::instance().eventHandler(
-            [this](auto move,auto exit) {
+            [this](auto move, auto exit) {
                 handleHover(move);
                 return false;
             },
-            [this](auto click,auto exit) {
-                if(m_turn == P1){
+            [this](auto click, auto exit) {
+                if (m_turn == P1) {
                     m_p1->doTurn(click);
                 }
                 return false;
             },
-            [](auto key, auto exit) {return false;},
-            [](auto type, auto exit) {return false;},
+            [](auto key, auto exit) { return false; },
+            [](auto type, auto exit) { return false; },
             [this](auto exit) {
 //                m_p2->doTurn();
                 handleEvents();
@@ -112,8 +112,8 @@ void Controller::initFlagAndHole() {
                     return false;
                 }
             },
-            [](auto key, auto exit) {return false;},
-            [](auto type, auto &exit) {return false;},
+            [](auto key, auto exit) { return false; },
+            [](auto type, auto &exit) { return false; },
             [this](auto exit) {
                 print();
             }
@@ -154,8 +154,16 @@ void Controller::handleEvents() {
 
 void Controller::animateFight(sf::Texture *fightTexture, const int width, const int height, const int frames) {
     float frameWidth = width / frames;
-    int frameX = 0;
-    int frameCounter = 1;
+    float frameSave = 0;
+    int counter = 0;
+    float arr[frames * 8];
+    for(int i = 0; i < frames * 8;i++){
+        if(i %  8  == 0 && i != 0){
+            frameSave += frameWidth;
+        }
+        arr[i] = frameSave;
+    }
+
     sf::Clock fightAnimationClock;
     sf::Texture bg;
     bg.create(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -167,18 +175,16 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width, const 
     fightSprite.setPosition(boardBounds.left + boardBounds.width / 2, boardBounds.top + boardBounds.height / 2);
     fightSprite.setOrigin(frameWidth / 2, height);
     fightSprite.setScale(2, 2);
-    while (frameX < width) {
-        fightSprite.setTextureRect(sf::IntRect(frameX, 0, frameWidth, height));
+    while (counter < frames * 8) {
+        fightSprite.setTextureRect(sf::IntRect(arr[counter], 0, frameWidth, height));
         m_window->clear();
         m_window->draw(background);
         m_window->draw(fightSprite);
         m_window->display();
-        if (fightAnimationClock.getElapsedTime().asSeconds() < 0.009) continue;
+        if (fightAnimationClock.getElapsedTime().asSeconds() < 0.015 && frames > 5) continue;
+        if (fightAnimationClock.getElapsedTime().asSeconds() < 0.03 && frames < 5) continue;
         fightAnimationClock.restart();
-        if (frameCounter % 30 == 0) {
-            frameX += frameWidth;
-        }
-        frameCounter++;
+        counter++;
     }
     m_window->clear();
     m_window->draw(background);

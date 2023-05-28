@@ -5,9 +5,9 @@ EnemyState::EnemyState(const std::string& name,const std::string& id) : PlayerSt
 
 void EnemyState::init(const std::array<std::array<sf::RectangleShape, BOARD_SIZE>, BOARD_SIZE> &matrix) {
     float x = matrix[0][0].getPosition().x;
-    float y = matrix[0][0].getPosition().y - 30;
+    float y = matrix[4][0].getPosition().y - 30;
 
-    int row = 0,col = 0;
+    int row = 4,col = 0;
     for(int i = 0; i < BOARD_SIZE*2; i++,col++) {
         if(i == BOARD_SIZE){
             row++;
