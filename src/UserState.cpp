@@ -56,7 +56,6 @@ void UserState::doTurn(sf::Event::MouseButtonEvent &click) {
         int col = (click.x - BOARD_START.left) / BOARD_START.width;
         auto bool_arr = checkAvailableLocations(Location(row, col));
         if (bool_arr) {
-            std::cout << row << " " << col << std::endl;
             m_selectedPlayerLocation = Location(row, col);
             setArrows(bool_arr, m_selectedPlayerLocation,
                       true);
