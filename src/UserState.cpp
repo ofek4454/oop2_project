@@ -5,23 +5,29 @@
 #include "UserState.h"
 #include "Rock.h"
 
-UserState::UserState(const std::string& name,const std::string& id) : PlayerState(name,id){}
+UserState::UserState(const std::string &name, const std::string &id) : PlayerState(name, id) {
+    for (auto &spr: m_arrows) {
+        spr.setTexture(*ResourcesManager::instance().getTexture(Arrow));
+        spr.setScale(RECT_SIZE / 1024, RECT_SIZE / 1024);
+        spr.setColor(sf::Color::Transparent);
+    }
+}
 
 void UserState::init(const std::array<std::array<sf::RectangleShape, BOARD_SIZE>, BOARD_SIZE> &matrix) {
-    float x = matrix[BOARD_SIZE-1][0].getPosition().x;
-    float y = matrix[BOARD_SIZE-1][0].getPosition().y - 30;
+    float x = matrix[BOARD_SIZE - 1][0].getPosition().x;
+    float y = matrix[BOARD_SIZE - 1][0].getPosition().y - 30;
 
-    int row = 7,col = 0;
-    for(int i = 0; i < BOARD_SIZE*2; i++,col++) {
-        if(i == BOARD_SIZE){
+    int row = 7, col = 0;
+    for (int i = 0; i < BOARD_SIZE * 2; i++, col++) {
+        if (i == BOARD_SIZE) {
             row--;
             col = 0;
         }
-        m_warriors.push_back(std::make_unique<Warrior>(sf::Vector2f(x, y),true, Location(row,col)));
-        x+=matrix[0][0].getGlobalBounds().width;
-        if(i== BOARD_SIZE - 1) {
+        m_warriors.push_back(std::make_unique<Warrior>(sf::Vector2f(x, y), true, Location(row, col)));
+        x += matrix[0][0].getGlobalBounds().width;
+        if (i == BOARD_SIZE - 1) {
             y -= matrix[BOARD_SIZE - 1][0].getGlobalBounds().height;
-            x = matrix[BOARD_SIZE- 1][0].getPosition().x;
+            x = matrix[BOARD_SIZE - 1][0].getPosition().x;
         }
     }
 }
@@ -36,8 +42,82 @@ void UserState::hoverHole(const int row, const int col) {
         warrior->setTextureHole(warrior->getLocation() == Location(row, col));
 }
 
-void UserState::doTurn() {
+void UserState::doTurn(sf::Event::MouseButtonEvent &click) {
+    if (m_playerChose) {
+        m_direction = getDirection(sf::Vector2f(click.x, click.y));
+        setArrows();
+        m_playerChose = false;
+        if (m_direction != Non_Direction) {
+            m_isAnimating = true;
+        }
+    }
+    if (BOARD_FRAME.contains(click.x, click.y)) {
+        int row = (click.y - BOARD_START.top) / BOARD_START.height;
+        int col = (click.x - BOARD_START.left) / BOARD_START.width;
+        auto bool_arr = checkAvailableLocations(Location(row, col));
+        if (bool_arr) {
+            std::cout << row << " " << col << std::endl;
+            m_selectedPlayerLocation = Location(row, col);
+            setArrows(bool_arr, m_selectedPlayerLocation,
+                      true);
+            m_playerChose = true;
+        }
+    }
+
+}
+
+
+void UserState::setArrows(bool *directions, Location location, bool set) {
+    if (!set) {
+        for (auto &spr: m_arrows)
+            spr.setPosition(sf::Vector2f(-1000, -1000));
+        return;
+    }
+    if (directions[Up]) {
+        m_arrows[Up].setPosition(
+                sf::Vector2f(BOARD_START.left + location.col * RECT_SIZE, BOARD_START.top + location.row * RECT_SIZE));
+        m_arrows[Up].setRotation(-90);
+        m_arrows[Up].setColor(sf::Color(255, 255, 255, 70));
+    }
+    if (directions[Down]) {
+        m_arrows[Down].setPosition(
+                sf::Vector2f(BOARD_START.left + ((location.col + 1) * RECT_SIZE),
+                             BOARD_START.top + (location.row + 1) * RECT_SIZE));
+        m_arrows[Down].setRotation(90);
+        m_arrows[Down].setColor(sf::Color(255, 255, 255, 70));
+    }
+    if (directions[Right]) {
+        m_arrows[Right].setPosition(
+                sf::Vector2f(sf::Vector2f(BOARD_START.left + (location.col + 1) * RECT_SIZE,
+                                          BOARD_START.top + location.row * RECT_SIZE)));
+        m_arrows[Right].setRotation(0);
+        m_arrows[Right].setColor(sf::Color(255, 255, 255, 70));
+    }
+    if (directions[Left]) {
+        m_arrows[Left].setPosition(
+                sf::Vector2f(BOARD_START.left + location.col * RECT_SIZE,
+                             BOARD_START.top + (location.row + 1) * RECT_SIZE));
+        m_arrows[Left].setRotation(180);
+        m_arrows[Left].setColor(sf::Color(255, 255, 255, 70));
+    }
+}
+
+Direction_t UserState::getDirection(const sf::Vector2f pos) const {
+    Direction_t dir = Non_Direction;
+    for (int i = 0; i < m_arrows.size(); i++) {
+        if (m_arrows[i].getGlobalBounds().contains(pos)) {
+            dir = Direction_t(i);
+        }
+    }
+    return dir;
+}
+
+void UserState::print() {
     auto window = WindowManager::instance().getWindow();
+    for (auto &warrior: m_warriors)
+        warrior->draw();
 
-
+    for (auto &arrow: m_arrows) {
+        window->draw(arrow);
+    }
 }

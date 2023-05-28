@@ -3,8 +3,8 @@
 
 Board::Board() {
 
-    float x = (WINDOW_WIDTH * 0.775 - BOARD_SIZE * RECT_SIZE) / 2 + RECT_SIZE / 2;
-    float y = WINDOW_HEIGHT / 2 - RECT_SIZE * (BOARD_SIZE / 2) + RECT_SIZE / 2;
+    float x = STARTING_X;
+    float y = STARTING_Y;
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             auto rect = sf::RectangleShape();
@@ -42,9 +42,9 @@ void Board::print() {
         window->draw(frame);
     }
 
-    for (auto &spr: m_arrows) {
-        window->draw(spr);
-    }
+//    for (auto &spr: m_arrows) {
+//        window->draw(spr);
+//    }
 }
 
 const std::array<std::array<sf::RectangleShape, BOARD_SIZE>, BOARD_SIZE> &Board::getMatrix() const {

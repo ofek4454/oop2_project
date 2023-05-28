@@ -42,7 +42,7 @@ void EnemyState::setFlagAndHole() {
 //    }
 }
 
-void EnemyState::doTurn() {
+void EnemyState::doTurn(sf::Event::MouseButtonEvent &click) {
 
 }
 

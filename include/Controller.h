@@ -15,7 +15,6 @@ public:
 
 private:
     void print();
-    void clickHandler(sf::Event::MouseButtonEvent& event);
     void handleEvents();
     void initNames();
 
@@ -27,13 +26,8 @@ private:
     std::unique_ptr<PlayerState> m_p2;
     Turn_t m_turn = P1;
 
-    Direction_t m_direction;
-    bool m_isMoving = false;
-    bool m_isAnimating = false;
-    Location m_flagLocation;
-    Location m_selectedPlayerLocation;
     void checkCollision();
-    void handleHover(sf::Event::MouseMoveEvent &event);
+    void handleHover(sf::Event::MouseMoveEvent &click);
     void handlemoveAnimation();
     void handleAnimation();
     void initFlagAndHole();

@@ -2,15 +2,13 @@
 #include "PlayerState.h"
 #include "iostream"
 
-PlayerState::PlayerState(const std::string& name,const std::string& id) : m_player(name,id){}
-void PlayerState::handleHover(const int row, const int col) {
-    for (auto &warrior: m_warriors)
-        warrior->setHighlighted(warrior->getLocation() == Location(row, col));
-}
+PlayerState::PlayerState(const std::string& name,const std::string& id) : m_player(name,id){
 
-void PlayerState::print() {
-    for (auto &warrior: m_warriors)
-        warrior->draw();
+}
+void PlayerState::handleHover(const int row, const int col) {
+    for (auto &warrior: m_warriors){
+        warrior->setHighlighted(warrior->getLocation() == Location(row, col));
+    }
 }
 
 bool *PlayerState::checkAvailableLocations(Location location) {
@@ -43,18 +41,18 @@ bool *PlayerState::checkAvailableLocations(Location location) {
     return locations;
 }
 
-bool PlayerState::move(Direction_t direction, Location selectedLocation) {
+bool PlayerState::move() {
     static int imageCounter = 0;
     static float shadowOffsetx = -1;
     static int shadowOffsety = 4;
-    auto warrior = getWarrior(selectedLocation);
-    if (direction == Up)
+    auto warrior = getWarrior(m_selectedPlayerLocation);
+    if (m_direction == Up)
         warrior->get()->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset),sf::Vector2f(shadowOffsetx, shadowOffsety));
-    if (direction == Down)
+    if (m_direction == Down)
         warrior->get()->setSpriteLocation(sf::Vector2f(0, +m_pixelOffset),sf::Vector2f(sf::Vector2f(shadowOffsetx * 0.5, -shadowOffsety * 0.8)));
-    if (direction == Left)
+    if (m_direction == Left)
         warrior->get()->setSpriteLocation(sf::Vector2f(-m_pixelOffset, 0),sf::Vector2f(sf::Vector2f(-shadowOffsetx, 0)));
-    if (direction == Right)
+    if (m_direction == Right)
         warrior->get()->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0),sf::Vector2f(sf::Vector2f(shadowOffsetx, 0)));
 
     warrior->get()->setIntRect(imageCounter);
@@ -63,7 +61,7 @@ bool PlayerState::move(Direction_t direction, Location selectedLocation) {
         shadowOffsetx = -1;
         shadowOffsety = 4;
         imageCounter = 0;
-        warrior->get()->setLocation(direction);
+        warrior->get()->setLocation(m_direction);
         return true;
     }
     if(imageCounter == 12){
@@ -97,15 +95,5 @@ void PlayerState::checkDeletion() {
 const PlayerModel &PlayerState::getPlayerModel() const {
     return m_player;
 }
-
-//void PlayerState::updateFlagAnimation(Location location) {
-//    static int imgCounter = 0;
-//    auto warrior = getWarrior(location);
-//    warrior->setIntRect(imgCounter);
-//    imgCounter++;
-//    if(imgCounter == IMAGE_COUNT){
-//        imgCounter = 0;
-//    }
-//}
 
 

@@ -9,8 +9,8 @@ Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerS
                                                                                              m_p2(p2->get()) {
     m_p1->init(m_board.getMatrix());
     m_p2->init(m_board.getMatrix());
-    initNames();
-    initFlagAndHole();
+//    initNames();
+//    initFlagAndHole();
 }
 
 void Controller::run() {
@@ -21,12 +21,15 @@ void Controller::run() {
                 return false;
             },
             [this](auto click,auto exit) {
-                clickHandler(click);
+                if(m_turn == P1){
+                    m_p1->doTurn(click);
+                }
                 return false;
             },
             [](auto key, auto exit) {return false;},
             [](auto type, auto exit) {return false;},
             [this](auto exit) {
+//                m_p2->doTurn();
                 handleEvents();
                 handleAnimation();
                 checkCollision();
@@ -47,27 +50,6 @@ void Controller::print() {
     m_window->display();
 }
 
-void Controller::clickHandler(sf::Event::MouseButtonEvent &event) {
-    if (m_isMoving) {
-        m_direction = m_board.getDirection(sf::Vector2f(event.x, event.y));
-        m_board.setArrows();
-        m_isMoving = false;
-        if (m_direction != Non_Direction) {
-            m_isAnimating = true;
-        }
-    }
-    if (m_board.getBoardBounds().contains(event.x, event.y)) {
-        sf::FloatRect rect_size = m_board.getMatrix()[0][0].getGlobalBounds();
-        int row = (event.y - rect_size.top) / rect_size.height;
-        int col = (event.x - rect_size.left) / rect_size.width;
-        auto bool_arr = m_p1->checkAvailableLocations(Location(row, col));
-        if (bool_arr) {
-            m_selectedPlayerLocation = Location(row, col);
-            m_board.setArrows(bool_arr, m_selectedPlayerLocation, true);
-            m_isMoving = true;
-        }
-    }
-}
 
 void Controller::checkCollision() {
     auto p1_vec = m_p1->getAllWarriors();
@@ -83,19 +65,19 @@ void Controller::checkCollision() {
 }
 
 void Controller::handleAnimation() {
-    if (!m_isAnimating) return;
+    if (!m_p1->isAnimating()) return;
     static sf::Clock clock;
     auto time = clock.getElapsedTime().asSeconds();
     if (time > 0.025) {
         clock.restart().asSeconds();
-        if (m_p1->move(m_direction, m_selectedPlayerLocation)) {
-            m_isAnimating = false;
+        if (m_p1->move()) {
+            m_p1->setAnimating(false);
         }
     }
 }
 
 void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
-    if (m_board.getBoardBounds().contains(event.x, event.y)) {
+    if (BOARD_FRAME.contains(event.x, event.y)) {
         sf::Vector2f rect_pos = m_board.getMatrix()[0][0].getPosition();
         int row = (event.y - rect_pos.y) / RECT_SIZE;
         int col = (event.x - rect_pos.x) / RECT_SIZE;
@@ -107,7 +89,7 @@ void Controller::initFlagAndHole() {
     bool flagChoosed = false;
     WindowManager::instance().eventHandler(
             [this, &flagChoosed](auto move, auto exit) {
-                if (!m_board.getBoardBounds().contains(move.x, move.y)) return true;
+                if (!BOARD_FRAME.contains(move.x, move.y)) return true;
                 sf::FloatRect rect_size = m_board.getMatrix()[0][0].getGlobalBounds();
                 int row = (move.y - rect_size.top) / rect_size.height;
                 int col = (move.x - rect_size.left) / rect_size.width;
@@ -116,7 +98,7 @@ void Controller::initFlagAndHole() {
                 return false;
             },
             [this, &flagChoosed](auto click, auto &exit) {
-                if (!m_board.getBoardBounds().contains(click.x, click.y)) return true;
+                if (!BOARD_FRAME.contains(click.x, click.y)) return true;
                 sf::FloatRect rect_size = m_board.getMatrix()[0][0].getGlobalBounds();
                 int row = (click.y - rect_size.top) / rect_size.height;
                 int col = (click.x - rect_size.left) / rect_size.width;
@@ -181,7 +163,7 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width, const 
     sf::Sprite background(bg);
     sf::Sprite fightSprite(*fightTexture);
 
-    auto boardBounds = m_board.getBoardBounds();
+    auto boardBounds = BOARD_FRAME;
     fightSprite.setPosition(boardBounds.left + boardBounds.width / 2, boardBounds.top + boardBounds.height / 2);
     fightSprite.setOrigin(frameWidth / 2, height);
     fightSprite.setScale(2, 2);
@@ -214,9 +196,9 @@ void Controller::initNames() {
     m_p2Name.setString(m_p2->getPlayerModel().m_name);
     m_p1Name.setOrigin(m_p1Name.getGlobalBounds().width / 2, m_p1Name.getGlobalBounds().height / 2);
     m_p2Name.setOrigin(m_p2Name.getGlobalBounds().width / 2, m_p2Name.getGlobalBounds().height / 2);
-    m_p1Name.setPosition(m_board.getBoardBounds().left + m_board.getBoardBounds().width / 2,
-                         m_board.getBoardBounds().top + m_board.getBoardBounds().height +
+    m_p1Name.setPosition(BOARD_FRAME.left + BOARD_FRAME.width / 2,
+                         BOARD_FRAME.top + BOARD_FRAME.height +
                          m_p1Name.getGlobalBounds().height);
-    m_p2Name.setPosition(m_board.getBoardBounds().left + m_board.getBoardBounds().width / 2,
-                         m_board.getBoardBounds().top - m_p2Name.getGlobalBounds().height - RECT_SIZE / 2);
+    m_p2Name.setPosition(BOARD_FRAME.left + BOARD_FRAME.width / 2,
+                         BOARD_FRAME.top - m_p2Name.getGlobalBounds().height - RECT_SIZE / 2);
 }
