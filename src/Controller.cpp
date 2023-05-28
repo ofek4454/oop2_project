@@ -164,6 +164,7 @@ void Controller::handleEvents() {
 void Controller::animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames) {
     float frameWidth = width/frames;
     int frameX = 0;
+    int frameCounter = 1;
     sf::Clock fightAnimationClock;
     sf::Texture bg;
     bg.create(WINDOW_WIDTH,WINDOW_HEIGHT);
@@ -181,9 +182,12 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width,const i
         m_window->draw(background);
         m_window->draw(fightSprite);
         m_window->display();
-        if(fightAnimationClock.getElapsedTime().asSeconds() < 0.2) continue;
+        if(fightAnimationClock.getElapsedTime().asSeconds() < 0.009) continue;
         fightAnimationClock.restart();
-        frameX+= frameWidth;
+        if(frameCounter % 30 == 0){
+            frameX+= frameWidth;
+        }
+        frameCounter++;
     }
     m_window->clear();
     m_window->draw(background);

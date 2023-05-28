@@ -15,7 +15,7 @@ Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location)
     m_sprite.setPosition(sf::Vector2f(pos.x, pos.y));
     m_sprite.setTextureRect(isMine ? sf::IntRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT) : sf::IntRect(0, IMAGE_HEIGHT * 3, IMAGE_WIDTH, IMAGE_HEIGHT));
     m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2, m_sprite.getLocalBounds().height / 2);
-    m_sprite.setScale(0.8, 0.8);
+    m_sprite.setScale(0.6, 0.6);
     m_initialIntRect = m_sprite.getTextureRect();
     m_shadow.setColor(sf::Color(0, 0, 0, 30)); // Set shadow color and transparency
     m_shadow.setScale(0.7,0.35);
@@ -23,7 +23,7 @@ Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location)
     m_shadow.setTextureRect(sf::IntRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT));
 
     if (isMine)
-        m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y+10));
+        m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 10, m_sprite.getPosition().y));
     else
         m_weapon->setSpriteLoc(sf::Vector2f(-1000,-1000));
 
@@ -39,16 +39,15 @@ void Warrior::draw() {
 
 void Warrior::setSpriteLocation(const sf::Vector2f &offset,const sf::Vector2f &shadowoffset) {
     m_sprite.move(offset);
-//    m_shadow.move(offset);
     m_shadow.move(shadowoffset);
     m_weapon->moveWeapon(offset);
 }
 
 void Warrior::setHighlighted(bool isHighlighted) {
     if (isHighlighted) {
-        m_sprite.setScale(0.9, 0.9);
+        m_sprite.setScale(0.75, 0.75);
     } else {
-        m_sprite.setScale(0.8, 0.8);
+        m_sprite.setScale(0.6, 0.6);
     }
 }
 
@@ -86,7 +85,7 @@ void Warrior::setTextureFlag(bool isHighlighted) {
     }
     else{
         m_sprite.setTextureRect(m_initialIntRect);
-        m_weapon.get()->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y+10));
+        m_weapon.get()->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 10, m_sprite.getPosition().y));
     }
 
 }
@@ -99,7 +98,7 @@ void Warrior::setTextureHole(bool isHighlighted) {
     }
     else{
         m_sprite.setTextureRect(m_initialIntRect);
-        m_weapon.get()->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y+10));
+        m_weapon.get()->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 10, m_sprite.getPosition().y));
     }
 }
 
