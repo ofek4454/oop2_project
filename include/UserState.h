@@ -10,6 +10,8 @@ public:
 
     virtual void hoverFlag(const int row, const int col);
     virtual void hoverHole(const int row, const int col);
+
+    virtual void makeTurn();
 private:
     //void setFlagAndHole(sf::FloatRect rect_size);
 

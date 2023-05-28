@@ -8,7 +8,7 @@ Menu::Menu() : m_window(WindowManager::instance().getWindow()) {
     m_background.setTexture(ResourcesManager::instance().getTexture(Background));
     for (int i = 0; i < MENU_BUTTONS; i++) {
         m_menuButtons[i].setFont(*ResourcesManager::instance().getFont());
-        m_menuButtons[i].setCharacterSize(WINDOW_HEIGHT*0.075);
+        m_menuButtons[i].setCharacterSize(H2);
         m_menuButtons[i].setFillColor(sf::Color::White);
         m_menuButtons[i].setString(m_textNames[i]);
         m_menuButtons[i].setOrigin(m_menuButtons[i].getGlobalBounds().width / 2,

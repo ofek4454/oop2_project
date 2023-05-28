@@ -114,7 +114,7 @@ void Undefined::initChooseBox() {
     m_ChooseWeaponText.setFont(*ResourcesManager::instance().getFont());
     m_ChooseWeaponText.setString("Choose Your\n  Weapon  ");
     m_ChooseWeaponText.setFillColor(sf::Color::White);
-    m_ChooseWeaponText.setCharacterSize(80);
+    m_ChooseWeaponText.setCharacterSize(H1);
     m_ChooseWeaponText.setPosition(boxPos.x +RECT_SIZE*3,boxPos.y + RECT_SIZE*3);
     m_ChooseWeaponText.setOrigin(m_ChooseWeaponText.getGlobalBounds().width/2,0);
     m_ChooseWeaponText.setOutlineColor(DARK_GREEN_COLOR);

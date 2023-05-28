@@ -35,3 +35,7 @@ void UserState::hoverHole(const int row, const int col) {
     for (auto &warrior: m_warriors)
         warrior->setTextureHole(warrior->getLocation() == Location(row, col));
 }
+
+void UserState::makeTurn() {
+
+}

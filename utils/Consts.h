@@ -83,3 +83,7 @@ enum Winner_t{
 const sf::Color GRAY_COLOR = sf::Color(181, 193, 105);
 const sf::Color GREEN_COLOR = sf::Color(181, 221, 94);
 const sf::Color DARK_GREEN_COLOR = sf::Color(103, 133, 39,120);
+
+const float H1 = WINDOW_HEIGHT * 0.075;
+const float H2 = WINDOW_HEIGHT * 0.065;
+const float H3 = WINDOW_HEIGHT * 0.05;

@@ -40,7 +40,6 @@ void Controller::print() {
     m_p1->print();
     m_p2->print();
 
-
     m_window->display();
 }
 
@@ -93,9 +92,9 @@ void Controller::handleAnimation() {
 
 void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
     if (m_board.getBoardBounds().contains(event.x, event.y)) {
-        sf::FloatRect rect_size = m_board.getMatrix()[0][0].getGlobalBounds();
-        int row = (event.y - rect_size.top) / rect_size.height;
-        int col = (event.x - rect_size.left) / rect_size.width;
+        sf::Vector2f rect_pos = m_board.getMatrix()[0][0].getPosition();
+        int row = (event.y - rect_pos.y) / RECT_SIZE;
+        int col = (event.x - rect_pos.x) / RECT_SIZE;
         m_p1->handleHover(row, col);
     }
 }
@@ -194,8 +193,8 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width,const i
 void Controller::initNames() {
     m_p1Name.setFont(*ResourcesManager::instance().getFont());
     m_p2Name.setFont(*ResourcesManager::instance().getFont());
-    m_p1Name.setCharacterSize(WINDOW_HEIGHT*0.05);
-    m_p2Name.setCharacterSize(WINDOW_HEIGHT*0.05);
+    m_p1Name.setCharacterSize(H3);
+    m_p2Name.setCharacterSize(H3);
     m_p1Name.setFillColor(sf::Color::Blue);
     m_p2Name.setFillColor(sf::Color::Red);
     m_p1Name.setString(m_p1->getPlayerModel().m_name);

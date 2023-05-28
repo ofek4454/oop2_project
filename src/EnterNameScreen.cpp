@@ -15,12 +15,12 @@ void EnterNameScreen::init() {
     m_background.setSize(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
     m_title.setFont(*ResourcesManager::instance().getFont());
     m_title.setString("Enter you name:");
-    m_title.setCharacterSize(WINDOW_HEIGHT*0.06);
+    m_title.setCharacterSize(H3);
     m_title.setPosition(WINDOW_WIDTH*0.5, WINDOW_HEIGHT*0.4);
     m_title.setOrigin(m_title.getGlobalBounds().width/2,m_title.getGlobalBounds().height/2);
     m_nameText.setFont(*ResourcesManager::instance().getFont());
     m_nameText.setString("");
-    m_nameText.setCharacterSize(WINDOW_HEIGHT*0.075);
+    m_nameText.setCharacterSize(H2);
     m_nameText.setPosition(WINDOW_WIDTH*0.5, m_title.getPosition().y + m_title.getGlobalBounds().height*2);
 }
 
