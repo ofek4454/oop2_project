@@ -13,9 +13,9 @@ UserState::UserState(const std::string &name, const std::string &id) : PlayerSta
     }
 }
 
-void UserState::init(const std::array<std::array<sf::RectangleShape, BOARD_SIZE>, BOARD_SIZE> &matrix) {
-    float x = matrix[BOARD_SIZE - 1][0].getPosition().x;
-    float y = matrix[BOARD_SIZE - 1][0].getPosition().y - 30;
+void UserState::init() {
+    float x = BOARD_TOP_LEFT.left + RECT_SIZE/2;
+    float y = BOARD_TOP_LEFT.top + RECT_SIZE*7 - 30 + RECT_SIZE/2;
 
     int row = 7, col = 0;
     for (int i = 0; i < BOARD_SIZE * 2; i++, col++) {
@@ -24,10 +24,10 @@ void UserState::init(const std::array<std::array<sf::RectangleShape, BOARD_SIZE>
             col = 0;
         }
         m_warriors.push_back(std::make_unique<Warrior>(sf::Vector2f(x, y), true, Location(row, col)));
-        x += matrix[0][0].getGlobalBounds().width;
+        x += RECT_SIZE;
         if (i == BOARD_SIZE - 1) {
-            y -= matrix[BOARD_SIZE - 1][0].getGlobalBounds().height;
-            x = matrix[BOARD_SIZE - 1][0].getPosition().x;
+            y -= RECT_SIZE;
+            x = BOARD_TOP_LEFT.left + RECT_SIZE/2;
         }
     }
 }
@@ -42,14 +42,13 @@ void UserState::hoverHole(const int row, const int col) {
         warrior->setTextureHole(warrior->getLocation() == Location(row, col));
 }
 
-bool UserState::doTurn(sf::Event::MouseButtonEvent *click) {
+void UserState::doTurn(sf::Event::MouseButtonEvent *click) {
     if (m_playerChose) {
         m_direction = getDirection(sf::Vector2f(click->x, click->y));
         setArrows();
         m_playerChose = false;
         if (m_direction != Non_Direction){ // finish turn
             m_isAnimating = true;
-            return true;
         }
     }
     if (BOARD_FRAME.contains(click->x, click->y)) { // choose warrior
@@ -62,7 +61,6 @@ bool UserState::doTurn(sf::Event::MouseButtonEvent *click) {
             m_playerChose = true;
         }
     }
-    return false;
 }
 
 

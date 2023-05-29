@@ -7,8 +7,8 @@
 Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerState> *p2,Turn_t turn) : m_window(
         WindowManager::instance().getWindow()), m_p1(p1->get()), m_p2(p2->get()), m_turn(turn), m_isMeP1(turn==P1) {
 
-    m_p1->init(m_board.getMatrix());
-    m_p2->init(m_board.getMatrix());
+    m_p1->init();
+    m_p2->init();
     initGame();
 }
 
@@ -18,20 +18,20 @@ void Controller::run() {
             [this](auto move, auto exit) {
                 if (m_turn == P1)
                     handleHover(move);
+                else return true;
                 return false;
             },
             [this](auto click, auto exit) {
                 if (m_turn == P1)
                     m_p1->doTurn(&click);
+                else return true;
                 return false;
             },
             [](auto key, auto exit) { return false; },
             [](auto type, auto exit) { return false; },
             [this](auto exit) {
-                if(m_turn == P2) {
+                if(m_turn == P2)
                     m_p2->doTurn();
-                    m_turn = P1;
-                }
                 handleAnimation();
                 handleEvents();
                 checkCollision();
@@ -67,13 +67,23 @@ void Controller::checkCollision() {
 }
 
 void Controller::handleAnimation() {
-    if (!m_p1->isAnimating()) return;
+    if (!m_p1->isAnimating() && !m_p2->isAnimating()) return;
     static sf::Clock clock;
     auto time = clock.getElapsedTime().asSeconds();
     if (time > 0.025) {
         clock.restart().asSeconds();
-        if (m_p1->move()) {
+        if (m_turn == P1 && m_p1->move() ) {
             m_p1->setAnimating(false);
+            m_turn = P2;
+            return;
+        }
+        if (m_turn == P2 && m_p2->move()) {
+            m_p2->setAnimating(false);
+            m_turn = P1;
+            // clear waiting events
+            sf::Event event;
+            while(m_window->pollEvent(event));
+            return;
         }
     }
 }
@@ -238,5 +248,4 @@ void Controller::initGame() {
                 print();
             }
     );
-    m_p2->setFlagAndHole();
 }

@@ -3,11 +3,11 @@
 #include "Rock.h"
 EnemyState::EnemyState(const std::string& name,const std::string& id) : PlayerState(name,id) {}
 
-void EnemyState::init(const std::array<std::array<sf::RectangleShape, BOARD_SIZE>, BOARD_SIZE> &matrix) {
-    float x = matrix[0][0].getPosition().x;
-    float y = matrix[4][0].getPosition().y - 30;
+void EnemyState::init() {
+    float x = BOARD_TOP_LEFT.left + RECT_SIZE/2;
+    float y = BOARD_TOP_LEFT.top - 30 + RECT_SIZE/2;
 
-    int row = 4,col = 0;
+    int row = 0,col = 0;
     for(int i = 0; i < BOARD_SIZE*2; i++,col++) {
         if(i == BOARD_SIZE){
             row++;
@@ -17,15 +17,17 @@ void EnemyState::init(const std::array<std::array<sf::RectangleShape, BOARD_SIZE
         x+=RECT_SIZE;
         if(i== BOARD_SIZE - 1) {
             y += RECT_SIZE;
-            x = matrix[0][0].getPosition().x;
+            x = BOARD_TOP_LEFT.left + RECT_SIZE/2;
         }
     }
-
 }
 
 
-bool EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
-    return true;
+void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
+    sf::Clock clock;
+    while(clock.getElapsedTime().asSeconds() < 3);
+
+    m_isAnimating = true;
 }
 
 
