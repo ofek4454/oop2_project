@@ -40,10 +40,8 @@ private:
     void initNames();
     void checkCollision();
     void handleHover(sf::Event::MouseMoveEvent &click);
-    void handlemoveAnimation();
     void handleAnimation();
-    void initFlagAndHole();
-    void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames,Sounds_t soundToPlay = NoSound);
+    void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
 };
 
 

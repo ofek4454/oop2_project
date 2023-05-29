@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.20)
 
-project (oop2_project_)
+project (oop2_project)
 
 set (MY_AUTHORS "Ofek_Gorgi-Bark_Kobi")
 
@@ -48,7 +48,7 @@ endif()
 
 if(WIN32)
 
-    add_executable (${CMAKE_PROJECT_NAME} "" main.cpp utils/Location.h utils/Location.cpp src/events/Event.cpp include/events/Event.h src/events/EventLoop.cpp include/events/EventLoop.h src/EnterNameScreen.cpp include/EnterNameScreen.h utils/WindowManager.cpp)
+    add_executable (${CMAKE_PROJECT_NAME} "" main.cpp utils/Location.h utils/Location.cpp src/events/Event.cpp include/events/Event.h src/events/EventLoop.cpp include/events/EventLoop.h src/EnterNameScreen.cpp include/EnterNameScreen.h utils/WindowManager.cpp services/env.h)
 
     target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-fsanitize=address>)
 

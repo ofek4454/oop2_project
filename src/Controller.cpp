@@ -166,9 +166,8 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width, const 
     int currentFrameCounter = 0;
     float arr[frames * 8];
     for (int i = 0; i < frames * 8; i++) {
-        if (i % 8 == 0 && i != 0) {
+        if (i % 8 == 0 && i != 0)
             frame += frameWidth;
-        }
         arr[i] = frame;
     }
 
