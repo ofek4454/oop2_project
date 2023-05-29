@@ -5,8 +5,7 @@
 #include "Controller.h"
 
 Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerState> *p2) : m_window(
-        WindowManager::instance().getWindow()), m_p1(p1->get()),
-                                                                                             m_p2(p2->get()) {
+        WindowManager::instance().getWindow()), m_p1(p1->get()), m_p2(p2->get()) {
     m_p1->init(m_board.getMatrix());
     m_p2->init(m_board.getMatrix());
     initNames();
@@ -78,9 +77,9 @@ void Controller::handleAnimation() {
 
 void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
     if (BOARD_FRAME.contains(event.x, event.y)) {
-        sf::Vector2f rect_pos = m_board.getMatrix()[0][0].getPosition();
-        int row = (event.y - rect_pos.y) / RECT_SIZE;
-        int col = (event.x - rect_pos.x) / RECT_SIZE;
+        sf::FloatRect rect_pos = BOARD_TOP_LEFT;
+        int row = (event.y - rect_pos.top) / RECT_SIZE;
+        int col = (event.x - rect_pos.left) / RECT_SIZE;
         m_p1->handleHover(row, col);
     }
 }
@@ -90,27 +89,28 @@ void Controller::initFlagAndHole() {
     WindowManager::instance().eventHandler(
             [this, &flagChoosed](auto move, auto exit) {
                 if (!BOARD_FRAME.contains(move.x, move.y)) return true;
-                sf::FloatRect rect_size = m_board.getMatrix()[0][0].getGlobalBounds();
-                int row = (move.y - rect_size.top) / rect_size.height;
-                int col = (move.x - rect_size.left) / rect_size.width;
+                sf::FloatRect rect_pos = BOARD_TOP_LEFT;
+                int row = (move.y - rect_pos.top) / rect_pos.height;
+                int col = (move.x - rect_pos.left) / rect_pos.width;
                 if (!flagChoosed) m_p1->hoverFlag(row, col);
                 else m_p1->hoverHole(row, col);
                 return false;
             },
             [this, &flagChoosed](auto click, auto &exit) {
                 if (!BOARD_FRAME.contains(click.x, click.y)) return true;
-                sf::FloatRect rect_size = m_board.getMatrix()[0][0].getGlobalBounds();
-                int row = (click.y - rect_size.top) / rect_size.height;
-                int col = (click.x - rect_size.left) / rect_size.width;
+                sf::FloatRect rect_pos = BOARD_TOP_LEFT;
+                int row = (click.y - rect_pos.top) / rect_pos.height;
+                int col = (click.x - rect_pos.left) / rect_pos.width;
                 if (row < BOARD_SIZE - 2) return true;
-                if (!flagChoosed) {
-                    m_p1->setAsFlag(row, col);
-                    flagChoosed = true;
-                } else {
-                    m_p1->setAsHole(row, col);
-                    exit = true;
-                    return false;
+                if (!flagChoosed){
+                    if (m_p1->setAsFlag(row, col))
+                        flagChoosed = true;
                 }
+                else{
+                    if (m_p1->setAsHole(row, col))
+                        exit = true;
+                }
+                return false;
             },
             [](auto key, auto exit) { return false; },
             [](auto type, auto &exit) { return false; },
@@ -195,7 +195,7 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width, const 
     sf::Sprite fightSprite(*fightTexture);
 
     auto boardBounds = BOARD_FRAME;
-    fightSprite.setPosition(boardBounds.left + boardBounds.width / 2, boardBounds.top + boardBounds.height / 2);
+    fightSprite.setPosition(boardBounds.left + boardBounds.width / 2 - RECT_SIZE/2, boardBounds.top + boardBounds.height / 2- RECT_SIZE/2);
     fightSprite.setOrigin(frameWidth / 2, height);
     fightSprite.setScale(2.2, 2.2);
     while (counter < frames * 8) {

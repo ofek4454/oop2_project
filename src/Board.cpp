@@ -3,8 +3,8 @@
 
 Board::Board() {
 
-    float x = STARTING_X;
-    float y = STARTING_Y;
+    float x = BOARD_FRAME.left;
+    float y = BOARD_FRAME.top;
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             auto rect = sf::RectangleShape();
@@ -16,7 +16,7 @@ Board::Board() {
             x += RECT_SIZE;
         }
         y += RECT_SIZE;
-        x = (WINDOW_WIDTH * 0.775 - BOARD_SIZE * RECT_SIZE) / 2 + RECT_SIZE / 2;
+        x = BOARD_FRAME.left;
     }
 
     for (auto &spr: m_arrows) {

@@ -28,7 +28,7 @@ public:
 
     void setOwner(Warrior *warrior);
     void lose();
-    Weapons_t chooseWeapon();
+    void chooseWeapon();
     void initChooseBox();
 
 

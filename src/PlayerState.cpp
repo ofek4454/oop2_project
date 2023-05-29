@@ -79,14 +79,14 @@ std::unique_ptr<Warrior> *PlayerState::getWarrior(const Location location) {
     return NULL;
 }
 
-void PlayerState::setAsFlag(const int row, const int col) {
+bool PlayerState::setAsFlag(const int row, const int col) {
     auto warrior = getWarrior(Location(row,col));
-    warrior->get()->setAsFlag();
+    return warrior->get()->setAsFlag();
 }
 
-void PlayerState::setAsHole(const int row, const int col) {
+bool PlayerState::setAsHole(const int row, const int col) {
     auto warrior = getWarrior(Location(row,col));
-    warrior->get()->setAsHole();
+    return warrior->get()->setAsHole();
 }
 
 void PlayerState::checkDeletion() {

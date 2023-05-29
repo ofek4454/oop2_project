@@ -20,7 +20,7 @@ void Weapon::lose() {
     m_warrior->lose();
 }
 
-Weapons_t Weapon::chooseWeapon() {
+void Weapon::chooseWeapon() {
     auto window = WindowManager::instance().getWindow();
 
     sf::Texture bg;
@@ -64,7 +64,7 @@ Weapons_t Weapon::chooseWeapon() {
 
 void Weapon::initChooseBox() {
     m_ChooseBoxRect.setSize(sf::Vector2f(RECT_SIZE*(BOARD_SIZE-2), RECT_SIZE*(BOARD_SIZE-2)));
-    sf::Vector2f boxPos((WINDOW_WIDTH * 0.775 - BOARD_SIZE * RECT_SIZE) / 2 + RECT_SIZE, WINDOW_HEIGHT / 2 - RECT_SIZE * (BOARD_SIZE / 2) + RECT_SIZE);
+    sf::Vector2f boxPos(BOARD_TOP_LEFT.left + RECT_SIZE, BOARD_TOP_LEFT.top + RECT_SIZE);
     m_ChooseBoxRect.setPosition(boxPos);
     m_ChooseBoxRect.setFillColor(sf::Color(sf::Color(181, 193, 105, 100)));
     m_ChooseBoxRect.setOutlineColor(sf::Color::White);

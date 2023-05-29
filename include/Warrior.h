@@ -24,8 +24,8 @@ public:
     void setIntRect(int counter);
     void setTextureFlag(bool isHighlighted);
     void setTextureHole(bool isHighlighted);
-    void setAsFlag();
-    void setAsHole();
+    bool setAsFlag();
+    bool setAsHole();
     bool canMove() const {return m_canMove;}
     void setWeapon(Weapons_t weapon);
     bool isNeedToBeDeleted() {return m_needToDelete;}

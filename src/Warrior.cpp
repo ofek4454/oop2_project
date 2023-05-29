@@ -103,22 +103,24 @@ void Warrior::setTextureHole(bool isHighlighted) {
     }
 }
 
-void Warrior::setAsFlag() {
-    if(!m_canMove) return;
+bool Warrior::setAsFlag() {
+    if(!m_canMove) return false;
     std::unique_ptr<Weapon> flag = std::make_unique<Flag>();
     m_weapon = std::move(flag);
     m_sprite.setTextureRect(sf::IntRect(0, IMAGE_HEIGHT*4, IMAGE_WIDTH, IMAGE_HEIGHT));
     m_initialIntRect = m_sprite.getTextureRect();
     m_canMove = false;
+    return true;
 }
 
-void Warrior::setAsHole() {
-    if(!m_canMove) return;
+bool Warrior::setAsHole() {
+    if(!m_canMove) return false;
     std::unique_ptr<Weapon> hole = std::make_unique<Hole>();
     m_weapon = std::move(hole);
     m_sprite.setTextureRect(sf::IntRect(IMAGE_WIDTH*2, IMAGE_HEIGHT*4, IMAGE_WIDTH, IMAGE_HEIGHT));
     m_initialIntRect = m_sprite.getTextureRect();
     m_canMove = false;
+    return true;
 }
 
 void Warrior::setWeapon(Weapons_t weapon) {

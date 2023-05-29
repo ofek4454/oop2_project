@@ -31,8 +31,8 @@ public:
 
 
     void checkDeletion();
-    void setAsFlag(const int row, const int col);
-    void setAsHole(const int row, const int col);
+    bool setAsFlag(const int row, const int col);
+    bool setAsHole(const int row, const int col);
 
 protected:
     std::vector<std::unique_ptr<Warrior>> m_warriors;

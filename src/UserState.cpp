@@ -47,18 +47,16 @@ void UserState::doTurn(sf::Event::MouseButtonEvent &click) {
         m_direction = getDirection(sf::Vector2f(click.x, click.y));
         setArrows();
         m_playerChose = false;
-        if (m_direction != Non_Direction) {
+        if (m_direction != Non_Direction)
             m_isAnimating = true;
-        }
     }
     if (BOARD_FRAME.contains(click.x, click.y)) {
-        int row = (click.y - BOARD_START.top) / BOARD_START.height;
-        int col = (click.x - BOARD_START.left) / BOARD_START.width;
+        int row = (click.y - BOARD_TOP_LEFT.top) / RECT_SIZE;
+        int col = (click.x - BOARD_TOP_LEFT.left) / RECT_SIZE;
         auto bool_arr = checkAvailableLocations(Location(row, col));
         if (bool_arr) {
             m_selectedPlayerLocation = Location(row, col);
-            setArrows(bool_arr, m_selectedPlayerLocation,
-                      true);
+            setArrows(bool_arr, m_selectedPlayerLocation, true);
             m_playerChose = true;
         }
     }
@@ -74,28 +72,28 @@ void UserState::setArrows(bool *directions, Location location, bool set) {
     }
     if (directions[Up]) {
         m_arrows[Up].setPosition(
-                sf::Vector2f(BOARD_START.left + location.col * RECT_SIZE, BOARD_START.top + location.row * RECT_SIZE));
+                sf::Vector2f(BOARD_TOP_LEFT.left + location.col * RECT_SIZE, BOARD_TOP_LEFT.top + location.row * RECT_SIZE));
         m_arrows[Up].setRotation(-90);
         m_arrows[Up].setColor(sf::Color(255, 255, 255, 70));
     }
     if (directions[Down]) {
         m_arrows[Down].setPosition(
-                sf::Vector2f(BOARD_START.left + ((location.col + 1) * RECT_SIZE),
-                             BOARD_START.top + (location.row + 1) * RECT_SIZE));
+                sf::Vector2f(BOARD_TOP_LEFT.left + ((location.col + 1) * RECT_SIZE),
+                             BOARD_TOP_LEFT.top + (location.row + 1) * RECT_SIZE));
         m_arrows[Down].setRotation(90);
         m_arrows[Down].setColor(sf::Color(255, 255, 255, 70));
     }
     if (directions[Right]) {
         m_arrows[Right].setPosition(
-                sf::Vector2f(sf::Vector2f(BOARD_START.left + (location.col + 1) * RECT_SIZE,
-                                          BOARD_START.top + location.row * RECT_SIZE)));
+                sf::Vector2f(sf::Vector2f(BOARD_TOP_LEFT.left + (location.col + 1) * RECT_SIZE,
+                                          BOARD_TOP_LEFT.top + location.row * RECT_SIZE)));
         m_arrows[Right].setRotation(0);
         m_arrows[Right].setColor(sf::Color(255, 255, 255, 70));
     }
     if (directions[Left]) {
         m_arrows[Left].setPosition(
-                sf::Vector2f(BOARD_START.left + location.col * RECT_SIZE,
-                             BOARD_START.top + (location.row + 1) * RECT_SIZE));
+                sf::Vector2f(BOARD_TOP_LEFT.left + location.col * RECT_SIZE,
+                             BOARD_TOP_LEFT.top + (location.row + 1) * RECT_SIZE));
         m_arrows[Left].setRotation(180);
         m_arrows[Left].setColor(sf::Color(255, 255, 255, 70));
     }
