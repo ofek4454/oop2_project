@@ -1,6 +1,8 @@
 #pragma once
 
+
 #include "vector"
+#include "array"
 #include "memory"
 #include "Consts.h"
 #include "WindowManager.h"

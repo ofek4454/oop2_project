@@ -2,6 +2,7 @@
 
 #include "SFML/Graphics.hpp"
 #include "Consts.h"
+#include <functional>
 
 class WindowManager {
 public:

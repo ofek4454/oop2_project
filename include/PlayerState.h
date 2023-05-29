@@ -6,6 +6,7 @@
 #include "WindowManager.h"
 #include "Weapon.h"
 #include "memory"
+#include "array"
 
 class PlayerState {
 public:
