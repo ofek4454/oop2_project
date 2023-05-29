@@ -32,18 +32,17 @@ void EnterNameScreen::handleEvents() {
             [](auto click, auto exit) {return false;},
             [this](auto key, auto exit) {
                 if(key.code == sf::Keyboard::Enter){
-                    std::unique_ptr<PlayerState> p1;
-                    std::unique_ptr<PlayerState> p2;
+                    std::unique_ptr<PlayerState> p1 = std::make_unique<UserState>(m_name,"uid");
+                    std::unique_ptr<PlayerState> p2 = std::make_unique<EnemyState>("enemy", "uid");
+                    Turn_t turn;
                     if(m_mode == Create){
                         // TODO Create room
-                        p1 = std::make_unique<UserState>(m_name,"uid");
-                        p2 = std::make_unique<EnemyState>("enemy", "uid");
+                        turn = P1;
                     } else {
                         // TODO Join room
-                        p2 = std::make_unique<UserState>(m_name,"uid");
-                        p1 = std::make_unique<EnemyState>("enemy", "uid");
+                        turn = P2;
                     }
-                    auto controller = Controller(&p1,&p2);
+                    auto controller = Controller(&p1,&p2, turn);
                     controller.run();
                 }
                 if(key.code == sf::Keyboard::BackSpace){

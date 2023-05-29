@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.20)
 
-project (oop2_project)
+project (oop2_project_)
 
 set (MY_AUTHORS "Ofek_Gorgi-Bark_Kobi")
 

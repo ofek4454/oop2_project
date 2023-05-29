@@ -42,17 +42,19 @@ void UserState::hoverHole(const int row, const int col) {
         warrior->setTextureHole(warrior->getLocation() == Location(row, col));
 }
 
-void UserState::doTurn(sf::Event::MouseButtonEvent &click) {
+bool UserState::doTurn(sf::Event::MouseButtonEvent *click) {
     if (m_playerChose) {
-        m_direction = getDirection(sf::Vector2f(click.x, click.y));
+        m_direction = getDirection(sf::Vector2f(click->x, click->y));
         setArrows();
         m_playerChose = false;
-        if (m_direction != Non_Direction)
+        if (m_direction != Non_Direction){ // finish turn
             m_isAnimating = true;
+            return true;
+        }
     }
-    if (BOARD_FRAME.contains(click.x, click.y)) {
-        int row = (click.y - BOARD_TOP_LEFT.top) / RECT_SIZE;
-        int col = (click.x - BOARD_TOP_LEFT.left) / RECT_SIZE;
+    if (BOARD_FRAME.contains(click->x, click->y)) { // choose warrior
+        int row = (click->y - BOARD_TOP_LEFT.top) / RECT_SIZE;
+        int col = (click->x - BOARD_TOP_LEFT.left) / RECT_SIZE;
         auto bool_arr = checkAvailableLocations(Location(row, col));
         if (bool_arr) {
             m_selectedPlayerLocation = Location(row, col);
@@ -60,7 +62,7 @@ void UserState::doTurn(sf::Event::MouseButtonEvent &click) {
             m_playerChose = true;
         }
     }
-
+    return false;
 }
 
 

@@ -14,7 +14,8 @@ public:
 
     virtual void hoverHole(const int row, const int col) {};
 
-    virtual void doTurn(sf::Event::MouseButtonEvent &click);
+    virtual bool doTurn(sf::Event::MouseButtonEvent *click);
+
 
     virtual void print() {
         auto window = WindowManager::instance().getWindow();
@@ -22,7 +23,6 @@ public:
             warrior->draw();
     }
 
-    void setFlagAndHole();
 
 private:
 };

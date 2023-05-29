@@ -9,15 +9,16 @@
 
 class PlayerState {
 public:
-    friend class PlayerModel;
     PlayerState(const std::string& name,const std::string& id);
     virtual ~PlayerState() = default;
     virtual void init(const std::array<std::array<sf::RectangleShape, BOARD_SIZE>, BOARD_SIZE> &matrix) = 0;
     virtual void hoverFlag(const int row, const int col) = 0;
     virtual void hoverHole(const int row, const int col) = 0;
-    virtual void doTurn(sf::Event::MouseButtonEvent &click) = 0;
+    virtual bool doTurn(sf::Event::MouseButtonEvent *click = NULL) = 0;
     virtual void print() = 0;
 
+    bool setAsFlag(const int row, const int col);
+    bool setAsHole(const int row, const int col);
 
     bool* checkAvailableLocations(Location location);
     bool move();
@@ -31,8 +32,7 @@ public:
 
 
     void checkDeletion();
-    bool setAsFlag(const int row, const int col);
-    bool setAsHole(const int row, const int col);
+
 
 protected:
     std::vector<std::unique_ptr<Warrior>> m_warriors;

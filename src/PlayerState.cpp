@@ -79,15 +79,6 @@ std::unique_ptr<Warrior> *PlayerState::getWarrior(const Location location) {
     return NULL;
 }
 
-bool PlayerState::setAsFlag(const int row, const int col) {
-    auto warrior = getWarrior(Location(row,col));
-    return warrior->get()->setAsFlag();
-}
-
-bool PlayerState::setAsHole(const int row, const int col) {
-    auto warrior = getWarrior(Location(row,col));
-    return warrior->get()->setAsHole();
-}
 
 void PlayerState::checkDeletion() {
     std::erase_if(m_warriors,[](auto& warrior) {return warrior->isNeedToBeDeleted();});
@@ -98,3 +89,18 @@ const PlayerModel &PlayerState::getPlayerModel() const {
 }
 
 
+bool PlayerState::setAsFlag(const int row, const int col) {
+    auto warrior = getWarrior(Location(row,col));
+    if(!warrior)
+        return false;
+
+    return warrior->get()->setAsFlag();
+}
+
+bool PlayerState::setAsHole(const int row, const int col) {
+    auto warrior = getWarrior(Location(row,col));
+    if(!warrior)
+        return false;
+
+    return warrior->get()->setAsHole();
+}
