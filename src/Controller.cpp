@@ -4,8 +4,8 @@
 
 #include "Controller.h"
 
-Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerState> *p2,Turn_t turn) : m_window(
-        WindowManager::instance().getWindow()), m_p1(p1->get()), m_p2(p2->get()), m_turn(turn), m_isMeP1(turn==P1) {
+Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerState> *p2, Turn_t turn) : m_window(
+        WindowManager::instance().getWindow()), m_p1(p1->get()), m_p2(p2->get()), m_turn(turn), m_isMeP1(turn == P1) {
 
     m_p1->init();
     m_p2->init();
@@ -22,19 +22,22 @@ void Controller::run() {
                 return false;
             },
             [this](auto click, auto exit) {
-                if (m_turn == P1)
+                if (m_turn == P1) {
                     m_p1->doTurn(&click);
-                else return true;
+                } else return true;
                 return false;
             },
             [](auto key, auto exit) { return false; },
             [](auto type, auto exit) { return false; },
             [this](auto exit) {
-                if(m_turn == P2)
+                if (m_turn == P2 && !m_p2->isAnimating()) {
                     m_p2->doTurn();
+                }
                 handleAnimation();
                 handleEvents();
                 checkCollision();
+                if (m_switchingTurn)
+                    changeTurnAnimation();
                 print();
             }
     );
@@ -48,6 +51,7 @@ void Controller::print() {
     m_window->draw(m_p2Name);
     m_p1->print();
     m_p2->print();
+    m_window->draw(m_referee);
 
     m_window->display();
 }
@@ -72,17 +76,17 @@ void Controller::handleAnimation() {
     auto time = clock.getElapsedTime().asSeconds();
     if (time > 0.025) {
         clock.restart().asSeconds();
-        if (m_turn == P1 && m_p1->move() ) {
+        if (m_turn == P1 && m_p1->move()) {
             m_p1->setAnimating(false);
-            m_turn = P2;
+            m_switchingTurn = true;
             return;
         }
         if (m_turn == P2 && m_p2->move()) {
             m_p2->setAnimating(false);
-            m_turn = P1;
+            m_switchingTurn = true;
             // clear waiting events
             sf::Event event;
-            while(m_window->pollEvent(event));
+            while (m_window->pollEvent(event));
             return;
         }
     }
@@ -108,24 +112,24 @@ void Controller::handleEvents() {
         switch (event.getEventType()) {
             case FightRP:
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BluePR : RedPR), 980,
-                             84, 7);
+                             84, 7, winP);
                 break;
             case FightRS:
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueRS : RedRS), 994,
-                             93, 7);
+                             93, 7, winR);
                 break;
             case FightRR:
-                animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3);
+                animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
                 break;
             case FightPS:
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP), 900,
-                             96, 6);
+                             96, 6, winS);
                 break;
             case FightPP:
-                animateFight(ResourcesManager::instance().getTexture(PaperPaper), 453, 63, 3);
+                animateFight(ResourcesManager::instance().getTexture(PaperPaper), 453, 63, 3, tieP);
                 break;
             case FightSS:
-                animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3);
+                animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3, tieS);
                 break;
             case UndefinedChoose: {
                 animateFight(ResourcesManager::instance().getTexture(BlueSP), 300,
@@ -155,7 +159,8 @@ void Controller::handleEvents() {
     }
 }
 
-void Controller::animateFight(sf::Texture *fightTexture, const int width, const int height, const int frames) {
+void Controller::animateFight(sf::Texture *fightTexture, const int width, const int height, const int frames,
+                              Sounds_t soundToPlay) {
     float frameWidth = width / frames;
     float frame = 0;
     int currentFrameCounter = 0;
@@ -190,7 +195,11 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width, const 
         if (fightAnimationClock.getElapsedTime().asSeconds() < 0.03 && frames < 5) continue;
         fightAnimationClock.restart();
         currentFrameCounter++;
+        if (currentFrameCounter == frames * 4 && soundToPlay != NoSound) {
+            ResourcesManager::instance().playSound(soundToPlay);
+        }
     }
+
     m_window->clear();
     m_window->draw(background);
     m_window->display();
@@ -215,6 +224,18 @@ void Controller::initNames() {
 }
 
 void Controller::initGame() {
+    auto frameRectSize = sf::Vector2f(WINDOW_WIDTH - WINDOW_WIDTH * 0.775,
+                                      WINDOW_HEIGHT * 0.685 - WINDOW_HEIGHT * 0.355);
+    m_referee.setTexture(*ResourcesManager::instance().getTexture(Referee));
+    m_referee.setScale((frameRectSize.x / 241.5) * 0.6, (frameRectSize.y / 164) * 0.6);
+    m_referee.setTextureRect(sf::IntRect(0, 0, 249, 164));
+    m_referee.setPosition(
+            sf::Vector2f(WINDOW_WIDTH * 0.775 + ((WINDOW_WIDTH - WINDOW_WIDTH * 0.775) / 2) -
+                         (m_referee.getGlobalBounds().width / 2),
+                         WINDOW_HEIGHT * 0.355 + ((WINDOW_WIDTH - WINDOW_WIDTH * 0.775,
+                                 WINDOW_HEIGHT * 0.685 - WINDOW_HEIGHT * 0.355) / 2) -
+                         (m_referee.getGlobalBounds().height / 2)));
+    m_refereeRect += (m_turn == P1) ? 0 : 724.5;
     bool flagChoosed = false;
     initNames();
     WindowManager::instance().eventHandler(
@@ -248,4 +269,26 @@ void Controller::initGame() {
                 print();
             }
     );
+
+
+}
+
+void Controller::changeTurnAnimation() {
+    static sf::Clock animationClock;
+    auto time = animationClock.getElapsedTime().asSeconds();
+    if (time > 0.1) {
+        animationClock.restart().asSeconds();
+        m_refereeRect += (m_turn == P1) ? 241.5 : -241.5;
+        if (m_refereeRect == 724.5 && m_turn == P1) {
+            m_switchingTurn = false;
+            ResourcesManager::instance().playSound(redTurn);
+            m_turn = P2;
+        }
+        if (m_refereeRect == 0 && m_turn == P2) {
+            m_switchingTurn = false;
+            ResourcesManager::instance().playSound(blueTurn);
+            m_turn = P1;
+        }
+        m_referee.setTextureRect(sf::IntRect(m_refereeRect, 0, 241.5, 164));
+    }
 }

@@ -25,11 +25,15 @@ private:
     std::unique_ptr<PlayerState> m_p1;
     std::unique_ptr<PlayerState> m_p2;
     Turn_t m_turn;
+    sf::Sprite m_referee;
+    float m_refereeRect;
+    bool m_switchingTurn = false;
 
     const bool m_isMeP1;
 
 
     // private functions:
+    void changeTurnAnimation();
     void initGame();
     void print();
     void handleEvents();
@@ -39,7 +43,7 @@ private:
     void handlemoveAnimation();
     void handleAnimation();
     void initFlagAndHole();
-    void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames);
+    void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames,Sounds_t soundToPlay = NoSound);
 };
 
 

@@ -16,7 +16,7 @@ Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location)
     m_sprite.setTextureRect(isMine ? sf::IntRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT) : sf::IntRect(0, IMAGE_HEIGHT * 3, IMAGE_WIDTH, IMAGE_HEIGHT));
     m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2, m_sprite.getLocalBounds().height / 2);
     //TODO set relative size
-    m_sprite.setScale(0.6,0.6);
+    m_sprite.setScale(RECT_SIZE / IMAGE_WIDTH,RECT_SIZE / IMAGE_WIDTH);
     m_initialIntRect = m_sprite.getTextureRect();
     m_shadow.setColor(sf::Color(0, 0, 0, 30)); // Set shadow color and transparency
     m_shadow.setScale(0.7,0.35);
@@ -46,9 +46,9 @@ void Warrior::setSpriteLocation(const sf::Vector2f &offset,const sf::Vector2f &s
 
 void Warrior::setHighlighted(bool isHighlighted) {
     if (isHighlighted) {
-        m_sprite.setScale(0.75, 0.75);
+//        m_sprite.setScale(0.75, 0.75);
     } else {
-        m_sprite.setScale(0.6, 0.6);
+//        m_sprite.setScale(0.6, 0.6);
     }
 }
 

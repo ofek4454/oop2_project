@@ -8,6 +8,8 @@ const int NUM_OF_TEXTURES = 16;
 
 // Board Size
 
+const int NUMBER_OF_SOUNDS = 10;
+
 const int MENU_BUTTONS = 5;
 
 const int IMAGE_COUNT = 25;
@@ -51,6 +53,22 @@ enum Textures_t{
     RedRS,
     RedSP,
     Background,
+    Referee,
+};
+
+
+enum Sounds_t{
+    tieP,
+    tieR,
+    tieS,
+    winP,
+    winR,
+    winS,
+    blueJump,
+    blueTurn,
+    redJump,
+    redTurn,
+    NoSound
 };
 
 enum Direction_t {

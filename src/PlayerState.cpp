@@ -67,6 +67,9 @@ bool PlayerState::move() {
         m_selectedPlayerLocation = warrior->get()->getLocation();
         return true;
     }
+    if(imageCounter == IMAGE_COUNT / 2){
+        ResourcesManager::instance().playSound(blueJump);
+    }
     if(imageCounter == 12){
         shadowOffsetx = 3.7;
         shadowOffsety = -12;

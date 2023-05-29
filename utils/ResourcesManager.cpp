@@ -34,11 +34,18 @@ ResourcesManager::ResourcesManager() {
     m_texture[RedRS].setSmooth(true);
     m_texture[RedSP].loadFromFile("redSP.png");
     m_texture[RedSP].setSmooth(true);
+    m_texture[Referee].loadFromFile("indicator.png");
+    m_texture[Referee].setSmooth(true);
     m_texture[Background].loadFromFile("background.png");
 
     m_background.setSize(sf::Vector2f (WINDOW_WIDTH, WINDOW_HEIGHT));
     m_background.setFillColor(GREEN_COLOR);
     m_font.loadFromFile("AlfaSlabOne-Regular.ttf");
+
+    for (int i = 0; i < NUMBER_OF_SOUNDS; i++) {
+        m_sounds_buffs[i].loadFromFile(m_sound_file_names[i]);
+        m_sounds[i].setBuffer(m_sounds_buffs[i]);
+    }
 
 }
 
@@ -52,4 +59,11 @@ sf::RectangleShape *ResourcesManager::getBackground() {
 
 sf::Font *ResourcesManager::getFont() {
     return &m_font;
+}
+
+void ResourcesManager::playSound(const int index) {
+    m_sounds[index].setBuffer(m_sounds_buffs[index]);
+    m_sounds[index].setLoop(false);
+    m_sounds[index].setVolume(100);
+    m_sounds[index].play();
 }
