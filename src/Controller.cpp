@@ -31,8 +31,8 @@ void Controller::run() {
             [this](auto exit) {
 //                m_p2->doTurn();
                 handleAnimation();
-                checkCollision();
                 handleEvents();
+                checkCollision();
                 print();
             }
     );
@@ -147,9 +147,12 @@ void Controller::handleEvents() {
                 animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3);
                 break;
             case UndefinedChoose:{
-                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP), 300,
+                animateFight(ResourcesManager::instance().getTexture(BlueSP), 300,
                              96, 2);
-                m_p1->getWarrior(m_p1->getWarriorLocation())->get()->getWeapon()->get()->chooseWeapon();
+                auto warrior1 = m_p1->getWarrior(m_p1->getWarriorLocation());
+                if(warrior1 != NULL){
+                    warrior1->get()->getWeapon()->get()->chooseWeapon();
+                }
                 break;
             }
             case UndefinedUndefined:{
