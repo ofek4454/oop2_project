@@ -28,11 +28,17 @@ public:
 
     void setOwner(Warrior *warrior);
     void lose();
+    Weapons_t chooseWeapon();
+    void initChooseBox();
+
 
 protected:
     sf::Sprite m_weapon_sprite;
     Warrior *m_warrior;
-
+    sf::Sprite m_weapons_textures[3];
+private:
+    sf::RectangleShape m_ChooseBoxRect;
+    sf::Text m_ChooseWeaponText;
 };
 
 

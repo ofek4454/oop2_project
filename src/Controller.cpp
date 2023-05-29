@@ -9,8 +9,8 @@ Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerS
                                                                                              m_p2(p2->get()) {
     m_p1->init(m_board.getMatrix());
     m_p2->init(m_board.getMatrix());
-//    initNames();
-//    initFlagAndHole();
+    initNames();
+    initFlagAndHole();
 }
 
 void Controller::run() {
@@ -30,9 +30,9 @@ void Controller::run() {
             [](auto type, auto exit) { return false; },
             [this](auto exit) {
 //                m_p2->doTurn();
-                handleEvents();
                 handleAnimation();
                 checkCollision();
+                handleEvents();
                 print();
             }
     );
@@ -146,6 +146,25 @@ void Controller::handleEvents() {
             case FightSS:
                 animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3);
                 break;
+            case UndefinedChoose:{
+                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP), 300,
+                             96, 2);
+                m_p1->getWarrior(m_p1->getWarriorLocation())->get()->getWeapon()->get()->chooseWeapon();
+                break;
+            }
+            case UndefinedUndefined:{
+                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP), 300,
+                             96, 2);
+                auto warrior1 = m_p1->getWarrior(m_p1->getWarriorLocation());
+                if(warrior1 != NULL){
+                    warrior1->get()->getWeapon()->get()->chooseWeapon();
+                }
+                auto warrior2 = m_p2->getWarrior(m_p2->getWarriorLocation());
+                if(warrior2 != NULL){
+                    warrior2->get()->getWeapon()->get()->chooseWeapon();
+                }
+                break;
+            }
             default:
                 break;
         }
@@ -168,20 +187,21 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width, const 
     sf::Texture bg;
     bg.create(WINDOW_WIDTH, WINDOW_HEIGHT);
     bg.update(*m_window);
+
     sf::Sprite background(bg);
     sf::Sprite fightSprite(*fightTexture);
 
     auto boardBounds = BOARD_FRAME;
     fightSprite.setPosition(boardBounds.left + boardBounds.width / 2, boardBounds.top + boardBounds.height / 2);
     fightSprite.setOrigin(frameWidth / 2, height);
-    fightSprite.setScale(2, 2);
+    fightSprite.setScale(2.2, 2.2);
     while (counter < frames * 8) {
         fightSprite.setTextureRect(sf::IntRect(arr[counter], 0, frameWidth, height));
         m_window->clear();
         m_window->draw(background);
         m_window->draw(fightSprite);
         m_window->display();
-        if (fightAnimationClock.getElapsedTime().asSeconds() < 0.015 && frames > 5) continue;
+        if (fightAnimationClock.getElapsedTime().asSeconds() < 0.019 && frames > 5) continue;
         if (fightAnimationClock.getElapsedTime().asSeconds() < 0.03 && frames < 5) continue;
         fightAnimationClock.restart();
         counter++;

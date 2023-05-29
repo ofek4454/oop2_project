@@ -62,6 +62,7 @@ bool PlayerState::move() {
         shadowOffsety = 4;
         imageCounter = 0;
         warrior->get()->setLocation(m_direction);
+        m_selectedPlayerLocation = warrior->get()->getLocation();
         return true;
     }
     if(imageCounter == 12){

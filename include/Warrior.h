@@ -34,6 +34,7 @@ public:
 
 private:
     Location m_location;
+    Location m_prevLocation;
     std::unique_ptr<Weapon> m_weapon;
     sf::Sprite m_sprite;
     sf::Sprite m_shadow;

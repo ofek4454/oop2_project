@@ -27,12 +27,12 @@ public:
     const PlayerModel &getPlayerModel() const;
     bool isAnimating() const {return m_isAnimating;}
     void setAnimating(bool animating) {m_isAnimating = animating;}
+    Location getWarriorLocation() const {return m_selectedPlayerLocation;}
 
 
     void checkDeletion();
     void setAsFlag(const int row, const int col);
     void setAsHole(const int row, const int col);
-//    void updateFlagAnimation(Location location);
 
 protected:
     std::vector<std::unique_ptr<Warrior>> m_warriors;
