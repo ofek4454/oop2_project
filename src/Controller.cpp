@@ -102,7 +102,6 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
     }
 }
 
-
 void Controller::handleEvents() {
     while (EventLoop::instance().hasEvent()) {
         auto event = EventLoop::instance().popEvent();
@@ -144,6 +143,7 @@ void Controller::handleEvents() {
                 if (warrior1 != NULL) {
                     warrior1->get()->getWeapon()->get()->chooseWeapon();
                 }
+                sf::sleep(sf::seconds(1));
                 auto warrior2 = m_p2->getWarrior(m_p2->getWarriorLocation());
                 if (warrior2 != NULL) {
                     warrior2->get()->getWeapon()->get()->chooseWeapon();
@@ -153,11 +153,15 @@ void Controller::handleEvents() {
             default:
                 break;
         }
+        ResourcesManager::instance().playSound(event.getWinner() == P1Won ? WinFight : event.getWinner() == P2Won ? LoseFight : NUMBER_OF_SOUNDS - 1);
+        sf::sleep(sf::seconds(0.4));
     }
+
 }
 
 void Controller::animateFight(sf::Texture *fightTexture, const int width, const int height, const int frames,
                               Sounds_t soundToPlay) {
+    ResourcesManager::instance().playSound(JumpFight);
     float frameWidth = width / frames;
     float frame = 0;
     int currentFrameCounter = 0;

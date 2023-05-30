@@ -39,7 +39,7 @@ protected:
     std::vector<std::unique_ptr<Warrior>> m_warriors;
     bool m_playerChose = false;
     Direction_t m_direction;
-    bool m_isAnimating = false;
+    bool m_isAnimating;
     Location m_selectedPlayerLocation;
 private:
     float m_pixelOffset = RECT_SIZE / IMAGE_COUNT;

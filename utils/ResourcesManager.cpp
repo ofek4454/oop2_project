@@ -62,6 +62,9 @@ sf::Font *ResourcesManager::getFont() {
 }
 
 void ResourcesManager::playSound(const int index) {
+    if(index == NUMBER_OF_SOUNDS - 1){
+        return;
+    }
     m_sounds[index].setBuffer(m_sounds_buffs[index]);
     m_sounds[index].setLoop(false);
     m_sounds[index].setVolume(100);

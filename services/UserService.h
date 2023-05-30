@@ -5,6 +5,7 @@
 #include "iostream"
 #include "curl/curl.h"
 #include "PlayerModel.h"
+#include "Consts.h"
 
 using json = nlohmann::json;
 
