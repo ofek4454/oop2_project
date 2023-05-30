@@ -4,6 +4,8 @@
 #include "Consts.h"
 #include "WindowManager.h"
 #include "Controller.h"
+#include "SettingsScreen.h"
+#include "SoundFlip.h"
 
 class Menu{
 public:

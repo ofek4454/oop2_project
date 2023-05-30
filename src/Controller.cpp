@@ -3,6 +3,8 @@
 //
 
 #include "Controller.h"
+#include "SoundFlip.h"
+
 
 Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerState> *p2, Turn_t turn) : m_window(
         WindowManager::instance().getWindow()), m_p1(p1->get()), m_p2(p2->get()), m_turn(turn), m_isMeP1(turn == P1) {
@@ -23,6 +25,7 @@ void Controller::run() {
                 return false;
             },
             [this](auto click, auto exit) {
+                SoundFlip::instance().checkIfContains(click);
                 if (m_turn == P1) {
                     m_p1->doTurn(&click);
                 } else return true;
@@ -53,6 +56,8 @@ void Controller::print() {
     m_p1->print();
     m_p2->print();
     m_window->draw(m_referee);
+    SoundFlip::instance().draw(*m_window);
+
 
     m_window->display();
 }

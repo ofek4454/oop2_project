@@ -11,6 +11,7 @@ ResourcesManager &ResourcesManager::instance() {
 
 
 ResourcesManager::ResourcesManager() {
+    m_backgroundMusic.openFromFile("BackGroundMusic.wav");
     m_texture[Warriors].loadFromFile("warriors2.png");
     m_texture[Warriors].setSmooth(true);
     m_texture[Rps].loadFromFile("weapons.png");
@@ -42,11 +43,13 @@ ResourcesManager::ResourcesManager() {
     m_background.setFillColor(GREEN_COLOR);
     m_font.loadFromFile("AlfaSlabOne-Regular.ttf");
 
-    for (int i = 0; i < NUMBER_OF_SOUNDS; i++) {
+    for (int i = 0; i < NUMBER_OF_SOUNDS - 1; i++) {
         m_sounds_buffs[i].loadFromFile(m_sound_file_names[i]);
         m_sounds[i].setBuffer(m_sounds_buffs[i]);
     }
-
+    for(int i = 0; i < 2;i++){
+        m_soundButton[i].loadFromFile(m_soundstring[i]);
+    }
 }
 
 sf::Texture *ResourcesManager::getTexture(Textures_t texture) {
@@ -65,8 +68,49 @@ void ResourcesManager::playSound(const int index) {
     if(index == NUMBER_OF_SOUNDS - 1){
         return;
     }
+    if(!SettingsManager::instance().getFXSwitch())
+        return;
     m_sounds[index].setBuffer(m_sounds_buffs[index]);
     m_sounds[index].setLoop(false);
-    m_sounds[index].setVolume(100);
+    m_sounds[index].setVolume(SettingsManager::instance().getVolume());
     m_sounds[index].play();
+}
+
+void ResourcesManager::playBackgroundMusic() {
+    if(!SettingsManager::instance().getMusicSwitch())
+        return;
+
+    m_backgroundMusic.setVolume(SettingsManager::instance().getBGMVolume());
+    m_backgroundMusic.setLoop(true);
+    m_backgroundMusic.play();
+}
+
+
+void ResourcesManager::updateSounds() {
+    if(!SettingsManager::instance().getMusicSwitch()){
+        m_backgroundMusic.stop();
+        return;
+    }
+
+    if(m_backgroundMusic.getStatus() != sf::Music::Status::Playing)
+        m_backgroundMusic.play();
+
+    m_backgroundMusic.setVolume(SettingsManager::instance().getBGMVolume());
+    m_backgroundMusic.setLoop(true);
+
+}
+
+sf::Texture *ResourcesManager::getSoundButton(const int loc) {
+    return &m_soundButton[loc];
+}
+
+void ResourcesManager::pauseBackgroundMusic() {
+    m_backgroundMusic.pause();
+}
+
+/**
+ * is the background music currently playing.
+ */
+bool ResourcesManager::isBGMusicPlaying() {
+    return m_backgroundMusic.getStatus() == sf::Music::Playing;
 }

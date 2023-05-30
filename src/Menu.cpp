@@ -2,6 +2,7 @@
 #include "EnterNameScreen.h"
 
 Menu::Menu() : m_window(WindowManager::instance().getWindow()) {
+    ResourcesManager::instance().playBackgroundMusic();
     int starting_y = WINDOW_HEIGHT * 0.3;
     int starting_x = WINDOW_WIDTH / 2;
     m_background.setSize(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
@@ -30,6 +31,7 @@ void Menu::handleEvents() {
                 return false;
             },
             [this](auto click, auto exit) {
+                SoundFlip::instance().checkIfContains(click);
                 handleClick(click);
                 return false;
             },
@@ -48,6 +50,7 @@ void Menu::print() {
     for (auto &btn: m_menuButtons) {
         m_window->draw(btn);
     }
+    SoundFlip::instance().draw(*m_window);
     m_window->display();
 }
 
@@ -75,6 +78,7 @@ void Menu::handleClick(sf::Event::MouseButtonEvent &click) {
                     break;
                 }
                 case 2: {
+                    SettingsScreen settingsScreen = SettingsScreen(*m_window);
                     break;
                 }
                 case 3: {
