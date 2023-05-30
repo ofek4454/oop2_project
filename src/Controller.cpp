@@ -101,10 +101,6 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
     }
 }
 
-void Controller::initFlagAndHole() {
-
-    // TODO fetch enemy hole and flag
-}
 
 void Controller::handleEvents() {
     while (EventLoop::instance().hasEvent()) {
@@ -268,7 +264,7 @@ void Controller::initGame() {
                 print();
             }
     );
-
+// TODO fetch enemy hole and flag
 
 }
 
