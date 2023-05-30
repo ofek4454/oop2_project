@@ -13,7 +13,7 @@ using json = nlohmann::json;
 
 // Board Size
 
-const int NUMBER_OF_SOUNDS = 15;
+const int NUMBER_OF_SOUNDS = 16;
 
 const int MENU_BUTTONS = 5;
 

@@ -65,6 +65,10 @@ void Controller::checkCollision() {
         for (auto &p2: *p2_vec)
             if (p1->getLocation() == p2->getLocation()) {
                 p2->getWeapon()->get()->fight(**p1->getWeapon());
+                m_currentP1 = p1.get();
+                m_currentP2 = p2.get();
+                m_currentP1->setNeedToBeDraw(false);
+                m_currentP2->setNeedToBeDraw(false);
             }
 
     m_p1->checkDeletion();
@@ -130,6 +134,7 @@ void Controller::handleEvents() {
             case UndefinedChoose: {
                 animateFight(ResourcesManager::instance().getTexture(BlueSP), 300,
                              96, 2);
+                ResourcesManager::instance().playSound(ChooseWeapon);
                 auto warrior1 = m_p1->getWarrior(m_p1->getWarriorLocation());
                 if (warrior1 != NULL) {
                     warrior1->get()->getWeapon()->get()->chooseWeapon();
@@ -139,11 +144,11 @@ void Controller::handleEvents() {
             case UndefinedUndefined: {
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP), 300,
                              96, 2);
+                ResourcesManager::instance().playSound(ChooseWeapon);
                 auto warrior1 = m_p1->getWarrior(m_p1->getWarriorLocation());
                 if (warrior1 != NULL) {
                     warrior1->get()->getWeapon()->get()->chooseWeapon();
                 }
-                sf::sleep(sf::seconds(1));
                 auto warrior2 = m_p2->getWarrior(m_p2->getWarriorLocation());
                 if (warrior2 != NULL) {
                     warrior2->get()->getWeapon()->get()->chooseWeapon();
@@ -154,7 +159,10 @@ void Controller::handleEvents() {
                 break;
         }
         ResourcesManager::instance().playSound(event.getWinner() == P1Won ? WinFight : event.getWinner() == P2Won ? LoseFight : NUMBER_OF_SOUNDS - 1);
-        sf::sleep(sf::seconds(0.4));
+        if(event.getWinner() == P1Won || event.getWinner() == P2Won){
+            m_currentP1->setNeedToBeDraw(true);
+            m_currentP2->setNeedToBeDraw(true);
+        }
     }
 
 }

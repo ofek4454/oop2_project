@@ -28,7 +28,8 @@ private:
     sf::Sprite m_referee;
     float m_refereeRect;
     bool m_switchingTurn = false;
-
+    Warrior* m_currentP1 = nullptr;
+    Warrior* m_currentP2 = nullptr;
     const bool m_isMeP1;
 
 

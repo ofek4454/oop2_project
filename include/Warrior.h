@@ -29,6 +29,8 @@ public:
     bool canMove() const {return m_canMove;}
     void setWeapon(Weapons_t weapon);
     bool isNeedToBeDeleted() {return m_needToDelete;}
+    void setNeedToBeDraw(bool drawable) {m_needToBeDraw = drawable;}
+    bool isDrawable(){return m_needToBeDraw;}
 
     void lose();
 
@@ -42,4 +44,5 @@ private:
     bool m_isMine;
     bool m_canMove = true;
     bool m_needToDelete = false;
+    bool m_needToBeDraw = true;
 };

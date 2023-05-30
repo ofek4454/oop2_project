@@ -19,7 +19,7 @@ private:
     sf::Texture m_texture[NUM_OF_TEXTURES];
     sf::RectangleShape m_background;
     sf::Font m_font;
-    std::string m_sound_file_names[NUMBER_OF_SOUNDS] = {"tieP.wav", "tieR.wav","tieS.wav","winP.wav","winR.wav","winS.wav",
+    std::string m_sound_file_names[NUMBER_OF_SOUNDS - 1] = {"tieP.wav", "tieR.wav","tieS.wav","winP.wav","winR.wav","winS.wav",
                                                         "blueJump.wav","blueTurn.wav","redJump.wav","redTurn.wav","WinFight.wav"
                                                         ,"Losefight.wav","Jumpsound.wav","Generatingweapon.wav","Chooseweapon.wav"};
 };
