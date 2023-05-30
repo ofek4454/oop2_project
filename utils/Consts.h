@@ -13,7 +13,7 @@ using json = nlohmann::json;
 
 // Board Size
 
-const int NUMBER_OF_SOUNDS = 10;
+const int NUMBER_OF_SOUNDS = 15;
 
 const int MENU_BUTTONS = 5;
 
@@ -73,7 +73,12 @@ enum Sounds_t{
     blueTurn,
     redJump,
     redTurn,
-    NoSound
+    WinFight,
+    LoseFight,
+    JumpFight,
+    GeneratingWeapons,
+    ChooseWeapon,
+    NoSound,
 };
 
 enum Direction_t {

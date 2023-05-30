@@ -6,11 +6,7 @@
 #include "UserService.h"
 
 int main(){
-//    srand(time(NULL));
-//    Menu menu;
-    json data;
-    data["name"] = "bar";
-    data["score"] = "19";
-    std::cout << HttpRequestsManager::instance().postRequest(data,BASE_URL);
+    srand(time(NULL));
+    Menu menu;
     return 0;
 }

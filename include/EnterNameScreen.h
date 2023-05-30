@@ -3,6 +3,7 @@
 #include "ResourcesManager.h"
 #include "WindowManager.h"
 #include "UserService.h"
+#include "RoomState.h"
 
 enum Mode_t{
     Create,

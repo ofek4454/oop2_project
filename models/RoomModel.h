@@ -63,8 +63,6 @@ private:
     std::array<std::array<std::string, BOARD_SIZE>,BOARD_SIZE> board;
 
     RoomModel(std::string id, nlohmann::json &data){
-        std::cout << id << std::endl;
-        std::cout << data << std::endl;
 
         roomId = id;
         creator_uid = data["creator_uid"];
