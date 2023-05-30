@@ -27,7 +27,7 @@ void WindowManager::eventHandler(std::function<bool(sf::Event::MouseMoveEvent, b
                 if(typeHandler(event.text, exit))continue;
             }
         }
-        if (exit) return;
+        if(exit) return;
         afterFunction(exit);
     }
 }
