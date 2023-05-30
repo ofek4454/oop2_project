@@ -14,15 +14,15 @@ using namespace nlohmann::literals;
 class RoomModel{
     friend class RoomState;
 public:
+    RoomModel(){}
     static RoomModel fromJson(std::string id, nlohmann::json data) {
         return RoomModel{id, data};
     }
 
     nlohmann::json toJson(){
-
         nlohmann::json data;
-        data["creator_uid"] = "id1";
-        data["player2_uid"] = "id2";
+        data["creator_uid"] = creator_uid;
+        data["player2_uid"] = player2_uid;
         data["watchers_uids"] = watchers_uids;
         data["board"] = board;
 
@@ -54,6 +54,8 @@ public:
     }
 
     std::string getRoomId() const {return roomId;}
+    std::string creatorUid() const {return creator_uid;}
+    std::string player2Uid() const {return player2_uid;}
 
 private:
     std::string roomId;
@@ -67,7 +69,8 @@ private:
         roomId = id;
         creator_uid = data["creator_uid"];
         player2_uid = data["player2_uid"];
-        watchers_uids = data["watchers_uids"];
+        if(data.contains("watchers_uids"))
+            watchers_uids = data["watchers_uids"];
         board = data["board"];
     }
 };

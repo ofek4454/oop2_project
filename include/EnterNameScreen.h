@@ -4,6 +4,8 @@
 #include "WindowManager.h"
 #include "UserService.h"
 #include "RoomState.h"
+#include "Controller.h"
+#include "WaitingRoom.h"
 
 enum Mode_t{
     Create,

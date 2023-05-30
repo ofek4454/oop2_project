@@ -13,5 +13,24 @@ void RoomState::createRoom(std::string creator_id) {
 
     auto response = RoomService::createRoom(room);
     room.roomId = response["name"];
+}
+
+void RoomState::joinRoom(std::string roomId, std::string uid){
+    room = RoomService::getRoom(roomId);
+    room.player2_uid = uid;
+    RoomService::updateRoom(room);
+}
+
+void RoomState::deleteRoom() {
+    RoomService::deleteRoom(room.roomId);
+}
+
+bool RoomState::isOpponentJoined(){
+    auto tmpRoom = RoomService::getRoom(room.roomId);
+    if(tmpRoom.player2_uid == "")
+        return false;
+
+    room.player2_uid = tmpRoom.player2_uid;
+    return true;
 
 }
