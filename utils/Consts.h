@@ -1,8 +1,8 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 
-const int WINDOW_WIDTH = sf::VideoMode::getDesktopMode().width * 0.75;
-const int WINDOW_HEIGHT = sf::VideoMode::getDesktopMode().height * 0.75;
+const float WINDOW_WIDTH = sf::VideoMode::getDesktopMode().width * 0.75;
+const float WINDOW_HEIGHT = sf::VideoMode::getDesktopMode().height * 0.75;
 
 const int NUM_OF_TEXTURES = 16;
 

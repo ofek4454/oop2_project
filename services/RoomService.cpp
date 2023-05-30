@@ -7,7 +7,7 @@ namespace RoomService {
         return size*nmemb;
     }
 
-    nlohmann::json RoomService::createRoom(RoomModel room) {
+    nlohmann::json createRoom(RoomModel room) {
         CURL *curl = curl_easy_init();
         std::string url = BASE_URL + "/rooms.json";
         std::string s;
@@ -39,7 +39,6 @@ namespace RoomService {
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body.c_str());
 
         CURLcode res = curl_easy_perform(curl);
-        std::cout << res << std::endl;
         return json();
     }
 
@@ -52,12 +51,10 @@ namespace RoomService {
 
         CURLcode res = curl_easy_perform(curl);
 
-        std::cout << res << std::endl;
-
         return json();
     }
 
-    RoomModel RoomService::getRoom(std::string roomId) {
+    RoomModel getRoom(std::string roomId) {
         CURL *curl = curl_easy_init();
         std::string url = BASE_URL + "/rooms/" + roomId + ".json";
         std::string s;

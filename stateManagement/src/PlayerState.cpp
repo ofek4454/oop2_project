@@ -1,5 +1,5 @@
 
-#include "PlayerState.h"
+#include "../include/PlayerState.h"
 #include "iostream"
 
 PlayerState::PlayerState(PlayerModel &player) : m_player(player){}

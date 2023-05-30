@@ -266,7 +266,6 @@ void Controller::initGame() {
             }
     );
 // TODO fetch enemy hole and flag
-
 }
 
 void Controller::changeTurnAnimation() {

@@ -31,6 +31,7 @@ if(APPLE)
     add_subdirectory (utils)
     add_subdirectory (services)
     add_subdirectory (models)
+    add_subdirectory (stateManagement)
 
     set (SFML_STATIC_LIBRARIES FALSE)
     set (SFML_DIR "/usr/local/Cellar/sfml/2.5.1")
@@ -46,7 +47,7 @@ endif()
 
 if(WIN32)
 
-    add_executable (${CMAKE_PROJECT_NAME} "" main.cpp utils/Location.h utils/Location.cpp src/events/Event.cpp include/events/Event.h src/events/EventLoop.cpp include/events/EventLoop.h src/EnterNameScreen.cpp include/EnterNameScreen.h utils/WindowManager.cpp services/env.h models/RoomModel.h services/RoomService.cpp services/RoomService.h services/UserService.cpp services/UserService.h src/RoomState.cpp include/RoomState.h)
+    add_executable (${CMAKE_PROJECT_NAME} "" main.cpp utils/Location.h utils/Location.cpp src/events/Event.cpp include/events/Event.h src/events/EventLoop.cpp include/events/EventLoop.h src/EnterNameScreen.cpp include/EnterNameScreen.h utils/WindowManager.cpp services/env.h models/RoomModel.h services/RoomService.cpp services/RoomService.h services/UserService.cpp services/UserService.h stateManagement/src/RoomState.cpp stateManagement/include/RoomState.h src/WaitingRoom.cpp include/WaitingRoom.h)
 
     target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-fsanitize=address>)
 
