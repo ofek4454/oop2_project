@@ -1,6 +1,3 @@
-//
-// Created by Ofek Gorgi on 30/05/2023.
-//
 
 #include "WaitingRoom.h"
 
@@ -38,7 +35,7 @@ void WaitingRoom::waitForOpponent() {
                 if(clock.getElapsedTime().asSeconds() > 1){
                     clock.restart();
                     if(RoomState::instance().isOpponentJoined()){
-                        auto enemy = UserService::getUser(RoomState::instance().getRoom().creatorUid());
+                        auto enemy = UserService::getUser(RoomState::instance().getRoom().player2Uid());
                         std::unique_ptr<PlayerState> p1 = std::make_unique<UserState>(p);
                         std::unique_ptr<PlayerState> p2 = std::make_unique<EnemyState>(enemy);
                         Controller(&p1 ,&p2, P2);

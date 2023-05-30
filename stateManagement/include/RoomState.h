@@ -11,7 +11,6 @@ public:
     }
 
     RoomModel &getRoom(){ return room;}
-
     bool isOpponentJoined();
 
     void createRoom(std::string creator_id);
