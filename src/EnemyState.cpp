@@ -1,7 +1,7 @@
 
 #include "EnemyState.h"
 #include "Rock.h"
-EnemyState::EnemyState(const std::string& name,const std::string& id) : PlayerState(name,id) {}
+EnemyState::EnemyState(PlayerModel &player) : PlayerState(player) {}
 
 void EnemyState::init() {
     float x = BOARD_TOP_LEFT.left + RECT_SIZE/2;

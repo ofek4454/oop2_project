@@ -2,6 +2,7 @@
 #include "SFML/Graphics.hpp"
 #include "ResourcesManager.h"
 #include "WindowManager.h"
+#include "UserService.h"
 
 enum Mode_t{
     Create,

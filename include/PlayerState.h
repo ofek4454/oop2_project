@@ -10,7 +10,7 @@
 
 class PlayerState {
 public:
-    PlayerState(const std::string& name,const std::string& id);
+    PlayerState(PlayerModel &player);
     virtual ~PlayerState() = default;
     virtual void init() = 0;
     virtual void hoverFlag(const int row, const int col) = 0;

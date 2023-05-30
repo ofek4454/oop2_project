@@ -4,7 +4,7 @@
 
 class UserState : public PlayerState{
 public:
-    UserState(const std::string& name,const std::string& id);
+    UserState(PlayerModel &player);
     ~UserState() = default;
     virtual void init();
 

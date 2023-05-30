@@ -10,6 +10,7 @@ Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerS
     m_p1->init();
     m_p2->init();
     initGame();
+    run();
 }
 
 void Controller::run() {
@@ -30,10 +31,9 @@ void Controller::run() {
             [](auto key, auto exit) { return false; },
             [](auto type, auto exit) { return false; },
             [this](auto exit) {
-                if (m_turn == P2 && !m_p2->isAnimating()){
+                if (m_turn == P2 && !m_p2->isAnimating()) {
                     m_p2->doTurn();
                 }
-
                 handleAnimation();
                 handleEvents();
                 checkCollision();
@@ -100,6 +100,11 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
         int col = (event.x - rect_pos.left) / RECT_SIZE;
         m_p1->handleHover(row, col);
     }
+}
+
+void Controller::initFlagAndHole() {
+
+    // TODO fetch enemy hole and flag
 }
 
 void Controller::handleEvents() {
@@ -264,7 +269,7 @@ void Controller::initGame() {
                 print();
             }
     );
-
+// TODO fetch enemy hole and flag
 
 }
 
