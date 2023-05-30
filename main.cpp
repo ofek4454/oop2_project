@@ -4,7 +4,6 @@
 #include "UserService.h"
 
 int main(){
-
     srand(time(NULL));
     Menu menu;
 

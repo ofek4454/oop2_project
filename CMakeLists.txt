@@ -46,7 +46,7 @@ endif()
 
 if(WIN32)
 
-    add_executable (${CMAKE_PROJECT_NAME} "" main.cpp utils/Location.h utils/Location.cpp src/events/Event.cpp include/events/Event.h src/events/EventLoop.cpp include/events/EventLoop.h src/EnterNameScreen.cpp include/EnterNameScreen.h utils/WindowManager.cpp services/env.h models/RoomModel.h services/RoomService.cpp services/RoomService.h services/UserService.cpp services/UserService.h)
+    add_executable (${CMAKE_PROJECT_NAME} "" main.cpp utils/Location.h utils/Location.cpp src/events/Event.cpp include/events/Event.h src/events/EventLoop.cpp include/events/EventLoop.h src/EnterNameScreen.cpp include/EnterNameScreen.h utils/WindowManager.cpp services/env.h models/RoomModel.h services/RoomService.cpp services/RoomService.h services/UserService.cpp services/UserService.h src/RoomState.cpp include/RoomState.h)
 
     target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-fsanitize=address>)
 

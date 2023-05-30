@@ -1,10 +1,9 @@
 #pragma once
-
 #include "PlayerState.h"
 
 class EnemyState : public PlayerState {
 public:
-    EnemyState(const std::string &name, const std::string &id);
+    EnemyState(PlayerModel &player);
 
     ~EnemyState() = default;
 

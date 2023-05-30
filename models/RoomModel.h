@@ -7,11 +7,12 @@
 #include "chrono"
 #include <nlohmann/json.hpp>
 #include "ostream"
-
+#include "iostream"
 
 using namespace nlohmann::literals;
 
 class RoomModel{
+    friend class RoomState;
 public:
     static RoomModel fromJson(std::string id, nlohmann::json data) {
         return RoomModel{id, data};

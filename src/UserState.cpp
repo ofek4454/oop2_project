@@ -1,11 +1,8 @@
-//
-// Created by Bar Kobi on 20/05/2023.
-//
 
 #include "UserState.h"
 #include "Rock.h"
 
-UserState::UserState(const std::string &name, const std::string &id) : PlayerState(name, id) {
+UserState::UserState(PlayerModel &player) : PlayerState(player) {
     for (auto &spr: m_arrows) {
         spr.setTexture(*ResourcesManager::instance().getTexture(Arrow));
         spr.setScale(RECT_SIZE / 1024, RECT_SIZE / 1024);

@@ -10,6 +10,7 @@ Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerS
     m_p1->init();
     m_p2->init();
     initGame();
+    run();
 }
 
 void Controller::run() {
