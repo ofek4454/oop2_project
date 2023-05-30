@@ -1,10 +1,15 @@
 #pragma once
 #include "SFML/Graphics.hpp"
+#include "nlohmann/json.hpp"
 
 const int WINDOW_WIDTH = sf::VideoMode::getDesktopMode().width * 0.75;
 const int WINDOW_HEIGHT = sf::VideoMode::getDesktopMode().height * 0.75;
 
 const int NUM_OF_TEXTURES = 16;
+
+const std::string BASE_URL = "https://rock-paper-scissors-89090-default-rtdb.firebaseio.com/";
+
+using json = nlohmann::json;
 
 // Board Size
 

@@ -30,9 +30,10 @@ void Controller::run() {
             [](auto key, auto exit) { return false; },
             [](auto type, auto exit) { return false; },
             [this](auto exit) {
-                if (m_turn == P2 && !m_p2->isAnimating()) {
+                if (m_turn == P2 && !m_p2->isAnimating()){
                     m_p2->doTurn();
                 }
+
                 handleAnimation();
                 handleEvents();
                 checkCollision();
@@ -99,11 +100,6 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
         int col = (event.x - rect_pos.left) / RECT_SIZE;
         m_p1->handleHover(row, col);
     }
-}
-
-void Controller::initFlagAndHole() {
-
-    // TODO fetch enemy hole and flag
 }
 
 void Controller::handleEvents() {

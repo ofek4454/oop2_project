@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.20)
 
-project (oop2_project)
+project (oop2_project_)
 
 set (MY_AUTHORS "Ofek_Gorgi-Bark_Kobi")
 
@@ -37,10 +37,11 @@ if(APPLE)
     set (SFML_DIR "/usr/local/Cellar/sfml/2.5.1")
 
     find_package (SFML 2.5 COMPONENTS audio graphics network REQUIRED)
+    find_package(CURL REQUIRED)
 
     set_target_properties ( PROPERTIES MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELEASE)
 
-    target_link_libraries (${CMAKE_PROJECT_NAME} sfml-graphics sfml-audio sfml-network )
+    target_link_libraries (${CMAKE_PROJECT_NAME} sfml-graphics sfml-audio sfml-network ${CURL_LIBRARIES})
 
 endif()
 
@@ -48,7 +49,7 @@ endif()
 
 if(WIN32)
 
-    add_executable (${CMAKE_PROJECT_NAME} "" main.cpp utils/Location.h utils/Location.cpp src/events/Event.cpp include/events/Event.h src/events/EventLoop.cpp include/events/EventLoop.h src/EnterNameScreen.cpp include/EnterNameScreen.h utils/WindowManager.cpp services/env.h)
+    add_executable (${CMAKE_PROJECT_NAME} "" main.cpp utils/Location.h utils/Location.cpp src/events/Event.cpp include/events/Event.h src/events/EventLoop.cpp include/events/EventLoop.h src/EnterNameScreen.cpp include/EnterNameScreen.h utils/WindowManager.cpp services/env.h services/HttpRequestsManager.cpp services/HttpRequestsManager.h)
 
     target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-fsanitize=address>)
 
