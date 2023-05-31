@@ -5,6 +5,8 @@
 #include "nlohmann/json.hpp"
 #include "iostream"
 
+using json = nlohmann::json;
+
 
 class HttpRequestsManager {
 public:
@@ -12,16 +14,12 @@ public:
         static HttpRequestsManager http_manager;
         return http_manager;
     }
-    ~HttpRequestsManager(){
-        curl_easy_cleanup(m_delete_curl);
-        curl_easy_cleanup(m_post_curl);
-        curl_easy_cleanup(m_put_curl);
-        curl_easy_cleanup(m_get_curl);
-    }
-    bool postRequest(const json& data,std::string url);
-    bool getRequest(json data,std::string url);
-    bool putRequest(json data,std::string url);
-    bool deleteRequest(std::string url);
+    ~HttpRequestsManager();
+    static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *response);
+    json postRequest(const json& data,std::string url);
+    json getRequest(std::string url);
+    json putRequest(json data,std::string url);
+    json deleteRequest(std::string url);
 
 private:
     HttpRequestsManager(){
@@ -34,7 +32,7 @@ private:
     CURL *m_get_curl;
     CURL *m_put_curl;
     CURL *m_delete_curl;
-    json m_body;
+    bool m_isDataRecieved;
 };
 
 

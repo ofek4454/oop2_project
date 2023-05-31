@@ -1,29 +1,61 @@
 #include "HttpRequestsManager.h"
 
-bool HttpRequestsManager::postRequest(const json& data, std::string url) {
+json HttpRequestsManager::postRequest(const json& data, std::string url) {
+    std::string response;
     std::string requestBody = data.dump();
     curl_easy_setopt(m_post_curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(m_post_curl, CURLOPT_CUSTOMREQUEST, "POST");
     curl_easy_setopt(m_post_curl, CURLOPT_POSTFIELDS, requestBody.c_str());
-
+    curl_easy_setopt(m_post_curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+    curl_easy_setopt(m_post_curl, CURLOPT_WRITEDATA, &response);
 
     CURLcode res;
     res = curl_easy_perform(m_post_curl);
-    if (res == CURLE_OK)
-        return true;
+    if (res == CURLE_OK){
+        return json::parse(response.c_str());
+    }
     else
-        return false;
+    //TODO throw exception
+
+    return NULL;
+}
+
+json HttpRequestsManager::getRequest(std::string url) {
+    std::string response;
+    curl_easy_setopt(m_get_curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(m_get_curl, CURLOPT_HTTPGET, "GET");
+    curl_easy_setopt(m_get_curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+    curl_easy_setopt(m_get_curl, CURLOPT_WRITEDATA, &response);
+    CURLcode res;
+    res = curl_easy_perform(m_get_curl);
+    if(res == CURLE_OK){
+        return json::parse(response);
+    }
+    else{
+        //TODO throw exception
+    }
+    //TODO create pthread
+    return NULL;
 
 }
 
-bool HttpRequestsManager::getRequest(json data, std::string url) {
-    return false;
+json HttpRequestsManager::deleteRequest(std::string url) {
+    return NULL;
 }
 
-bool HttpRequestsManager::deleteRequest(std::string url) {
-    return false;
+json HttpRequestsManager::putRequest(json data, std::string url) {
+    return NULL;
 }
 
-bool HttpRequestsManager::putRequest(json data, std::string url) {
-    return false;
+size_t HttpRequestsManager::WriteCallback(void *contents, size_t size, size_t nmemb, std::string *response) {
+    size_t totalSize = size * nmemb;
+    response->append((char *) contents, totalSize);
+    return totalSize;
+}
+
+HttpRequestsManager::~HttpRequestsManager() {
+    curl_easy_cleanup(m_delete_curl);
+    curl_easy_cleanup(m_post_curl);
+    curl_easy_cleanup(m_put_curl);
+    curl_easy_cleanup(m_get_curl);
 }

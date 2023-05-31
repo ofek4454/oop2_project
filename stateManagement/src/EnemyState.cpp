@@ -5,9 +5,9 @@ EnemyState::EnemyState(PlayerModel &player) : PlayerState(player) {}
 
 void EnemyState::init() {
     float x = BOARD_TOP_LEFT.left + RECT_SIZE/2;
-    float y = BOARD_TOP_LEFT.top - 30 + (RECT_SIZE/2 * 9);
+    float y = BOARD_TOP_LEFT.top - 30 + RECT_SIZE/2;
 
-    int row = 4,col = 0;
+    int row = 0,col = 0;
     for(int i = 0; i < BOARD_SIZE*2; i++,col++) {
         if(i == BOARD_SIZE){
             row++;

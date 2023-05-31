@@ -8,23 +8,7 @@ namespace RoomService {
     }
 
     nlohmann::json createRoom(RoomModel room) {
-        CURL *curl = curl_easy_init();
-        std::string url = BASE_URL + "/rooms.json";
-        std::string s;
-
-        std::string body = room.toJson().dump();
-
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_POST, 1L);
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body.c_str());
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
-
-        curl_easy_perform(curl);
-        curl_easy_cleanup(curl);
-
-        json response = json::parse(s.c_str());
-
+        auto response = HttpRequestsManager::instance().postRequest(room.toJson(),BASE_URL + "/rooms.json");
         return response;
     }
 
