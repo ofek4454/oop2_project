@@ -167,6 +167,7 @@ void Controller::handleEvents() {
         if(event.getWinner() == P1Won || event.getWinner() == P2Won){
             m_currentP1->setNeedToBeDraw(true);
             m_currentP2->setNeedToBeDraw(true);
+            sf::sleep(sf::seconds(1.5));
         }
     }
 
