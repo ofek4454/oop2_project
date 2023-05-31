@@ -25,6 +25,7 @@ public:
         data["player2_uid"] = player2_uid;
         data["watchers_uids"] = watchers_uids;
         data["board"] = board;
+        data["turn"] = int(turn);
 
         return data;
     }
@@ -47,15 +48,16 @@ public:
         return str;
     }
 
-    void changeBoard(char c){
-        for(auto &line : board)
-            for (auto &tmp : line)
-                tmp = c;
-    }
-
     std::string getRoomId() const {return roomId;}
     std::string creatorUid() const {return creator_uid;}
     std::string player2Uid() const {return player2_uid;}
+
+//    void rotateBoard(){
+//        std::reverse(board.begin(),board.end());
+//        for(auto &line : board){
+//            std::reverse(line.begin(),line.end());
+//        }
+//    }
 
 private:
     std::string roomId;
@@ -63,14 +65,15 @@ private:
     std::string player2_uid;
     std::vector<std::string> watchers_uids;
     std::array<std::array<std::string, BOARD_SIZE>,BOARD_SIZE> board;
+    Turn_t turn;
 
     RoomModel(std::string id, nlohmann::json &data){
-
         roomId = id;
         creator_uid = data["creator_uid"];
         player2_uid = data["player2_uid"];
         if(data.contains("watchers_uids"))
             watchers_uids = data["watchers_uids"];
         board = data["board"];
+        turn = Turn_t(data["turn"]);
     }
 };

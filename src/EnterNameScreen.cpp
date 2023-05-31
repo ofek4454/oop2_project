@@ -37,7 +37,7 @@ void EnterNameScreen::handleEvents() {
                         WaitingRoom(PlayerModel(user));
                         exit = true;
                     } else {
-                        RoomState::instance().joinRoom("-NWhdFGB1zIQDqnHFbMd", user.m_uid);
+                        RoomState::instance().joinRoom("-NWlHNYxSM3Kn6hATEyo", user.m_uid);
                         auto enemy = UserService::getUser(RoomState::instance().getRoom().creatorUid());
                         std::unique_ptr<PlayerState> p1 = std::make_unique<UserState>(user);
                         std::unique_ptr<PlayerState> p2 = std::make_unique<EnemyState>(enemy);

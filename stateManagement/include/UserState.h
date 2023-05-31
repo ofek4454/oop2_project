@@ -17,7 +17,4 @@ public:
 
 private:
     std::array<sf::Sprite,4> m_arrows;
-
-    //void setFlagAndHole(sf::FloatRect rect_size);
-
 };

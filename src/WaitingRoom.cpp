@@ -31,14 +31,15 @@ void WaitingRoom::waitForOpponent() {
                 return false;
             },
             [](auto type, auto exit) { return false; },
-            [this, &clock](auto exit) {
+            [this, &clock](auto &exit) {
                 if(clock.getElapsedTime().asSeconds() > 1){
                     clock.restart();
                     if(RoomState::instance().isOpponentJoined()){
                         auto enemy = UserService::getUser(RoomState::instance().getRoom().player2Uid());
                         std::unique_ptr<PlayerState> p1 = std::make_unique<UserState>(p);
                         std::unique_ptr<PlayerState> p2 = std::make_unique<EnemyState>(enemy);
-                        Controller(&p1 ,&p2, P2);
+                        Controller(&p1 ,&p2, P1);
+                        exit = true;
                     }
                 }
             }

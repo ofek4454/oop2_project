@@ -31,7 +31,7 @@ public:
     void setAnimating(bool animating) {m_isAnimating = animating;}
     Location getWarriorLocation() const {return m_selectedPlayerLocation;}
 
-
+    void setPlayerSymbol(char s){m_playerSymbol=s;}
     void checkDeletion();
 
 
@@ -45,6 +45,7 @@ private:
     float m_pixelOffset = RECT_SIZE / IMAGE_COUNT;
     PlayerModel m_player;
 
+    std::string m_playerSymbol;
 };
 
 

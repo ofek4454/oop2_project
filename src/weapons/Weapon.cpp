@@ -3,6 +3,8 @@
 #include "Weapon.h"
 #include "Warrior.h"
 
+Weapon::Weapon(const char symbol) : m_symbol(symbol){}
+
 void Weapon::draw() {
     auto window = WindowManager::instance().getWindow();
     window->draw(m_weapon_sprite);

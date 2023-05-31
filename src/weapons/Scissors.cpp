@@ -10,7 +10,7 @@
 #include "Undefined.h"
 #include "Warrior.h"
 
-Scissors::Scissors(){
+Scissors::Scissors() : Weapon('S') {
     auto weapon = ResourcesManager::instance().getTexture(Rps);
     m_weapon_sprite.setTexture(*weapon);
     m_weapon_sprite.setTextureRect(sf::IntRect(110, 0, 55, 58));

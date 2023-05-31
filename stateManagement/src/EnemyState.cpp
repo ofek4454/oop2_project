@@ -1,5 +1,5 @@
 
-#include "../include/EnemyState.h"
+#include "EnemyState.h"
 #include "Rock.h"
 EnemyState::EnemyState(PlayerModel &player) : PlayerState(player) {}
 

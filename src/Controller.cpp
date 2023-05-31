@@ -4,11 +4,13 @@
 
 #include "Controller.h"
 #include "SoundFlip.h"
-
+#include "RoomState.h"
 
 Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerState> *p2, Turn_t turn) : m_window(
         WindowManager::instance().getWindow()), m_p1(p1->get()), m_p2(p2->get()), m_turn(turn), m_isMeP1(turn == P1) {
 
+    m_p1->setPlayerSymbol(m_isMeP1 ? '1' : '2');
+    m_p2->setPlayerSymbol(!m_isMeP1 ? '1' : '2');
     m_p1->init();
     m_p2->init();
     initGame();
@@ -268,13 +270,15 @@ void Controller::initGame() {
                 int row = (click.y - rect_pos.top) / rect_pos.height;
                 int col = (click.x - rect_pos.left) / rect_pos.width;
                 if (row < BOARD_SIZE - 2) return true;
-                if (!flagChoosed) {
+                if (!flagChoosed){
                     if (m_p1->setAsFlag(row, col))
                         flagChoosed = true;
-                } else {
+                }
+                else{
                     if (m_p1->setAsHole(row, col))
                         exit = true;
                 }
+
                 return false;
             },
             [](auto key, auto exit) { return false; },
@@ -283,11 +287,22 @@ void Controller::initGame() {
                 print();
             }
     );
-// TODO fetch enemy hole and flag
+    RoomState::instance().upload();
+    std::pair<Location,Location> opponentFlagAndHole;
+    sf::Clock clock;
+    do{
+        if(clock.getElapsedTime().asSeconds() < 1) continue;
+        clock.restart();
+        opponentFlagAndHole = RoomState::instance().getOpponentFlagAndHole();
+    } while (opponentFlagAndHole.first == Location(-1,-1));
+
+    m_p2->setAsFlag(opponentFlagAndHole.first.row,opponentFlagAndHole.first.col);
+    m_p2->setAsHole(opponentFlagAndHole.second.row,opponentFlagAndHole.second.col);
 }
 
 void Controller::changeTurnAnimation() {
     static sf::Clock animationClock;
+    Turn_t oldTurn = m_turn;
     auto time = animationClock.getElapsedTime().asSeconds();
     if (time > 0.1) {
         animationClock.restart().asSeconds();
@@ -296,12 +311,16 @@ void Controller::changeTurnAnimation() {
             m_switchingTurn = false;
             ResourcesManager::instance().playSound(redTurn);
             m_turn = P2;
+            RoomState::instance().changeTurn(m_turn);
         }
         if (m_refereeRect == 0 && m_turn == P2) {
             m_switchingTurn = false;
             ResourcesManager::instance().playSound(blueTurn);
             m_turn = P1;
+            RoomState::instance().changeTurn(m_turn);
         }
         m_referee.setTextureRect(sf::IntRect(m_refereeRect, 0, 241.5, 164));
     }
+    if(oldTurn != m_turn)
+        RoomState::instance().upload();
 }

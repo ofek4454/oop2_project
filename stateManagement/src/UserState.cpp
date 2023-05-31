@@ -1,8 +1,7 @@
 
-#include "../include/UserState.h"
-#include "Rock.h"
+#include "UserState.h"
 
-UserState::UserState(PlayerModel &player) : PlayerState(player) {
+UserState::UserState(PlayerModel &player) : PlayerState(player){
     for (auto &spr: m_arrows) {
         spr.setTexture(*ResourcesManager::instance().getTexture(Arrow));
         spr.setScale(RECT_SIZE / 1024, RECT_SIZE / 1024);

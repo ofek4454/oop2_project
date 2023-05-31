@@ -16,9 +16,9 @@ public:
     }
     ~HttpRequestsManager();
     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *response);
-    json postRequest(const json& data,std::string url);
+    json postRequest(const json& data, std::string url);
     json getRequest(std::string url);
-    json putRequest(json data,std::string url);
+    json putRequest(const json& data, std::string url);
     json deleteRequest(std::string url);
 
 private:

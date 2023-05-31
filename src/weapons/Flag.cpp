@@ -9,7 +9,7 @@
 #include "Hole.h"
 #include "Undefined.h"
 
-Flag::Flag() {
+Flag::Flag() : Weapon('F') {
     auto weapon = ResourcesManager::instance().getTexture(Rps);
     m_weapon_sprite.setTexture(*weapon);
     m_weapon_sprite.setColor(sf::Color::Transparent);

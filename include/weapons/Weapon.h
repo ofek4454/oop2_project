@@ -12,7 +12,7 @@ class Warrior;
 
 class Weapon {
 public:
-    Weapon() = default;
+    Weapon(const char symbol);
     virtual ~Weapon() = default;
     virtual void draw();
     void setSpriteLoc(sf::Vector2f pos) {m_weapon_sprite.setPosition(pos);}
@@ -31,6 +31,8 @@ public:
     void chooseWeapon();
     void initChooseBox();
 
+    char getSymbol() const {return m_symbol;}
+
 
 protected:
     sf::Sprite m_weapon_sprite;
@@ -39,6 +41,7 @@ protected:
 private:
     sf::RectangleShape m_ChooseBoxRect;
     sf::Text m_ChooseWeaponText;
+    const char m_symbol;
 };
 
 

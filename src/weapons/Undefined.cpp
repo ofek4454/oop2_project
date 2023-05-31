@@ -3,7 +3,7 @@
 #include "Warrior.h"
 #include "EventLoop.h"
 
-Undefined::Undefined(bool isMine) {
+Undefined::Undefined(bool isMine) : Weapon('U')  {
     if (isMine) {
         int rand = std::rand() % 3;
         auto wep = Weapons_t(rand);

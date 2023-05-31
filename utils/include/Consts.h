@@ -8,8 +8,6 @@ const float WINDOW_HEIGHT = sf::VideoMode::getDesktopMode().height * 0.75;
 
 const int NUM_OF_TEXTURES = 16;
 
-const std::string BASE_URL = "https://rock-paper-scissors-89090-default-rtdb.firebaseio.com/";
-
 // Board Size
 
 const int NUMBER_OF_SOUNDS = 16;

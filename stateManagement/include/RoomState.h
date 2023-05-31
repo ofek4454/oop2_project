@@ -2,6 +2,7 @@
 
 #include "RoomModel.h"
 #include "RoomService.h"
+#include "Location.h"
 
 class RoomState {
 public:
@@ -12,12 +13,19 @@ public:
 
     RoomModel &getRoom(){ return room;}
     bool isOpponentJoined();
+    std::pair<Location,Location> getOpponentFlagAndHole();
 
     void createRoom(std::string creator_id);
     void joinRoom(std::string roomId,std::string uid);
     void deleteRoom();
 
+    void upload();
+    void changeTurn(Turn_t turn);
+    void setBoardCell(Location loc , std::string str);
+
 private:
     RoomState(){}
     RoomModel room;
+
+    bool m_isMeP1;
 };

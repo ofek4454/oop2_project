@@ -10,7 +10,7 @@
 #include "Undefined.h"
 #include "Warrior.h"
 
-Rock::Rock(){
+Rock::Rock() : Weapon('R') {
     auto weapon = ResourcesManager::instance().getTexture(Rps);
     m_weapon_sprite.setTexture(*weapon);
     m_weapon_sprite.setTextureRect(sf::IntRect(110, 116, 55,58));

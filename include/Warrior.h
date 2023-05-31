@@ -24,13 +24,15 @@ public:
     void setIntRect(int counter);
     void setTextureFlag(bool isHighlighted);
     void setTextureHole(bool isHighlighted);
-    bool setAsFlag();
-    bool setAsHole();
+    bool setAsFlag(bool changeTexture);
+    bool setAsHole(bool changeTexture);
     bool canMove() const {return m_canMove;}
     void setWeapon(Weapons_t weapon);
     bool isNeedToBeDeleted() {return m_needToDelete;}
     void setNeedToBeDraw(bool drawable) {m_needToBeDraw = drawable;}
     bool isDrawable(){return m_needToBeDraw;}
+
+    char getSymbol()const{return m_weapon->getSymbol();}
 
     void lose();
 
