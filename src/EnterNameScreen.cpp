@@ -3,6 +3,7 @@
 //
 
 #include "EnterNameScreen.h"
+#include "AvailableRooms.h"
 
 EnterNameScreen::EnterNameScreen(Mode_t mode) : m_mode(mode) , m_window(WindowManager::instance().getWindow()) , m_name(""){
     init();
@@ -33,15 +34,16 @@ void EnterNameScreen::handleEvents() {
                 if(key.code == sf::Keyboard::Enter){
                     auto user = UserService::createUser(m_name);
                     if(m_mode == Create){
-                        RoomState::instance().createRoom(user.m_uid);
+                        RoomState::instance().createRoom(user);
                         WaitingRoom(PlayerModel(user));
                         exit = true;
                     } else {
-                        RoomState::instance().joinRoom("-NWlHNYxSM3Kn6hATEyo", user.m_uid);
-                        auto enemy = UserService::getUser(RoomState::instance().getRoom().creatorUid());
-                        std::unique_ptr<PlayerState> p1 = std::make_unique<UserState>(user);
-                        std::unique_ptr<PlayerState> p2 = std::make_unique<EnemyState>(enemy);
-                        Controller(&p1,&p2, P2);
+                        AvailableRooms(PlayerModel(user));
+//                        RoomState::instance().joinRoom("-NWlHNYxSM3Kn6hATEyo", user.m_uid);
+//                        auto enemy = UserService::getUser(RoomState::instance().getRoom().creatorUid());
+//                        std::unique_ptr<PlayerState> p1 = std::make_unique<UserState>(user);
+//                        std::unique_ptr<PlayerState> p2 = std::make_unique<EnemyState>(enemy);
+//                        Controller(&p1,&p2, P2);
                         exit = true;
                     }
                 }

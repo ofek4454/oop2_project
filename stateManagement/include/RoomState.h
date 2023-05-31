@@ -3,6 +3,7 @@
 #include "RoomModel.h"
 #include "RoomService.h"
 #include "Location.h"
+#include "PlayerModel.h"
 
 class RoomState {
 public:
@@ -15,7 +16,7 @@ public:
     bool isOpponentJoined();
     std::pair<Location,Location> getOpponentFlagAndHole();
 
-    void createRoom(std::string creator_id);
+    void createRoom(PlayerModel &creator);
     void joinRoom(std::string roomId,std::string uid);
     void deleteRoom();
 

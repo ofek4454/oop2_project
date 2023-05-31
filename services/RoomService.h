@@ -9,8 +9,9 @@
 using json = nlohmann::json;
 
 namespace RoomService{
-    json createRoom(RoomModel room);
+    json createRoom(RoomModel room, std::string creator_name);
     json updateRoom(RoomModel room);
     RoomModel getRoom(std::string roomId);
     json deleteRoom(std::string roomId);
+    json getAvailableRooms();
 }

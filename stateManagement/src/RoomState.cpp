@@ -1,6 +1,6 @@
 #include "RoomState.h"
 
-void RoomState::createRoom(std::string creator_id) {
+void RoomState::createRoom(PlayerModel &creator) {
     m_isMeP1 = true;
     for(int row=0 ; row<2 ; row++)
         for(int i = 0 ; i <BOARD_SIZE ; i++)
@@ -10,9 +10,9 @@ void RoomState::createRoom(std::string creator_id) {
         for(int i = 0 ; i <BOARD_SIZE ; i++)
             room.board[row][i] = "1U";
 
-    room.creator_uid = creator_id;
+    room.creator_uid = creator.m_uid;
     room.turn = P1;
-    auto response = RoomService::createRoom(room);
+    auto response = RoomService::createRoom(room , creator.m_name);
     room.roomId = response["name"];
 }
 
@@ -33,6 +33,7 @@ bool RoomState::isOpponentJoined(){
         return false;
 
     room.player2_uid = tmpRoom.player2_uid;
+    HttpRequestsManager::instance().deleteRequest(BASE_URL + "/available_rooms" + room.roomId + ".json");
     return true;
 }
 
