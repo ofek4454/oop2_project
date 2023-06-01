@@ -7,6 +7,7 @@
 #include "Weapon.h"
 #include "memory"
 #include "array"
+#include "RoomState.h"
 
 class PlayerState {
 public:
@@ -22,7 +23,7 @@ public:
     bool setAsHole(const int row, const int col);
 
     bool* checkAvailableLocations(Location location);
-    bool move();
+    virtual bool move() = 0;
     std::unique_ptr<Warrior>* getWarrior(const Location location);
     std::vector<std::unique_ptr<Warrior>>* getAllWarriors() { return &m_warriors;}
     void handleHover(const int row, const int col);
@@ -41,11 +42,11 @@ protected:
     Direction_t m_direction;
     bool m_isAnimating;
     Location m_selectedPlayerLocation;
-private:
-    float m_pixelOffset = RECT_SIZE / IMAGE_COUNT;
     PlayerModel m_player;
-
+    float m_pixelOffset = RECT_SIZE / IMAGE_COUNT;
     std::string m_playerSymbol;
+private:
+
 };
 
 

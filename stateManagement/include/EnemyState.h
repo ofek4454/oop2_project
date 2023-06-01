@@ -1,5 +1,6 @@
 #pragma once
 #include "PlayerState.h"
+#include "pthread.h"
 
 class EnemyState : public PlayerState {
 public:
@@ -8,13 +9,12 @@ public:
     ~EnemyState() = default;
 
     virtual void init();
-
+    virtual bool move();
     virtual void hoverFlag(const int row, const int col) {};
 
     virtual void hoverHole(const int row, const int col) {};
 
     virtual void doTurn(sf::Event::MouseButtonEvent *click);
-
 
     virtual void print() {
         auto window = WindowManager::instance().getWindow();
@@ -23,7 +23,10 @@ public:
     }
 
 
+
 private:
+
+    sf::Clock clock;
 };
 
 

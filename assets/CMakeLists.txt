@@ -39,3 +39,6 @@ configure_file ("Chooseweapon.wav" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
 configure_file ("Generatingweapon.wav" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
 configure_file ("arrow.png" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
 configure_file ("AlfaSlabOne-Regular.ttf" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
+configure_file ("button.png" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
+configure_file ("exit.png" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
+
