@@ -55,6 +55,7 @@ void Weapon::chooseWeapon() {
                 return false;
             },
             [](auto type, auto exit) { return false; },
+            [](auto offset, auto exit) { return false; },
             [this, window, background](auto exit) {
                 window->draw(background);
                 window->draw(m_ChooseBoxRect);

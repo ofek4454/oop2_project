@@ -39,11 +39,6 @@ void EnterNameScreen::handleEvents() {
                         exit = true;
                     } else {
                         AvailableRooms(PlayerModel(user));
-//                        RoomState::instance().joinRoom("-NWlHNYxSM3Kn6hATEyo", user.m_uid);
-//                        auto enemy = UserService::getUser(RoomState::instance().getRoom().creatorUid());
-//                        std::unique_ptr<PlayerState> p1 = std::make_unique<UserState>(user);
-//                        std::unique_ptr<PlayerState> p2 = std::make_unique<EnemyState>(enemy);
-//                        Controller(&p1,&p2, P2);
                         exit = true;
                     }
                 }
@@ -66,6 +61,7 @@ void EnterNameScreen::handleEvents() {
                 print();
                 return false;
             },
+            [](auto offset,auto exit){return false;},
             [this](auto exit) {}
     );
 }

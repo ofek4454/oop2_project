@@ -21,6 +21,7 @@ void RoomState::joinRoom(std::string roomId, std::string uid){
     room = RoomService::getRoom(roomId);
     room.player2_uid = uid;
     RoomService::updateRoom(room);
+    RoomService::deleteAvailableRoom(roomId);
 }
 
 void RoomState::deleteRoom() {
@@ -66,4 +67,22 @@ std::pair<Location, Location> RoomState::getOpponentFlagAndHole() {
     }
 
     return std::make_pair(flag,hole);
+}
+
+bool RoomState::isTurnChanged() {
+    std::cout << "room changed\n";
+    auto tmpRoom = RoomService::getRoom(room.roomId);
+
+    std::cout << "local: " << room.turn << " server: " << tmpRoom.turn << "\n";
+    if(tmpRoom.turn == room.turn)
+        return false;
+
+    room.turn = tmpRoom.turn;
+    return true;
+}
+
+void RoomState::uploadFlagAndHole() {
+    int row1 = m_isMeP1 ? BOARD_SIZE-1 : 0;
+    int row2 = m_isMeP1 ? BOARD_SIZE-2 : 1;
+    RoomService::setFlagAndHole(room,row1,row2);
 }

@@ -51,6 +51,7 @@ public:
     std::string getRoomId() const {return roomId;}
     std::string creatorUid() const {return creator_uid;}
     std::string player2Uid() const {return player2_uid;}
+    std::array<std::string, BOARD_SIZE> getBoardRow(int row) const {return board[row];}
 
 //    void rotateBoard(){
 //        std::reverse(board.begin(),board.end());

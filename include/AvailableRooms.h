@@ -17,7 +17,12 @@ private:
     sf::RectangleShape m_background;
     sf::RenderWindow &m_window;
     std::unordered_map<std::string,std::string> availableRooms;
+    std::vector<sf::RectangleShape> m_buttons;
+    std::vector<sf::Text> m_texts;
 
+    void print(int offset = 0);
     void init();
     void chooseRoom();
+    void clickHandler(sf::Event::MouseButtonEvent &click,bool &exit);
+
 };

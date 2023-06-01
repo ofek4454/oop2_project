@@ -31,7 +31,7 @@ public:
     void setAnimating(bool animating) {m_isAnimating = animating;}
     Location getWarriorLocation() const {return m_selectedPlayerLocation;}
 
-    void setPlayerSymbol(char s){m_playerSymbol=s;}
+    void setPlayerSymbol(std::string s){m_playerSymbol=s;}
     void checkDeletion();
 
 

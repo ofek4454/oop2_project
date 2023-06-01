@@ -19,10 +19,12 @@ public:
     void createRoom(PlayerModel &creator);
     void joinRoom(std::string roomId,std::string uid);
     void deleteRoom();
+    void uploadFlagAndHole();
 
     void upload();
     void changeTurn(Turn_t turn);
     void setBoardCell(Location loc , std::string str);
+    bool isTurnChanged();
 
 private:
     RoomState(){}

@@ -3,7 +3,7 @@
 
 namespace RoomService {
 
-    json createRoom(RoomModel room, std::string creator_name) {
+    json createRoom(RoomModel &room, std::string creator_name) {
         auto response = HttpRequestsManager::instance().postRequest(room.toJson(), BASE_URL + "/rooms.json");
         std::string roomId = response["name"];
         json data;
@@ -13,7 +13,7 @@ namespace RoomService {
         return response;
     }
 
-    json updateRoom(RoomModel room) {
+    json updateRoom(RoomModel &room) {
         auto response = HttpRequestsManager::instance().putRequest(room.toJson(), BASE_URL + "/rooms/" + room.getRoomId() + ".json");
         return response;
     }
@@ -30,6 +30,19 @@ namespace RoomService {
 
     json getAvailableRooms(){
         auto response = HttpRequestsManager::instance().getRequest(BASE_URL + "/available_rooms.json");
+        return response;
+    }
+
+    json deleteAvailableRoom(std::string roomId) {
+        auto response = HttpRequestsManager::instance().deleteRequest(BASE_URL + "/available_rooms/" + roomId + ".json");
+        return response;
+    }
+
+    json setFlagAndHole(RoomModel &room, int row1,int row2){
+        std::string url = BASE_URL + "/rooms/" + room.getRoomId() + "/board/" + std::to_string(row1) + ".json";
+        HttpRequestsManager::instance().putRequest(room.getBoardRow(row1), url);
+        url = BASE_URL + "/rooms/" + room.getRoomId() + "/board/" + std::to_string(row2) + ".json";
+        auto response = HttpRequestsManager::instance().putRequest(room.getBoardRow(row2), url);
         return response;
     }
 }

@@ -12,7 +12,7 @@
 class Controller {
 public:
     // C-Tor
-    Controller(std::unique_ptr<PlayerState>* p1,std::unique_ptr<PlayerState>* p2,Turn_t turn = P1) ;
+    Controller(std::unique_ptr<PlayerState>* p1,std::unique_ptr<PlayerState>* p2, bool isMeP1) ;
     // D-Tor
     ~Controller() = default;
     // function
@@ -24,9 +24,9 @@ private:
     sf::Texture m_fightTexture;
     sf::Text m_p1Name, m_p2Name;
     Board m_board;
-    std::unique_ptr<PlayerState> m_p1;
-    std::unique_ptr<PlayerState> m_p2;
-    Turn_t m_turn;
+    std::unique_ptr<PlayerState> m_user;
+    std::unique_ptr<PlayerState> m_enemy;
+    Turn_t m_turn = P1;
     sf::Sprite m_referee;
     float m_refereeRect;
     bool m_switchingTurn = false;
@@ -45,6 +45,10 @@ private:
     void handleHover(sf::Event::MouseMoveEvent &click);
     void handleAnimation();
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
+
+    bool isMyTurn(){
+        return (m_turn == P1 && m_isMeP1) || (m_turn == P2 && !m_isMeP1);
+    }
 };
 
 
