@@ -37,6 +37,7 @@ void Menu::handleEvents() {
             },
             [](auto key, auto exit) {return false;},
             [](auto type, auto exit) {return false;},
+            [](auto offset,auto exit){return false;},
             [this](auto exit) {
                 print();
             }

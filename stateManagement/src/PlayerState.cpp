@@ -1,7 +1,6 @@
 
 #include "PlayerState.h"
 #include "iostream"
-#include "RoomState.h"
 
 PlayerState::PlayerState(PlayerModel &player) : m_player(player){}
 
@@ -41,48 +40,6 @@ bool *PlayerState::checkAvailableLocations(Location location) {
     return locations;
 }
 
-bool PlayerState::move() {
-    static int imageCounter = 0;
-    static float shadowOffsetX = -1;
-    static int shadowOffsetY = 4;
-    auto warrior = getWarrior(m_selectedPlayerLocation);
-    if(warrior == NULL)
-        return true;
-    if (m_direction == Up)
-        warrior->get()->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset),sf::Vector2f(shadowOffsetX, shadowOffsetY));
-    if (m_direction == Down)
-        warrior->get()->setSpriteLocation(sf::Vector2f(0, m_pixelOffset),sf::Vector2f(sf::Vector2f(shadowOffsetX * 0.5, -shadowOffsetY * 0.8)));
-    if (m_direction == Left)
-        warrior->get()->setSpriteLocation(sf::Vector2f(-m_pixelOffset, 0),sf::Vector2f(sf::Vector2f(-shadowOffsetX, 0)));
-    if (m_direction == Right)
-        warrior->get()->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0),sf::Vector2f(sf::Vector2f(shadowOffsetX, 0)));
-
-    warrior->get()->setIntRect(imageCounter);
-    imageCounter++;
-    if(imageCounter == IMAGE_COUNT){
-        shadowOffsetX = -1;
-        shadowOffsetY = 4;
-        imageCounter = 0;
-
-        auto oldLocation = warrior->get()->getLocation();
-        warrior->get()->setLocation(m_direction);
-        m_selectedPlayerLocation = warrior->get()->getLocation();
-
-        if(m_playerSymbol == "1"){
-            RoomState::instance().setBoardCell(oldLocation, "");
-            RoomState::instance().setBoardCell(m_selectedPlayerLocation, m_playerSymbol+warrior->get()->getSymbol());
-        }
-        return true;
-    }
-    if(imageCounter == 3){
-        ResourcesManager::instance().playSound(blueJump);
-    }
-    if(imageCounter == 12){
-        shadowOffsetX = 3.7;
-        shadowOffsetY = -12;
-    }
-    return false;
-}
 
 std::unique_ptr<Warrior> *PlayerState::getWarrior(const Location location) {
     for (int i = 0; i < m_warriors.size(); i++)

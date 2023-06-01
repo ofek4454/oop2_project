@@ -48,6 +48,7 @@ void RoomState::upload() {
 
 void RoomState::changeTurn(Turn_t turn) {
     room.turn = turn;
+    std::cout << "turn changed\n";
 }
 
 std::pair<Location, Location> RoomState::getOpponentFlagAndHole() {
@@ -66,4 +67,13 @@ std::pair<Location, Location> RoomState::getOpponentFlagAndHole() {
     }
 
     return std::make_pair(flag,hole);
+}
+
+bool RoomState::isChangedTurn() {
+    auto tmpRoom = RoomService::getRoom(room.roomId);
+    if(tmpRoom.turn == room.turn)
+        return false;
+
+    room.turn = tmpRoom.turn;
+    return true;
 }

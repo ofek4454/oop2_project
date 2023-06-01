@@ -5,6 +5,7 @@ void WindowManager::eventHandler(std::function<bool(sf::Event::MouseMoveEvent, b
                                  std::function<bool(sf::Event::MouseButtonEvent, bool &exit)> clickHandler,
                                  std::function<bool(sf::Event::KeyEvent, bool &exit)> keyPressedHandler,
                                  std::function<bool(sf::Event::TextEvent, bool &exit)> typeHandler,
+                                 std::function<bool(int offset, bool &exit)> printScroll,
                                  std::function<void(bool &exit)> afterFunction) {
 
     bool exit = false;
@@ -25,6 +26,9 @@ void WindowManager::eventHandler(std::function<bool(sf::Event::MouseMoveEvent, b
             }
             else if (event.type == sf::Event::TextEntered){
                 if(typeHandler(event.text, exit))continue;
+            }
+            else if(event.type == sf::Event::MouseWheelScrolled){
+                if(printScroll(event.mouseWheelScroll.delta * 3, exit))continue;
             }
         }
         if(exit) return;

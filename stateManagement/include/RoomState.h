@@ -19,6 +19,7 @@ public:
     void createRoom(PlayerModel &creator);
     void joinRoom(std::string roomId,std::string uid);
     void deleteRoom();
+    bool isChangedTurn();
 
     void upload();
     void changeTurn(Turn_t turn);

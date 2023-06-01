@@ -56,6 +56,8 @@ enum Textures_t{
     RedSP,
     Background,
     Referee,
+    ExitButton,
+    RoomButton,
 };
 
 

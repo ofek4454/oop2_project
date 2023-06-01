@@ -1,14 +1,11 @@
-//
-// Created by Bar Kobi on 20/05/2023.
-//
 
+#include <CoreFoundation/CoreFoundation.h>
 #include "Controller.h"
 #include "SoundFlip.h"
 #include "RoomState.h"
 
-Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerState> *p2, Turn_t turn) : m_window(
-        WindowManager::instance().getWindow()), m_p1(p1->get()), m_p2(p2->get()), m_turn(turn), m_isMeP1(turn == P1) {
-
+Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerState> *p2, bool isMeP1)
+    : m_window(WindowManager::instance().getWindow()), m_p1(p1->get()), m_p2(p2->get()), m_isMeP1(isMeP1) {
     m_p1->setPlayerSymbol(m_isMeP1 ? '1' : '2');
     m_p2->setPlayerSymbol(!m_isMeP1 ? '1' : '2');
     m_p1->init();
@@ -21,23 +18,24 @@ void Controller::run() {
     print();
     WindowManager::instance().eventHandler(
             [this](auto move, auto exit) {
-                if (m_turn == P1)
+                if ((m_turn == P1 && m_isMeP1) || (m_turn == P2 && !m_isMeP1)) {}
                     handleHover(move);
-                else return true;
                 return false;
             },
             [this](auto click, auto exit) {
                 SoundFlip::instance().checkIfContains(click);
-                if (m_turn == P1) {
+                if ((m_turn == P1 && m_isMeP1) || (m_turn == P2 && !m_isMeP1)){
                     m_p1->doTurn(&click);
-                } else return true;
+                }
                 return false;
             },
             [](auto key, auto exit) { return false; },
             [](auto type, auto exit) { return false; },
+            [](auto offset, auto exit) { return false; },
             [this](auto exit) {
-                if (m_turn == P2 && !m_p2->isAnimating()) {
-                    m_p2->doTurn();
+                if ((m_turn == P2 && m_isMeP1) || (m_turn == P1 && !m_isMeP1)) {
+                    if(!m_p2->isAnimating())
+                        m_p2->doTurn();
                 }
                 handleAnimation();
                 handleEvents();
@@ -47,6 +45,7 @@ void Controller::run() {
                 print();
             }
     );
+
 }
 
 void Controller::print() {
@@ -59,7 +58,6 @@ void Controller::print() {
     m_p2->print();
     m_window->draw(m_referee);
     SoundFlip::instance().draw(*m_window);
-
 
     m_window->display();
 }
@@ -109,7 +107,10 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
         sf::FloatRect rect_pos = BOARD_TOP_LEFT;
         int row = (event.y - rect_pos.top) / RECT_SIZE;
         int col = (event.x - rect_pos.left) / RECT_SIZE;
-        m_p1->handleHover(row, col);
+        if(m_isMeP1)
+            m_p1->handleHover(row, col);
+        else
+            m_p2->handleHover(row, col);
     }
 }
 
@@ -142,7 +143,13 @@ void Controller::handleEvents() {
                 animateFight(ResourcesManager::instance().getTexture(BlueSP), 300,
                              96, 2);
                 ResourcesManager::instance().playSound(ChooseWeapon);
-                auto warrior1 = m_p1->getWarrior(m_p1->getWarriorLocation());
+
+                std::unique_ptr<Warrior> *warrior1;
+                if(m_isMeP1)
+                    warrior1 = m_p1->getWarrior(m_p1->getWarriorLocation());
+                else
+                    warrior1 = m_p2->getWarrior(m_p2->getWarriorLocation());
+
                 if (warrior1 != NULL) {
                     warrior1->get()->getWeapon()->get()->chooseWeapon();
                 }
@@ -152,21 +159,28 @@ void Controller::handleEvents() {
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP), 300,
                              96, 2);
                 ResourcesManager::instance().playSound(ChooseWeapon);
-                auto warrior1 = m_p1->getWarrior(m_p1->getWarriorLocation());
-                if (warrior1 != NULL) {
+
+                std::unique_ptr<Warrior> *warrior1 , *warrior2;
+                if(m_isMeP1){
+                    warrior1 = m_p1->getWarrior(m_p1->getWarriorLocation());
+                    warrior2 = m_p2->getWarrior(m_p2->getWarriorLocation());
+                }
+                else{
+                    warrior2 = m_p1->getWarrior(m_p1->getWarriorLocation());
+                    warrior1 = m_p2->getWarrior(m_p2->getWarriorLocation());
+                }
+                if (warrior1 != NULL)
                     warrior1->get()->getWeapon()->get()->chooseWeapon();
-                }
-                auto warrior2 = m_p2->getWarrior(m_p2->getWarriorLocation());
-                if (warrior2 != NULL) {
+                if (warrior2 != NULL)
                     warrior2->get()->getWeapon()->get()->chooseWeapon();
-                }
                 break;
             }
             default:
                 break;
         }
-        ResourcesManager::instance().playSound(event.getWinner() == P1Won ? WinFight : event.getWinner() == P2Won ? LoseFight : NUMBER_OF_SOUNDS - 1);
-        if(event.getWinner() == P1Won || event.getWinner() == P2Won){
+        ResourcesManager::instance().playSound(
+                event.getWinner() == P1Won ? WinFight : event.getWinner() == P2Won ? LoseFight : NUMBER_OF_SOUNDS - 1);
+        if (event.getWinner() == P1Won || event.getWinner() == P2Won) {
             m_currentP1->setNeedToBeDraw(true);
             m_currentP2->setNeedToBeDraw(true);
             sf::sleep(sf::seconds(1.5));
@@ -254,6 +268,7 @@ void Controller::initGame() {
     m_refereeRect += (m_turn == P1) ? 0 : 724.5;
     bool flagChoosed = false;
     initNames();
+    /*
     WindowManager::instance().eventHandler(
             [this, &flagChoosed](auto move, auto exit) {
                 if (!BOARD_FRAME.contains(move.x, move.y)) return true;
@@ -270,11 +285,10 @@ void Controller::initGame() {
                 int row = (click.y - rect_pos.top) / rect_pos.height;
                 int col = (click.x - rect_pos.left) / rect_pos.width;
                 if (row < BOARD_SIZE - 2) return true;
-                if (!flagChoosed){
+                if (!flagChoosed) {
                     if (m_p1->setAsFlag(row, col))
                         flagChoosed = true;
-                }
-                else{
+                } else {
                     if (m_p1->setAsHole(row, col))
                         exit = true;
                 }
@@ -283,21 +297,23 @@ void Controller::initGame() {
             },
             [](auto key, auto exit) { return false; },
             [](auto type, auto &exit) { return false; },
+            [](auto offset, auto exit) { return false; },
             [this](auto exit) {
                 print();
             }
     );
-    RoomState::instance().upload();
-    std::pair<Location,Location> opponentFlagAndHole;
-    sf::Clock clock;
-    do{
-        if(clock.getElapsedTime().asSeconds() < 1) continue;
-        clock.restart();
-        opponentFlagAndHole = RoomState::instance().getOpponentFlagAndHole();
-    } while (opponentFlagAndHole.first == Location(-1,-1));
-
-    m_p2->setAsFlag(opponentFlagAndHole.first.row,opponentFlagAndHole.first.col);
-    m_p2->setAsHole(opponentFlagAndHole.second.row,opponentFlagAndHole.second.col);
+//    std::pair<Location,Location> opponentFlagAndHole;
+//    sf::Clock clock;
+//    do{
+//        if(clock.getElapsedTime().asSeconds() < 1) continue;
+//        clock.restart();
+//        opponentFlagAndHole = RoomState::instance().getOpponentFlagAndHole();
+//    } while (opponentFlagAndHole.first == Location(-1,-1));
+//
+//    m_p2->setAsFlag(opponentFlagAndHole.first.row,opponentFlagAndHole.first.col);
+//    m_p2->setAsHole(opponentFlagAndHole.second.row,opponentFlagAndHole.second.col);
+//    RoomState::instance().upload();
+     */
 }
 
 void Controller::changeTurnAnimation() {
@@ -321,6 +337,7 @@ void Controller::changeTurnAnimation() {
         }
         m_referee.setTextureRect(sf::IntRect(m_refereeRect, 0, 241.5, 164));
     }
-    if(oldTurn != m_turn)
+    if(oldTurn != m_turn && ((m_turn == P1 && m_isMeP1) || (m_turn == P2 && !m_isMeP1)))
         RoomState::instance().upload();
 }
+

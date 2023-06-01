@@ -5,6 +5,7 @@
 #include "EnemyState.h"
 #include "UserState.h"
 #include "iostream"
+#include "signal.h"
 #include "EventLoop.h"
 
 
@@ -12,11 +13,12 @@
 class Controller {
 public:
     // C-Tor
-    Controller(std::unique_ptr<PlayerState>* p1,std::unique_ptr<PlayerState>* p2,Turn_t turn = P1) ;
+    Controller(std::unique_ptr<PlayerState>* p1,std::unique_ptr<PlayerState>* p2, bool isMeP1) ;
     // D-Tor
     ~Controller() = default;
     // function
     void run();
+
 
 private:
     // private members
@@ -26,14 +28,13 @@ private:
     Board m_board;
     std::unique_ptr<PlayerState> m_p1;
     std::unique_ptr<PlayerState> m_p2;
-    Turn_t m_turn;
+    Turn_t m_turn = P1;
     sf::Sprite m_referee;
     float m_refereeRect;
     bool m_switchingTurn = false;
     Warrior* m_currentP1 = nullptr;
     Warrior* m_currentP2 = nullptr;
     const bool m_isMeP1;
-
 
     // private functions:
     void changeTurnAnimation();
@@ -46,5 +47,3 @@ private:
     void handleAnimation();
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
 };
-
-
