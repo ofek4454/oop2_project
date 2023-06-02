@@ -32,7 +32,8 @@ private:
     bool m_switchingTurn = false;
     Warrior* m_currentP1 = nullptr;
     Warrior* m_currentP2 = nullptr;
-    const bool m_isMeP1;
+    const bool m_serverTurn;
+    bool playerFinished = false;
 
 
     // private functions:
@@ -47,7 +48,13 @@ private:
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
 
     bool isMyTurn(){
-        return (m_turn == P1 && m_isMeP1) || (m_turn == P2 && !m_isMeP1);
+        auto turn = RoomState::instance().getTurn();
+        std::cout << "room turn: " << turn << " real my turn: " << m_serverTurn << std::endl;
+        if(turn == m_serverTurn)
+            return true;
+
+        return false;
+
     }
 };
 

@@ -7,12 +7,13 @@
 #include "RoomState.h"
 
 Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerState> *p2, bool isMeP1) : m_window(
-        WindowManager::instance().getWindow()), m_user(p1->get()), m_enemy(p2->get()), m_isMeP1(isMeP1) {
+        WindowManager::instance().getWindow()), m_user(p1->get()), m_enemy(p2->get()), m_serverTurn(isMeP1) {
 
     m_user->setPlayerSymbol(isMeP1 ? "1" : "2");
     m_enemy->setPlayerSymbol(!isMeP1 ? "1" : "2");
     m_user->init();
     m_enemy->init();
+    m_turn = (Turn_t)RoomState::instance().getTurn();
     initGame();
     run();
 }
@@ -21,14 +22,14 @@ void Controller::run() {
     print();
     WindowManager::instance().eventHandler(
             [this](auto move, auto exit) {
-                if (isMyTurn())
+                if (m_turn == m_serverTurn)
                     handleHover(move);
                 else return true;
                 return false;
             },
             [this](auto click, auto exit) {
                 SoundFlip::instance().checkIfContains(click);
-                if (isMyTurn()) {
+                if (m_turn == m_serverTurn) {
                     m_user->doTurn(&click);
                 } else return true;
                 return false;
@@ -37,8 +38,14 @@ void Controller::run() {
             [](auto type, auto exit) { return false; },
             [](auto offset, auto exit) { return false; },
             [this](auto exit) {
-                if (!isMyTurn() && !m_enemy->isAnimating()) {
-                    m_enemy->doTurn();
+                if (m_turn != m_serverTurn && !m_enemy->isAnimating() && !m_switchingTurn) {
+                    static sf::Clock clock;
+                    if(clock.getElapsedTime().asSeconds() > 3){
+                        clock.restart().asSeconds();
+                        if(isMyTurn()){
+                            m_enemy->doTurn();
+                        }
+                    }
                 }
                 handleAnimation();
                 handleEvents();
@@ -89,12 +96,12 @@ void Controller::handleAnimation() {
     auto time = clock.getElapsedTime().asSeconds();
     if (time > 0.025) {
         clock.restart().asSeconds();
-        if (m_turn == P1 && m_user->move()) {
+        if (m_turn == m_serverTurn && m_user->move()) {
             m_user->setAnimating(false);
             m_switchingTurn = true;
             return;
         }
-        if (m_turn == P2 && m_enemy->move()) {
+        if (m_turn != m_serverTurn && m_enemy->move()) {
             m_enemy->setAnimating(false);
             m_switchingTurn = true;
             // clear waiting events
@@ -245,14 +252,16 @@ void Controller::initGame() {
                                       WINDOW_HEIGHT * 0.685 - WINDOW_HEIGHT * 0.355);
     m_referee.setTexture(*ResourcesManager::instance().getTexture(Referee));
     m_referee.setScale((frameRectSize.x / 241.5) * 0.6, (frameRectSize.y / 164) * 0.6);
-    m_referee.setTextureRect(sf::IntRect(0, 0, 249, 164));
+    m_referee.setTextureRect(sf::IntRect(0, 0, 241.5, 164));
     m_referee.setPosition(
             sf::Vector2f(WINDOW_WIDTH * 0.775 + ((WINDOW_WIDTH - WINDOW_WIDTH * 0.775) / 2) -
                          (m_referee.getGlobalBounds().width / 2),
                          WINDOW_HEIGHT * 0.355 + ((WINDOW_WIDTH - WINDOW_WIDTH * 0.775,
                                  WINDOW_HEIGHT * 0.685 - WINDOW_HEIGHT * 0.355) / 2) -
                          (m_referee.getGlobalBounds().height / 2)));
-    m_refereeRect += (m_turn == P1) ? 0 : 724.5;
+    m_refereeRect += (m_serverTurn == P1) ? 0 : 724.5;
+    m_referee.setTextureRect(sf::IntRect(m_refereeRect, 0, 241.5, 164));
+
     bool flagChoosed = false;
     initNames();
     WindowManager::instance().eventHandler(
@@ -290,6 +299,7 @@ void Controller::initGame() {
             }
     );
     RoomState::instance().uploadFlagAndHole();
+    /*
     std::pair<Location,Location> opponentFlagAndHole;
     sf::Clock clock;
     do{
@@ -299,30 +309,31 @@ void Controller::initGame() {
     } while (opponentFlagAndHole.first == Location(-1,-1));
 
     m_enemy->setAsFlag(opponentFlagAndHole.first.row,opponentFlagAndHole.first.col);
-    m_enemy->setAsHole(opponentFlagAndHole.second.row,opponentFlagAndHole.second.col);
+    m_enemy->setAsHole(opponentFlagAndHole.second.row,opponentFlagAndHole.second.col);*/
 }
 
 void Controller::changeTurnAnimation() {
     static sf::Clock animationClock;
-    Turn_t oldTurn = m_turn;
+//    Turn_t oldTurn = m_turn;
     auto time = animationClock.getElapsedTime().asSeconds();
     if (time > 0.1) {
         animationClock.restart().asSeconds();
-        m_refereeRect += isMyTurn() ? 241.5 : -241.5;
-        if (m_refereeRect == 724.5 && m_turn == P1) {
+        m_refereeRect += (m_turn == m_serverTurn) ? 241.5 : -241.5;
+        if (m_refereeRect >= 724.5 && m_turn == m_serverTurn) {
+            std::cout  << "change to emeny turn\n";
             m_switchingTurn = false;
             ResourcesManager::instance().playSound(redTurn);
-            m_turn = P2;
+            m_turn = (Turn_t)!m_serverTurn;
+            playerFinished = false;
             RoomState::instance().changeTurn(m_turn);
+            RoomState::instance().upload();
         }
-        if (m_refereeRect == 0 && m_turn == P2) {
+        if (m_refereeRect <= 0 && m_turn != m_serverTurn) {
+            std::cout << "Changing turn" << std::endl;
             m_switchingTurn = false;
             ResourcesManager::instance().playSound(blueTurn);
-            m_turn = P1;
-            RoomState::instance().changeTurn(m_turn);
+            m_turn = (Turn_t)m_serverTurn;
         }
         m_referee.setTextureRect(sf::IntRect(m_refereeRect, 0, 241.5, 164));
     }
-    if(oldTurn != m_turn)
-        RoomState::instance().upload();
 }

@@ -26,19 +26,8 @@ void EnemyState::init() {
 
 
 void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
-    sf::sleep(sf::seconds(1));
     m_isAnimating = true;
 
-//    sf::Clock clock;
-//    while(true){
-//        if(clock.getElapsedTime().asSeconds() > 2){
-//            clock.restart();
-//            if(RoomState::instance().isTurnChanged()){
-//                m_isAnimating = true;
-//                break;
-//            }
-//        }
-//    }
 }
 
 

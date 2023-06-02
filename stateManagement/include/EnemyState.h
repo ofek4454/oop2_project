@@ -9,7 +9,9 @@ public:
     ~EnemyState() = default;
 
     virtual void init();
-    virtual bool move();
+    virtual bool move(){
+        std::cout << m_isAnimating;
+        return m_isAnimating;}
     virtual void hoverFlag(const int row, const int col) {};
 
     virtual void hoverHole(const int row, const int col) {};

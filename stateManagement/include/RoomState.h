@@ -11,6 +11,7 @@ public:
         static RoomState roomState;
         return roomState;
     }
+    ~RoomState() {deleteRoom();}
 
     RoomModel &getRoom(){ return room;}
     bool isOpponentJoined();
@@ -24,7 +25,7 @@ public:
     void upload();
     void changeTurn(Turn_t turn);
     void setBoardCell(Location loc , std::string str);
-    bool isTurnChanged();
+    bool getTurn();
 
 private:
     RoomState(){}
