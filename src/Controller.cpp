@@ -9,8 +9,8 @@
 Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerState> *p2, bool isMeP1) : m_window(
         WindowManager::instance().getWindow()), m_user(p1->get()), m_enemy(p2->get()), m_serverTurn(isMeP1) {
 
-    m_user->setPlayerSymbol(isMeP1 ? "1" : "2");
-    m_enemy->setPlayerSymbol(!isMeP1 ? "1" : "2");
+    m_user->setPlayerSymbol(!isMeP1 ? "1" : "2");
+    m_enemy->setPlayerSymbol(isMeP1 ? "1" : "2");
     m_user->init();
     m_enemy->init();
     m_turn = (Turn_t)RoomState::instance().getTurn();
@@ -40,7 +40,7 @@ void Controller::run() {
             [this](auto exit) {
                 if (m_turn != m_serverTurn && !m_enemy->isAnimating() && !m_switchingTurn) {
                     static sf::Clock clock;
-                    if(clock.getElapsedTime().asSeconds() > 3){
+                    if(clock.getElapsedTime().asSeconds() > 1.5){
                         clock.restart().asSeconds();
                         if(isMyTurn()){
                             m_enemy->doTurn();
@@ -314,22 +314,18 @@ void Controller::initGame() {
 
 void Controller::changeTurnAnimation() {
     static sf::Clock animationClock;
-//    Turn_t oldTurn = m_turn;
     auto time = animationClock.getElapsedTime().asSeconds();
     if (time > 0.1) {
         animationClock.restart().asSeconds();
         m_refereeRect += (m_turn == m_serverTurn) ? 241.5 : -241.5;
         if (m_refereeRect >= 724.5 && m_turn == m_serverTurn) {
-            std::cout  << "change to emeny turn\n";
             m_switchingTurn = false;
             ResourcesManager::instance().playSound(redTurn);
             m_turn = (Turn_t)!m_serverTurn;
-            playerFinished = false;
             RoomState::instance().changeTurn(m_turn);
             RoomState::instance().upload();
         }
         if (m_refereeRect <= 0 && m_turn != m_serverTurn) {
-            std::cout << "Changing turn" << std::endl;
             m_switchingTurn = false;
             ResourcesManager::instance().playSound(blueTurn);
             m_turn = (Turn_t)m_serverTurn;

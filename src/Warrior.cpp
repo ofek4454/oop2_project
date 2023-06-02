@@ -56,8 +56,12 @@ void Warrior::setHighlighted(bool isHighlighted) {
     }
 }
 
-void Warrior::setIntRect(int counter) {
-    m_sprite.setTextureRect(sf::IntRect(MOVING_ANIMATION_ARR[counter], 0, IMAGE_WIDTH, IMAGE_HEIGHT));
+void Warrior::setIntRect(int counter,bool isEnemy) {
+    if (isEnemy) {
+        m_sprite.setTextureRect(sf::IntRect(MOVING_ANIMATION_ARR[counter], IMAGE_HEIGHT * 3, IMAGE_WIDTH, IMAGE_HEIGHT));
+    }else{
+        m_sprite.setTextureRect(sf::IntRect(MOVING_ANIMATION_ARR[counter], 0, IMAGE_WIDTH, IMAGE_HEIGHT));
+    }
 }
 
 

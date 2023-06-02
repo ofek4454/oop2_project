@@ -141,10 +141,12 @@ bool UserState::move() {
         auto oldLocation = warrior->get()->getLocation();
         warrior->get()->setLocation(m_direction);
         m_selectedPlayerLocation = warrior->get()->getLocation();
-
         if(m_playerSymbol == "1"){
             RoomState::instance().setBoardCell(oldLocation, "");
             RoomState::instance().setBoardCell(m_selectedPlayerLocation, m_playerSymbol+warrior->get()->getSymbol());
+            std::string move = std::to_string(7 - oldLocation.row) + "," + std::to_string(7 - oldLocation.col) + " to " +
+                    std::to_string(7 - m_selectedPlayerLocation.row) + "," + std::to_string(7 - m_selectedPlayerLocation.col);
+            RoomState::instance().setLastMove(move);
         }
         return true;
     }

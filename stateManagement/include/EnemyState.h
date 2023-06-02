@@ -9,9 +9,7 @@ public:
     ~EnemyState() = default;
 
     virtual void init();
-    virtual bool move(){
-        std::cout << m_isAnimating;
-        return m_isAnimating;}
+    virtual bool move();
     virtual void hoverFlag(const int row, const int col) {};
 
     virtual void hoverHole(const int row, const int col) {};
@@ -24,10 +22,10 @@ public:
             warrior->draw();
     }
 
-
+    std::vector<int> extractNumbers(const std::string& str);
 
 private:
-
+    Location m_newLocation;
     sf::Clock clock;
 };
 

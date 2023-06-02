@@ -33,7 +33,6 @@ private:
     Warrior* m_currentP1 = nullptr;
     Warrior* m_currentP2 = nullptr;
     const bool m_serverTurn;
-    bool playerFinished = false;
 
 
     // private functions:

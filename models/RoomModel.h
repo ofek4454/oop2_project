@@ -26,6 +26,7 @@ public:
         data["watchers_uids"] = watchers_uids;
         data["board"] = board;
         data["turn"] = int(turn);
+        data["enemy_last_move"] = enemyLastMove;
 
         return data;
     }
@@ -45,6 +46,8 @@ public:
             }
             str+= "\n";
         }
+        str += enemyLastMove;
+        str += "\n";
         return str;
     }
 
@@ -52,6 +55,7 @@ public:
     std::string creatorUid() const {return creator_uid;}
     std::string player2Uid() const {return player2_uid;}
     std::array<std::string, BOARD_SIZE> getBoardRow(int row) const {return board[row];}
+    std::string getLastMove() {return enemyLastMove;}
 
 //    void rotateBoard(){
 //        std::reverse(board.begin(),board.end());
@@ -67,6 +71,7 @@ private:
     std::vector<std::string> watchers_uids;
     std::array<std::array<std::string, BOARD_SIZE>,BOARD_SIZE> board;
     Turn_t turn;
+    std::string enemyLastMove = "";
 
     RoomModel(std::string id, nlohmann::json &data){
         roomId = id;
@@ -76,5 +81,6 @@ private:
             watchers_uids = data["watchers_uids"];
         board = data["board"];
         turn = Turn_t(data["turn"]);
+        enemyLastMove = data["enemy_last_move"];
     }
 };

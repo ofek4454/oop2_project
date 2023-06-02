@@ -79,3 +79,13 @@ void RoomState::uploadFlagAndHole() {
     int row2 = m_isMeP1 ? BOARD_SIZE-2 : 1;
     RoomService::setFlagAndHole(room,row1,row2);
 }
+
+
+void RoomState::setLastMove(std::string str){
+    room.enemyLastMove = str;
+}
+
+std::string RoomState::getLastMove() {
+    auto tmpRoom = RoomService::getRoom(room.roomId);
+    return tmpRoom.enemyLastMove;
+}

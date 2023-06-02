@@ -21,7 +21,7 @@ public:
     void setLocation(Direction_t direction);
     void setSpriteLocation(const sf::Vector2f &offset,const sf::Vector2f &shadowoffset);
     void setHighlighted(bool isHighlighted);
-    void setIntRect(int counter);
+    void setIntRect(int counter,bool isEnemy = false);
     void setTextureFlag(bool isHighlighted);
     void setTextureHole(bool isHighlighted);
     bool setAsFlag(bool changeTexture);

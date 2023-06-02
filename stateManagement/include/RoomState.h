@@ -26,6 +26,8 @@ public:
     void changeTurn(Turn_t turn);
     void setBoardCell(Location loc , std::string str);
     bool getTurn();
+    std::string getLastMove();
+    void setLastMove(std::string str);
 
 private:
     RoomState(){}
