@@ -133,21 +133,18 @@ void Controller::handleEvents() {
                              84, 7, winP);
                 RoomState::instance().changeTurn();
                 m_turn = (Turn_t)!myTurn;
-                m_isInFight = false;
-                break;
+                 break;
             case FightRS:
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueRS : RedRS), 994,
                              93, 7, winR);
                 RoomState::instance().changeTurn();
                 m_turn = (Turn_t)!myTurn;
-                m_isInFight = false;
                 break;
             case FightPS:
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP), 900,
                              96, 6, winS);
                 RoomState::instance().changeTurn();
                 m_turn = (Turn_t)!myTurn;
-                m_isInFight = false;
                 break;
             case FightRR:
                 animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
@@ -159,7 +156,6 @@ void Controller::handleEvents() {
                 animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3, tieS);
                 break;
             case FightUndefined: { // undefined vs undefined
-                m_isInFight = true;
                 animateFight(ResourcesManager::instance().getTexture(BlueSP), 300, 96, 2);
                 ResourcesManager::instance().playSound(ChooseWeapon);
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
@@ -170,7 +166,6 @@ void Controller::handleEvents() {
                 break;
             }
             case FightBack:{ // got attacked by undefined and me also undefined
-                m_isInFight = true;
                 ResourcesManager::instance().playSound(ChooseWeapon);
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
                 if (warrior != NULL){
@@ -180,7 +175,6 @@ void Controller::handleEvents() {
                 break;
             }
             case AttackingUndefined: { // I have weapon and attack undefined
-                m_isInFight = true;
                 ResourcesManager::instance().playSound(ChooseWeapon);
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
                 RoomState::instance().setLastMove(warrior->get()->getPrevLocation(), warrior->get()->getLocation(),

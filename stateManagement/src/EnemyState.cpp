@@ -27,6 +27,7 @@ void EnemyState::init() {
 
 
 void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
+    static bool enteredOnce = false;
     m_isAnimating = true;
     std::string last_move = RoomState::instance().getRoom().getLastMove();
     auto locations = extractNumbers(last_move);
@@ -47,7 +48,17 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
     }
 
     auto warrior = getWarrior(m_selectedPlayerLocation);
+    if(warrior == NULL)
+    {
+        return;
+    }
+    if(enteredOnce){
+        enteredOnce = false;
+        return;
+    }
     if(warrior->get()->getSymbol()[0] != last_move[last_move.size()-1]){
+        enteredOnce = true;
+        std::cout << "setting weapon\n";
         switch(last_move[last_move.size()-1]){
             case 'R':
                 warrior->get()->setWeapon(Rock_t);
@@ -67,8 +78,10 @@ bool EnemyState::move() {
     static float shadowOffsetX = -1;
     static int shadowOffsetY = 4;
     auto warrior = getWarrior(m_selectedPlayerLocation);
-    if (warrior == NULL)
-        return false;
+    if (warrior == NULL){
+        m_isAnimating = false;
+        return true;
+    }
     if (m_direction == Up)
         warrior->get()->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset), sf::Vector2f(shadowOffsetX, shadowOffsetY));
     else if (m_direction == Down)
