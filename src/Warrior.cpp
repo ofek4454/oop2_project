@@ -65,6 +65,8 @@ void Warrior::setIntRect(int counter,bool isEnemy) {
     }
 }
 
+Location Warrior::getPrevLocation() const {return m_prevLocation;}
+
 
 void Warrior::setLocation(Direction_t direction) {
     m_prevLocation = Location(m_location.row,m_location.col);
@@ -160,8 +162,6 @@ void Warrior::setWeapon(Weapons_t weapon) {
     new_weapon->setOwner(this);
     m_weapon = std::move(new_weapon);
 
-    RoomState::instance().setLastMove(m_prevLocation, m_location, m_weapon->getSymbol());
-    RoomState::instance().upload();
 }
 
 void Warrior::lose() {

@@ -48,6 +48,7 @@ void RoomState::upload() {
 }
 
 void RoomState::changeTurn() {
+    std::cout << "change turn" << std::endl;
     room.turn = (Turn_t)!room.turn;
     upload();
 }

@@ -31,7 +31,7 @@ public:
     bool isNeedToBeDeleted() {return m_needToDelete;}
     void setNeedToBeDraw(bool drawable) {m_needToBeDraw = drawable;}
     bool isDrawable(){return m_needToBeDraw;}
-
+    Location getPrevLocation() const;
     std::string getSymbol()const{return m_weapon->getSymbol();}
 
     void lose();

@@ -31,7 +31,7 @@ void Scissors::fight(Paper& other) {
 }
 
 void Scissors::fight(Undefined& other){
-    Event event(FightUndefined);
+    Event event(AttackingUndefined);
     EventLoop::instance().addEvent(event);
 }
 

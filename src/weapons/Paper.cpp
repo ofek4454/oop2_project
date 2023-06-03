@@ -36,7 +36,8 @@ void Paper::fight(Rock& other){
 }
 
 void Paper::fight(Undefined& other){
-    other.chooseWeapon();
+    Event event(AttackingUndefined);
+    EventLoop::instance().addEvent(event);
 }
 
 void Paper::fight(Hole& other){

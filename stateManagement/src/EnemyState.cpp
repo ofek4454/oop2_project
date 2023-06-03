@@ -42,8 +42,9 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
         m_direction = Left;
     else if (m_selectedPlayerLocation.col + 1 == m_newLocation.col)
         m_direction = Right;
-    else
+    else {
         m_direction = Non_Direction;
+    }
 
     auto warrior = getWarrior(m_selectedPlayerLocation);
     if(warrior->get()->getSymbol()[0] != last_move[last_move.size()-1]){
@@ -78,8 +79,11 @@ bool EnemyState::move() {
                                           sf::Vector2f(sf::Vector2f(-shadowOffsetX, 0)));
     else if (m_direction == Right)
         warrior->get()->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0), sf::Vector2f(sf::Vector2f(shadowOffsetX, 0)));
-    else
+    else{
+        m_isAnimating = false;
         return true;
+    }
+
 
     warrior->get()->setIntRect(imageCounter, true);
     imageCounter++;

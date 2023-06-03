@@ -116,7 +116,10 @@ void UserState::print() {
 }
 
 bool UserState::move() {
-    if(m_direction == Non_Direction) return true;
+    if(m_direction == Non_Direction) {
+        m_isAnimating = false;
+        return true;
+    }
 
     static bool skip = true;
     static int imageCounter = 0;

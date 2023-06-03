@@ -26,17 +26,17 @@ void Undefined::fight(Weapon &other) {
 }
 
 void Undefined::fight(Scissors &other) {
-    Event event(FightUndefined);
+    Event event(FightBack);
     EventLoop::instance().addEvent(event);
 }
 
 void Undefined::fight(Paper &other) {
-    Event event(FightUndefined);
+    Event event(FightBack);
     EventLoop::instance().addEvent(event);
 }
 
 void Undefined::fight(Rock &other) {
-    Event event(FightUndefined);
+    Event event(FightBack);
     EventLoop::instance().addEvent(event);
 }
 

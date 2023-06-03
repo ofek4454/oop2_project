@@ -8,6 +8,7 @@ public:
 
     void animate(Turn_t turn);
     void print();
+    void setTurn(Turn_t turn) { m_turn = turn; }
 private:
     sf::Sprite m_sprite;
     float m_rect;

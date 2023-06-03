@@ -46,7 +46,7 @@ Rock::Rock() : Weapon("R") {
 }
 
 void Rock::fight(Undefined& other){
-    Event event(FightUndefined);
+    Event event(AttackingUndefined);
     EventLoop::instance().addEvent(event);
 }
 

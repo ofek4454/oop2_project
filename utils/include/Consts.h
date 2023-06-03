@@ -99,6 +99,8 @@ enum EventType_t{
     FightPP,
     FightSS,
     FightUndefined,
+    FightBack,
+    AttackingUndefined,
 };
 
 enum Turn_t{

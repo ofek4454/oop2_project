@@ -17,7 +17,6 @@ public:
     virtual void doTurn(sf::Event::MouseButtonEvent *click);
 
     virtual void print() {
-        auto window = WindowManager::instance().getWindow();
         for (auto &warrior: m_warriors)
             warrior->draw();
     }

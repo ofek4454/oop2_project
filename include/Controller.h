@@ -31,6 +31,7 @@ private:
     Warrior* m_currentP2 = nullptr;
     const Turn_t myTurn;
     Referee m_referee;
+    bool m_isInFight = false;
 
     // private functions:
     void changeTurnAnimation();
