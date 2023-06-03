@@ -3,7 +3,7 @@
 #include "Weapon.h"
 #include "Warrior.h"
 
-Weapon::Weapon(const char symbol) : m_symbol(symbol){}
+Weapon::Weapon(const std::string symbol) : m_symbol(symbol){}
 
 void Weapon::draw() {
     auto window = WindowManager::instance().getWindow();

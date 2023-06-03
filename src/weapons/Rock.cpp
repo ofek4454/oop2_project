@@ -10,7 +10,7 @@
 #include "Undefined.h"
 #include "Warrior.h"
 
-Rock::Rock() : Weapon('R') {
+Rock::Rock() : Weapon("R") {
     auto weapon = ResourcesManager::instance().getTexture(Rps);
     m_weapon_sprite.setTexture(*weapon);
     m_weapon_sprite.setTextureRect(sf::IntRect(110, 116, 55,58));
@@ -46,7 +46,8 @@ Rock::Rock() : Weapon('R') {
 }
 
 void Rock::fight(Undefined& other){
-    other.chooseWeapon();
+    Event event(FightUndefined);
+    EventLoop::instance().addEvent(event);
 }
 
 void Rock::fight(Weapon &other) {

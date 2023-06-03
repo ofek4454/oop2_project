@@ -40,17 +40,17 @@ void Controller::run() {
                 if (!isMyTurn() && !m_enemy->isAnimating()) {
                     static sf::Clock clock;
                     if(clock.getElapsedTime().asSeconds() > 1){
-                        std::cout << "enemy turn\n";
                         clock.restart().asSeconds();
                         if(RoomState::instance().getTurn() == myTurn) {
-                            std::cout << "ascascsacsa\n";
                             m_enemy->doTurn();
                         }
                     }
                 }
                 handleAnimation();
-                handleEvents();
-                checkCollision();
+                if(isMyTurn()) {
+                    checkCollision();
+                    handleEvents();
+                }
                 print();
             }
     );
@@ -96,12 +96,10 @@ void Controller::handleAnimation() {
     if (time > 0.025) {
         clock.restart().asSeconds();
         if (isMyTurn() && m_user->move()) {
-            m_user->setAnimating(false);
             RoomState::instance().changeTurn();
             m_turn = (Turn_t)!myTurn;
         }
         else if (!isMyTurn() && m_enemy->move()) {
-            m_enemy->setAnimating(false);
             // clear waiting events
             sf::Event event;
             while (m_window->pollEvent(event));
@@ -144,23 +142,14 @@ void Controller::handleEvents() {
             case FightSS:
                 animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3, tieS);
                 break;
-            case UndefinedChoose: {
+            case FightUndefined: {
                 animateFight(ResourcesManager::instance().getTexture(BlueSP), 300,
                              96, 2);
                 ResourcesManager::instance().playSound(ChooseWeapon);
-                auto warrior1 = m_user->getWarrior(m_user->getWarriorLocation());
-                if (warrior1 != NULL) {
-                    warrior1->get()->getWeapon()->get()->chooseWeapon();
-                }
-                break;
-            }
-            case UndefinedUndefined: {
-                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP), 300,
-                             96, 2);
-                ResourcesManager::instance().playSound(ChooseWeapon);
-                auto warrior1 = m_user->getWarrior(m_user->getWarriorLocation());
-                if (warrior1 != NULL) {
-                    warrior1->get()->getWeapon()->get()->chooseWeapon();
+                auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
+                if (warrior != NULL){
+                    warrior->get()->getWeapon()->get()->chooseWeapon();
+
                 }
                 break;
             }

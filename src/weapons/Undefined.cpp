@@ -3,7 +3,7 @@
 #include "Warrior.h"
 #include "EventLoop.h"
 
-Undefined::Undefined(bool isMine) : Weapon('U')  {
+Undefined::Undefined(bool isMine) : Weapon("U")  {
     if (isMine) {
         int rand = std::rand() % 3;
         auto wep = Weapons_t(rand);
@@ -26,22 +26,24 @@ void Undefined::fight(Weapon &other) {
 }
 
 void Undefined::fight(Scissors &other) {
-    Event event(UndefinedChoose);
+    Event event(FightUndefined);
     EventLoop::instance().addEvent(event);
 }
 
 void Undefined::fight(Paper &other) {
-    Event event(UndefinedChoose);
+    Event event(FightUndefined);
     EventLoop::instance().addEvent(event);
 }
 
 void Undefined::fight(Rock &other) {
-    Event event(UndefinedChoose);
+    Event event(FightUndefined);
     EventLoop::instance().addEvent(event);
 }
 
-void Undefined::fight(Undefined &other) { Event event(UndefinedUndefined);
-    EventLoop::instance().addEvent(event); }
+void Undefined::fight(Undefined &other) {
+    Event event(FightUndefined);
+    EventLoop::instance().addEvent(event);
+}
 
 void Undefined::fight(Hole &other) {
     lose();

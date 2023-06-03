@@ -33,17 +33,31 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
 
     m_selectedPlayerLocation = Location(locations[0], locations[1]);
     m_newLocation = Location(locations[2], locations[3]);
-    if (m_selectedPlayerLocation.row + 1 == m_newLocation.row) {
+
+    if (m_selectedPlayerLocation.row + 1 == m_newLocation.row)
         m_direction = Down;
-    }
-    if (m_selectedPlayerLocation.row - 1 == m_newLocation.row) {
+    else if (m_selectedPlayerLocation.row - 1 == m_newLocation.row)
         m_direction = Up;
-    }
-    if (m_selectedPlayerLocation.col - 1 == m_newLocation.col) {
+    else if (m_selectedPlayerLocation.col - 1 == m_newLocation.col)
         m_direction = Left;
-    }
-    if (m_selectedPlayerLocation.col + 1 == m_newLocation.col) {
+    else if (m_selectedPlayerLocation.col + 1 == m_newLocation.col)
         m_direction = Right;
+    else
+        m_direction = Non_Direction;
+
+    auto warrior = getWarrior(m_selectedPlayerLocation);
+    if(warrior->get()->getSymbol()[0] != last_move[last_move.size()-1]){
+        switch(last_move[last_move.size()-1]){
+            case 'R':
+                warrior->get()->setWeapon(Rock_t);
+                break;
+            case 'S':
+                warrior->get()->setWeapon(Scissors_t);
+                break;
+            case 'P':
+                warrior->get()->setWeapon(Paper_t);
+                break;
+        }
     }
 }
 
@@ -56,14 +70,16 @@ bool EnemyState::move() {
         return false;
     if (m_direction == Up)
         warrior->get()->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset), sf::Vector2f(shadowOffsetX, shadowOffsetY));
-    if (m_direction == Down)
+    else if (m_direction == Down)
         warrior->get()->setSpriteLocation(sf::Vector2f(0, m_pixelOffset),
                                           sf::Vector2f(sf::Vector2f(shadowOffsetX * 0.5, -shadowOffsetY * 0.8)));
-    if (m_direction == Left)
+    else if (m_direction == Left)
         warrior->get()->setSpriteLocation(sf::Vector2f(-m_pixelOffset, 0),
                                           sf::Vector2f(sf::Vector2f(-shadowOffsetX, 0)));
-    if (m_direction == Right)
+    else if (m_direction == Right)
         warrior->get()->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0), sf::Vector2f(sf::Vector2f(shadowOffsetX, 0)));
+    else
+        return true;
 
     warrior->get()->setIntRect(imageCounter, true);
     imageCounter++;
@@ -72,6 +88,7 @@ bool EnemyState::move() {
         shadowOffsetY = 4;
         imageCounter = 0;
         warrior->get()->setLocation(m_direction);
+        m_isAnimating = false;
         return true;
     }
     if (imageCounter == 3) {

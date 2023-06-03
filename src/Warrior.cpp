@@ -5,6 +5,7 @@
 #include "Paper.h"
 #include "Scissors.h"
 #include "Weapon.h"
+#include "RoomState.h"
 
 Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location)
         : m_weapon(std::make_unique<Undefined>(isMine)), m_location(location), m_isMine(isMine) {
@@ -66,6 +67,7 @@ void Warrior::setIntRect(int counter,bool isEnemy) {
 
 
 void Warrior::setLocation(Direction_t direction) {
+    m_prevLocation = Location(m_location.row,m_location.col);
     switch (direction) {
         case Direction_t::Up:
             m_location = Location(m_location.row - 1, m_location.col);
@@ -157,6 +159,9 @@ void Warrior::setWeapon(Weapons_t weapon) {
     new_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y + 10));
     new_weapon->setOwner(this);
     m_weapon = std::move(new_weapon);
+
+    RoomState::instance().setLastMove(m_prevLocation, m_location, m_weapon->getSymbol());
+    RoomState::instance().upload();
 }
 
 void Warrior::lose() {

@@ -10,7 +10,7 @@
 #include "Undefined.h"
 #include "Warrior.h"
 
-Scissors::Scissors() : Weapon('S') {
+Scissors::Scissors() : Weapon("S") {
     auto weapon = ResourcesManager::instance().getTexture(Rps);
     m_weapon_sprite.setTexture(*weapon);
     m_weapon_sprite.setTextureRect(sf::IntRect(110, 0, 55, 58));
@@ -31,7 +31,8 @@ void Scissors::fight(Paper& other) {
 }
 
 void Scissors::fight(Undefined& other){
-    other.chooseWeapon();
+    Event event(FightUndefined);
+    EventLoop::instance().addEvent(event);
 }
 
 void Scissors::fight(Rock& other) {

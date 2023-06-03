@@ -10,7 +10,7 @@
 #include "Undefined.h"
 #include "Warrior.h"
 
-Paper::Paper() : Weapon('P') {
+Paper::Paper() : Weapon("P") {
     auto weapon = ResourcesManager::instance().getTexture(Rps);
     m_weapon_sprite.setTexture(*weapon);
     m_weapon_sprite.setTextureRect(sf::IntRect(110, 232, 55, 58));

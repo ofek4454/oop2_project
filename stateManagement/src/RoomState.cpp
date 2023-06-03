@@ -83,7 +83,7 @@ void RoomState::uploadFlagAndHole() {
 }
 
 
-void RoomState::setLastMove(Location oldLocation, Location newLocation) {
+void RoomState::setLastMove(Location oldLocation, Location newLocation, std::string weapon) {
     std::string move;
     if(m_isMeP1)
         move = std::to_string(oldLocation.row) + "," + std::to_string(oldLocation.col) + " to " +
@@ -91,5 +91,7 @@ void RoomState::setLastMove(Location oldLocation, Location newLocation) {
     else
         move = std::to_string(BOARD_SIZE - oldLocation.row -1) + "," + std::to_string(BOARD_SIZE - oldLocation.col - 1) + " to " +
                std::to_string(BOARD_SIZE - newLocation.row -1) + "," + std::to_string(BOARD_SIZE - newLocation.col -1);
+
+    move += " , " + weapon;
     room.enemyLastMove = move;
 }
