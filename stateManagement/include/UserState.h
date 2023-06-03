@@ -9,7 +9,6 @@ public:
     virtual void init();
 
     bool* checkAvailableLocations(Location location);
-
     virtual void hoverFlag(const int row, const int col);
     virtual void hoverHole(const int row, const int col);
     virtual void print();

@@ -24,7 +24,6 @@ public:
     std::vector<int> extractNumbers(const std::string& str);
 
 private:
-    Location m_newLocation;
     sf::Clock clock;
 };
 

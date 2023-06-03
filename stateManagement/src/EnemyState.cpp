@@ -58,7 +58,6 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
     }
     if(warrior->get()->getSymbol()[0] != last_move[last_move.size()-1]){
         enteredOnce = true;
-        std::cout << "setting weapon\n";
         switch(last_move[last_move.size()-1]){
             case 'R':
                 warrior->get()->setWeapon(Rock_t);
