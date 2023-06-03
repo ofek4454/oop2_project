@@ -24,6 +24,6 @@ private:
     sf::RenderWindow m_window;
 
     WindowManager() : m_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
-                               "Even juk", sf::Style::Close | sf::Style::Titlebar | sf::Style::Resize) {}
+                               "Even juk", sf::Style::Close | sf::Style::Titlebar) {}
 };
 

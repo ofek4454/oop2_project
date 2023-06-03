@@ -47,31 +47,33 @@ void RoomState::upload() {
     RoomService::updateRoom(room);
 }
 
-void RoomState::changeTurn(Turn_t turn) {
-    room.turn = turn;
+void RoomState::changeTurn() {
+    room.turn = (Turn_t)!room.turn;
+    upload();
 }
 
 std::pair<Location, Location> RoomState::getOpponentFlagAndHole() {
     auto tmpRoom = RoomService::getRoom(room.roomId);
+    std::string flagStr = m_isMeP1 ? "2F" : "1F";
+    std::string holeStr = m_isMeP1 ? "2H" : "1H";
     Location flag,hole;
 
     Location location;
     for(int i=0 ; i<2 ; i++){
         for(int j=0 ; j<BOARD_SIZE ; j++){
             location = m_isMeP1 ? Location(i,j) : Location(BOARD_SIZE-i-1,BOARD_SIZE-j-1);
-            if(tmpRoom.board[location.row][location.col] == "2F")
+            if(tmpRoom.board[location.row][location.col] == flagStr)
                 flag = Location(location.row,location.col);
-            else if(tmpRoom.board[location.row][location.col] == "2H")
+            else if(tmpRoom.board[location.row][location.col] == holeStr)
                 hole = Location(location.row,location.col);
         }
     }
-
     return std::make_pair(flag,hole);
 }
 
-bool RoomState::getTurn() {
-    auto tmpRoom = RoomService::getRoom(room.roomId);
-    return tmpRoom.turn;
+Turn_t RoomState::getTurn() {
+    room = RoomService::getRoom(room.roomId);
+    return room.turn;
 }
 
 void RoomState::uploadFlagAndHole() {
@@ -81,11 +83,13 @@ void RoomState::uploadFlagAndHole() {
 }
 
 
-void RoomState::setLastMove(std::string str){
-    room.enemyLastMove = str;
-}
-
-std::string RoomState::getLastMove() {
-    auto tmpRoom = RoomService::getRoom(room.roomId);
-    return tmpRoom.enemyLastMove;
+void RoomState::setLastMove(Location oldLocation, Location newLocation) {
+    std::string move;
+    if(m_isMeP1)
+        move = std::to_string(oldLocation.row) + "," + std::to_string(oldLocation.col) + " to " +
+                           std::to_string(newLocation.row) + "," + std::to_string(newLocation.col);
+    else
+        move = std::to_string(BOARD_SIZE - oldLocation.row -1) + "," + std::to_string(BOARD_SIZE - oldLocation.col - 1) + " to " +
+               std::to_string(BOARD_SIZE - newLocation.row -1) + "," + std::to_string(BOARD_SIZE - newLocation.col -1);
+    room.enemyLastMove = move;
 }

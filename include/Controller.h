@@ -6,7 +6,7 @@
 #include "UserState.h"
 #include "iostream"
 #include "EventLoop.h"
-
+#include "Referee.h"
 
 
 class Controller {
@@ -27,13 +27,10 @@ private:
     std::unique_ptr<PlayerState> m_user;
     std::unique_ptr<PlayerState> m_enemy;
     Turn_t m_turn = P1;
-    sf::Sprite m_referee;
-    float m_refereeRect;
-    bool m_switchingTurn = false;
     Warrior* m_currentP1 = nullptr;
     Warrior* m_currentP2 = nullptr;
-    const bool m_serverTurn;
-
+    const Turn_t myTurn;
+    Referee m_referee;
 
     // private functions:
     void changeTurnAnimation();
@@ -46,14 +43,8 @@ private:
     void handleAnimation();
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
 
-    bool isMyTurn(){
-        auto turn = RoomState::instance().getTurn();
-        std::cout << "room turn: " << turn << " real my turn: " << m_serverTurn << std::endl;
-        if(turn == m_serverTurn)
-            return true;
-
-        return false;
-
+    bool isMyTurn() const{
+        return m_turn == myTurn;
     }
 };
 

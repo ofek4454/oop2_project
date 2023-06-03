@@ -23,11 +23,10 @@ public:
     void uploadFlagAndHole();
 
     void upload();
-    void changeTurn(Turn_t turn);
+    void changeTurn();
     void setBoardCell(Location loc , std::string str);
-    bool getTurn();
-    std::string getLastMove();
-    void setLastMove(std::string str);
+    Turn_t getTurn();
+    void setLastMove(Location oldLocation, Location newLocation);
 
 private:
     RoomState(){}

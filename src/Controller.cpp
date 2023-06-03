@@ -7,13 +7,12 @@
 #include "RoomState.h"
 
 Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerState> *p2, bool isMeP1) : m_window(
-        WindowManager::instance().getWindow()), m_user(p1->get()), m_enemy(p2->get()), m_serverTurn(isMeP1) {
+        WindowManager::instance().getWindow()), m_user(p1->get()), m_enemy(p2->get()), myTurn(isMeP1 ? P1 : P2), m_referee(myTurn){
 
-    m_user->setPlayerSymbol(!isMeP1 ? "1" : "2");
-    m_enemy->setPlayerSymbol(isMeP1 ? "1" : "2");
+    m_user->setPlayerSymbol(isMeP1 ? "1" : "2");
+    m_enemy->setPlayerSymbol(!isMeP1 ? "1" : "2");
     m_user->init();
     m_enemy->init();
-    m_turn = (Turn_t)RoomState::instance().getTurn();
     initGame();
     run();
 }
@@ -22,14 +21,14 @@ void Controller::run() {
     print();
     WindowManager::instance().eventHandler(
             [this](auto move, auto exit) {
-                if (m_turn == m_serverTurn)
+                if (isMyTurn())
                     handleHover(move);
                 else return true;
                 return false;
             },
             [this](auto click, auto exit) {
                 SoundFlip::instance().checkIfContains(click);
-                if (m_turn == m_serverTurn) {
+                if (isMyTurn() && !m_user->isAnimating()) {
                     m_user->doTurn(&click);
                 } else return true;
                 return false;
@@ -38,11 +37,13 @@ void Controller::run() {
             [](auto type, auto exit) { return false; },
             [](auto offset, auto exit) { return false; },
             [this](auto exit) {
-                if (m_turn != m_serverTurn && !m_enemy->isAnimating() && !m_switchingTurn) {
+                if (!isMyTurn() && !m_enemy->isAnimating()) {
                     static sf::Clock clock;
-                    if(clock.getElapsedTime().asSeconds() > 1.5){
+                    if(clock.getElapsedTime().asSeconds() > 1){
+                        std::cout << "enemy turn\n";
                         clock.restart().asSeconds();
-                        if(isMyTurn()){
+                        if(RoomState::instance().getTurn() == myTurn) {
+                            std::cout << "ascascsacsa\n";
                             m_enemy->doTurn();
                         }
                     }
@@ -50,8 +51,6 @@ void Controller::run() {
                 handleAnimation();
                 handleEvents();
                 checkCollision();
-                if (m_switchingTurn)
-                    changeTurnAnimation();
                 print();
             }
     );
@@ -65,9 +64,8 @@ void Controller::print() {
     m_window->draw(m_p2Name);
     m_user->print();
     m_enemy->print();
-    m_window->draw(m_referee);
     SoundFlip::instance().draw(*m_window);
-
+    m_referee.print();
 
     m_window->display();
 }
@@ -91,23 +89,23 @@ void Controller::checkCollision() {
 }
 
 void Controller::handleAnimation() {
+    m_referee.animate((Turn_t)!isMyTurn());
     if (!m_user->isAnimating() && !m_enemy->isAnimating()) return;
     static sf::Clock clock;
     auto time = clock.getElapsedTime().asSeconds();
     if (time > 0.025) {
         clock.restart().asSeconds();
-        if (m_turn == m_serverTurn && m_user->move()) {
+        if (isMyTurn() && m_user->move()) {
             m_user->setAnimating(false);
-            m_switchingTurn = true;
-            return;
+            RoomState::instance().changeTurn();
+            m_turn = (Turn_t)!myTurn;
         }
-        if (m_turn != m_serverTurn && m_enemy->move()) {
+        else if (!isMyTurn() && m_enemy->move()) {
             m_enemy->setAnimating(false);
-            m_switchingTurn = true;
             // clear waiting events
             sf::Event event;
             while (m_window->pollEvent(event));
-            return;
+            m_turn = (Turn_t)myTurn;
         }
     }
 }
@@ -163,10 +161,6 @@ void Controller::handleEvents() {
                 auto warrior1 = m_user->getWarrior(m_user->getWarriorLocation());
                 if (warrior1 != NULL) {
                     warrior1->get()->getWeapon()->get()->chooseWeapon();
-                }
-                auto warrior2 = m_enemy->getWarrior(m_enemy->getWarriorLocation());
-                if (warrior2 != NULL) {
-                    warrior2->get()->getWeapon()->get()->chooseWeapon();
                 }
                 break;
             }
@@ -248,20 +242,6 @@ void Controller::initNames() {
 }
 
 void Controller::initGame() {
-    auto frameRectSize = sf::Vector2f(WINDOW_WIDTH - WINDOW_WIDTH * 0.775,
-                                      WINDOW_HEIGHT * 0.685 - WINDOW_HEIGHT * 0.355);
-    m_referee.setTexture(*ResourcesManager::instance().getTexture(Referee));
-    m_referee.setScale((frameRectSize.x / 241.5) * 0.6, (frameRectSize.y / 164) * 0.6);
-    m_referee.setTextureRect(sf::IntRect(0, 0, 241.5, 164));
-    m_referee.setPosition(
-            sf::Vector2f(WINDOW_WIDTH * 0.775 + ((WINDOW_WIDTH - WINDOW_WIDTH * 0.775) / 2) -
-                         (m_referee.getGlobalBounds().width / 2),
-                         WINDOW_HEIGHT * 0.355 + ((WINDOW_WIDTH - WINDOW_WIDTH * 0.775,
-                                 WINDOW_HEIGHT * 0.685 - WINDOW_HEIGHT * 0.355) / 2) -
-                         (m_referee.getGlobalBounds().height / 2)));
-    m_refereeRect += (m_serverTurn == P1) ? 0 : 724.5;
-    m_referee.setTextureRect(sf::IntRect(m_refereeRect, 0, 241.5, 164));
-
     bool flagChoosed = false;
     initNames();
     WindowManager::instance().eventHandler(
@@ -299,7 +279,7 @@ void Controller::initGame() {
             }
     );
     RoomState::instance().uploadFlagAndHole();
-    /*
+
     std::pair<Location,Location> opponentFlagAndHole;
     sf::Clock clock;
     do{
@@ -309,27 +289,5 @@ void Controller::initGame() {
     } while (opponentFlagAndHole.first == Location(-1,-1));
 
     m_enemy->setAsFlag(opponentFlagAndHole.first.row,opponentFlagAndHole.first.col);
-    m_enemy->setAsHole(opponentFlagAndHole.second.row,opponentFlagAndHole.second.col);*/
-}
-
-void Controller::changeTurnAnimation() {
-    static sf::Clock animationClock;
-    auto time = animationClock.getElapsedTime().asSeconds();
-    if (time > 0.1) {
-        animationClock.restart().asSeconds();
-        m_refereeRect += (m_turn == m_serverTurn) ? 241.5 : -241.5;
-        if (m_refereeRect >= 724.5 && m_turn == m_serverTurn) {
-            m_switchingTurn = false;
-            ResourcesManager::instance().playSound(redTurn);
-            m_turn = (Turn_t)!m_serverTurn;
-            RoomState::instance().changeTurn(m_turn);
-            RoomState::instance().upload();
-        }
-        if (m_refereeRect <= 0 && m_turn != m_serverTurn) {
-            m_switchingTurn = false;
-            ResourcesManager::instance().playSound(blueTurn);
-            m_turn = (Turn_t)m_serverTurn;
-        }
-        m_referee.setTextureRect(sf::IntRect(m_refereeRect, 0, 241.5, 164));
-    }
+    m_enemy->setAsHole(opponentFlagAndHole.second.row,opponentFlagAndHole.second.col);
 }

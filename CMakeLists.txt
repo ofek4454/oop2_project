@@ -47,7 +47,7 @@ endif()
 
 if(WIN32)
 
-    add_executable (${CMAKE_PROJECT_NAME} "" main.cpp utils/include/Location.h utils/src/Location.cpp src/events/Event.cpp include/events/Event.h src/events/EventLoop.cpp include/events/EventLoop.h src/EnterNameScreen.cpp include/EnterNameScreen.h utils/src/WindowManager.cpp services/env.h models/RoomModel.h services/RoomService.cpp services/RoomService.h services/UserService.cpp services/UserService.h stateManagement/src/RoomState.cpp stateManagement/include/RoomState.h src/WaitingRoom.cpp include/WaitingRoom.h include/SettingsScreen.cpp include/SettingsScreen.h utils/src/SettingsManager.cpp utils/include/SettingsManager.h utils/src/SoundFlip.cpp utils/include/SoundFlip.h src/AvailableRooms.cpp include/AvailableRooms.h)
+    add_executable (${CMAKE_PROJECT_NAME} "" main.cpp utils/include/Location.h utils/src/Location.cpp src/events/Event.cpp include/events/Event.h src/events/EventLoop.cpp include/events/EventLoop.h src/EnterNameScreen.cpp include/EnterNameScreen.h utils/src/WindowManager.cpp services/env.h models/RoomModel.h services/RoomService.cpp services/RoomService.h services/UserService.cpp services/UserService.h stateManagement/src/RoomState.cpp stateManagement/include/RoomState.h src/WaitingRoom.cpp include/WaitingRoom.h include/SettingsScreen.cpp include/SettingsScreen.h utils/src/SettingsManager.cpp utils/include/SettingsManager.h utils/src/SoundFlip.cpp utils/include/SoundFlip.h src/AvailableRooms.cpp include/AvailableRooms.h include/Referee.cpp include/Referee.h)
 
     target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-fsanitize=address>)
 

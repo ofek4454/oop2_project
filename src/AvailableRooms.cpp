@@ -90,7 +90,7 @@ void AvailableRooms::clickHandler(sf::Event::MouseButtonEvent &click,bool &exit)
             auto enemyUser = UserService::getUser(RoomState::instance().getRoom().creatorUid());
             std::unique_ptr<PlayerState> user = std::make_unique<UserState>(p);
             std::unique_ptr<PlayerState> enemy = std::make_unique<EnemyState>(enemyUser);
-            Controller(&user ,&enemy, true);
+            Controller(&user ,&enemy, false);
             exit = true;
             break;
         }

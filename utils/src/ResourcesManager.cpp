@@ -35,8 +35,8 @@ ResourcesManager::ResourcesManager() {
     m_texture[RedRS].setSmooth(true);
     m_texture[RedSP].loadFromFile("redSP.png");
     m_texture[RedSP].setSmooth(true);
-    m_texture[Referee].loadFromFile("indicator.png");
-    m_texture[Referee].setSmooth(true);
+    m_texture[RefereeTexture].loadFromFile("indicator.png");
+    m_texture[RefereeTexture].setSmooth(true);
     m_texture[Background].loadFromFile("background.png");
     m_texture[ExitButton].loadFromFile("exit.png");
     m_texture[RoomButton].loadFromFile("button.png");

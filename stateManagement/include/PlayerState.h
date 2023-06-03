@@ -22,7 +22,6 @@ public:
     bool setAsFlag(const int row, const int col);
     bool setAsHole(const int row, const int col);
 
-    bool* checkAvailableLocations(Location location);
     virtual bool move() = 0;
     std::unique_ptr<Warrior>* getWarrior(const Location location);
     std::vector<std::unique_ptr<Warrior>>* getAllWarriors() { return &m_warriors;}
