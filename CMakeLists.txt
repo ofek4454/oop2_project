@@ -33,21 +33,26 @@ if(APPLE)
     add_subdirectory (models)
     add_subdirectory (stateManagement)
 
+    # external libraries
+    add_subdirectory (dependencies/curl-8.1.2)
+    add_subdirectory (dependencies/nlohmann)
+
+
     set (SFML_STATIC_LIBRARIES FALSE)
     set (SFML_DIR "/usr/local/Cellar/sfml/2.5.1")
 
-    find_package (SFML 2.5 COMPONENTS audio graphics network REQUIRED)
-    find_package(CURL REQUIRED)
+    find_package (SFML 2.5 COMPONENTS audio graphics REQUIRED)
+    #find_package(CURL REQUIRED)
 
     set_target_properties ( PROPERTIES MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELEASE)
 
-    target_link_libraries (${CMAKE_PROJECT_NAME} sfml-graphics sfml-audio sfml-network ${CURL_LIBRARIES})
+    target_link_libraries (${CMAKE_PROJECT_NAME} sfml-graphics sfml-audio)
 
 endif()
 
 if(WIN32)
 
-    add_executable (${CMAKE_PROJECT_NAME} "" main.cpp utils/include/Location.h utils/src/Location.cpp src/events/Event.cpp include/events/Event.h src/events/EventLoop.cpp include/events/EventLoop.h src/EnterNameScreen.cpp include/EnterNameScreen.h utils/src/WindowManager.cpp services/env.h models/RoomModel.h services/RoomService.cpp services/RoomService.h services/UserService.cpp services/UserService.h stateManagement/src/RoomState.cpp stateManagement/include/RoomState.h src/WaitingRoom.cpp include/WaitingRoom.h include/SettingsScreen.cpp include/SettingsScreen.h utils/src/SettingsManager.cpp utils/include/SettingsManager.h utils/src/SoundFlip.cpp utils/include/SoundFlip.h src/AvailableRooms.cpp include/AvailableRooms.h include/Referee.cpp include/Referee.h)
+    add_executable (${CMAKE_PROJECT_NAME} main.cpp)
 
     target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-fsanitize=address>)
 
@@ -57,15 +62,16 @@ if(WIN32)
     add_subdirectory (utils)
     add_subdirectory (services)
     add_subdirectory (models)
+    add_subdirectory (stateManagement)
 
     set (SFML_STATIC_LIBRARIES TRUE)
     set (SFML_DIR "C:/SFML/SFML-2.5.1/lib/cmake/SFML")
 
-    find_package (SFML 2.5 COMPONENTS graphics audio network REQUIRED)
+    find_package (SFML 2.5 COMPONENTS graphics audio REQUIRED)
 
-    set_target_properties (sfml-main sfml-system sfml-window sfml-graphics sfml-audio sfml-network PROPERTIES MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELEASE)
+    set_target_properties (sfml-main sfml-system sfml-window sfml-graphics sfml-audio PROPERTIES MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELEASE)
 
-    target_link_libraries (${CMAKE_PROJECT_NAME} sfml-graphics sfml-main sfml-audio sfml-network)
+    target_link_libraries (${CMAKE_PROJECT_NAME} sfml-graphics sfml-main sfml-audio)
 
     configure_file (C:/SFML/SFML-2.5.1/bin/openal32.dll ${CMAKE_BINARY_DIR} COPYONLY)
 

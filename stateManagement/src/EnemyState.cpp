@@ -68,6 +68,10 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
             case 'P':
                 warrior->get()->setWeapon(Paper_t);
                 break;
+            case 'U':
+                std::cout << "changeing undefined\n";
+                warrior->get()->setWeapon(Undefined_t);
+                break;
         }
     }
 }
