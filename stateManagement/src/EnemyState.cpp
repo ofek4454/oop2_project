@@ -31,12 +31,21 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
 
     if (enteredOnce) {
         enteredOnce = false;
-        EventLoop::instance().addEvent(Event(NeedToResetLocation));
         return;
     }
-
     m_isAnimating = true;
+
+
     std::string last_move = RoomState::instance().getRoom().getLastMove();
+    if(last_move == "tie"){
+        std::cout << "tie" << std::endl;
+        auto warrior = getWarrior(m_selectedPlayerLocation);
+        warrior->get()->setWeapon(Undefined_t);
+        EventLoop::instance().addEvent(Event(NeedToResetLocation));
+        EventLoop::instance().addEvent(Event(TimeOver));
+        m_direction = Non_Direction;
+        return;
+    }
     auto locations = extractNumbers(last_move);
 
     m_selectedPlayerLocation = Location(locations[0], locations[1]);
@@ -56,11 +65,14 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
 
     auto warrior = getWarrior(m_selectedPlayerLocation);
     if (warrior == NULL) {
+        std::cout << "warrior not found" << std::endl;
         return;
     }
 
     if(last_move[last_move.size() - 1] != warrior->get()->getSymbol()[0]) {
+        std::cout << "changing weapon" << std::endl;
         enteredOnce = true;
+        EventLoop::instance().addEvent(Event(NeedToResetLocation));
         switch (last_move[last_move.size() - 1]) {
             case 'R':
                 warrior->get()->setWeapon(Rock_t);

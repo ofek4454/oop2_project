@@ -43,6 +43,7 @@ private:
     void handleAnimation();
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
     void updateLastMoveAndChangeTurn();
+    void updateTieCase();
 
     bool isMyTurn() const{
         return m_turn == myTurn;

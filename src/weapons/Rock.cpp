@@ -43,6 +43,7 @@ Rock::Rock() : Weapon("R") {
 }
 
 void Rock::fight(Undefined& other){
+    std::cout << " rock vs undef" << std::endl;
     Event event(AttackingUndefined);
     EventLoop::instance().addEvent(event);
 }

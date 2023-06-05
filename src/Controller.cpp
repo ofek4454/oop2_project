@@ -45,7 +45,6 @@ void Controller::run() {
                         clock.restart().asSeconds();
                         if (RoomState::instance().getTurn() == myTurn) {
                             m_enemy->doTurn();
-//                            enemyCheckCollision();
                         }
                     }
                 }
@@ -107,6 +106,7 @@ void Controller::handleAnimation() {
             sf::Event event;
             while (m_window->pollEvent(event));
             m_turn = (Turn_t) myTurn;
+            handleEvents();
         }
     }
 }
@@ -130,14 +130,16 @@ void Controller::handleEvents() {
         auto event = EventLoop::instance().popEvent();
         switch (event.getEventType()) {
             case TimeOver: {
+                std::cout << "setting myself undefined\n";
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
-                if (warrior == NULL) return;
+                std::cout << " tie\n" << "location : " << m_user->getWarriorLocation().row << " " << m_user->getWarriorLocation().col << std::endl;
                 warrior->get()->setWeapon(Undefined_t);
                 break;
             }
             case NeedToResetLocation: {
+                std::cout << "reset loc\n";
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
-                if(warrior == NULL) return;
+                if (warrior == NULL) return;
                 warrior->get()->resetLocation();
                 break;
             }
@@ -162,41 +164,19 @@ void Controller::handleEvents() {
                              96, 6, winS);
                 break;
             case FightRR: {
-                std::cout << "in Rock Rock \n";
-
-                auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
-                if (warrior == NULL) return;
-                warrior->get()->setWeapon(Undefined_t);
-                RoomState::instance().setBoardCell(warrior->get()->getLocation(),
-                                                   m_user->getPlayerSymbol() + warrior->get()->getSymbol());
-                RoomState::instance().setLastMove(warrior->get()->getLocation(), warrior->get()->getLocation(),
-                                                  warrior->get()->getSymbol());
-
-                RoomState::instance().changeTurn();
-                m_turn = (Turn_t) !myTurn;
-
-                animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
-
+                updateTieCase();
                 break;
             }
             case FightPP: {
                 std::cout << "in Paper paper \n";
-                animateFight(ResourcesManager::instance().getTexture(PaperPaper), 453, 63, 3, tieP);
-                auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
-                if (warrior != NULL) {
-                    std::cout << "setting undefined\n";
-                    warrior->get()->setWeapon(Undefined_t);
-                }
-                RoomState::instance().setBoardCell(warrior->get()->getLocation(),
-                                                   m_user->getPlayerSymbol() + warrior->get()->getSymbol());
-                RoomState::instance().setLastMove(warrior->get()->getLocation(), warrior->get()->getLocation(),
-                                                  warrior->get()->getSymbol());
+                updateTieCase();
             }
                 break;
             case FightSS:
-                animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3, tieS);
+                updateTieCase();
                 break;
             case AttackingUndefined: { // I have weapon and attack undefined
+                std::cout << "attacking undefined\n";
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
                 RoomState::instance().setBoardCell(warrior->get()->getLocation(),
                                                    m_user->getPlayerSymbol() + warrior->get()->getSymbol());
@@ -345,4 +325,19 @@ void Controller::updateLastMoveAndChangeTurn() {
 
     RoomState::instance().changeTurn();
     m_turn = (Turn_t) !myTurn;
+}
+
+void Controller::updateTieCase() {
+    auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
+    warrior->get()->setWeapon(Undefined_t);
+    auto enemy = m_enemy->getWarrior(m_enemy->getWarriorLocation());
+    enemy->get()->setWeapon(Undefined_t);
+    RoomState::instance().setBoardCell(warrior->get()->getLocation(),
+                                       m_user->getPlayerSymbol() + warrior->get()->getSymbol());
+    RoomState::instance().setLastMove(warrior->get()->getLocation(), warrior->get()->getLocation(),
+                                      warrior->get()->getSymbol(), true);
+    RoomState::instance().changeTurn();
+    m_turn = (Turn_t) !myTurn;
+
+    animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
 }

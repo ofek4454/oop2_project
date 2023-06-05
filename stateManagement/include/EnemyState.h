@@ -22,6 +22,7 @@ public:
     }
 
     std::vector<int> extractNumbers(const std::string& str);
+protected:
 
 private:
     sf::Clock clock;

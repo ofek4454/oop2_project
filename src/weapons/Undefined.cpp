@@ -40,6 +40,7 @@ void Undefined::fight(Paper &other) {
 }
 
 void Undefined::fight(Rock &other) {
+    std::cout << " undefined vs rock" << std::endl;
     chooseWeapon();
 
 //    Event event(FightBack);
@@ -47,6 +48,7 @@ void Undefined::fight(Rock &other) {
 }
 
 void Undefined::fight(Undefined &other) {
+    std::cout << " undefined" << std::endl;
     chooseWeapon();
 
 //    Event event(FightBack);
