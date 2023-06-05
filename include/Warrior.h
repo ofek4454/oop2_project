@@ -35,6 +35,7 @@ public:
     std::string getSymbol()const{return m_weapon->getSymbol();}
 
     void lose();
+    void resetLocation(){m_prevLocation = m_location;}
 
 private:
     Location m_location;

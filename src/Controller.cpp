@@ -129,6 +129,12 @@ void Controller::handleEvents() {
     while (EventLoop::instance().hasEvent()) {
         auto event = EventLoop::instance().popEvent();
         switch (event.getEventType()) {
+            case TimeOver: {
+                auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
+                if(warrior == NULL) return;
+                warrior->get()->resetLocation();
+                break;
+            }
             case FightRP: {
                 std::cout << "in Rock paper \n";
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BluePR : RedPR), 980,
@@ -221,8 +227,8 @@ void Controller::handleEvents() {
             m_currentP2->setNeedToBeDraw(true);
         } else if (event.getWinner() == Tie) {
             std::cout << "Tie chanignig turn \n";
-            RoomState::instance().changeTurn();
-            m_turn = (Turn_t) !myTurn;
+//            RoomState::instance().changeTurn();
+//            m_turn = (Turn_t) !myTurn;
 
         }
     }
@@ -350,8 +356,9 @@ void Controller::updateLastMoveAndChangeTurn() {
     if (warrior == NULL) return;
     RoomState::instance().setBoardCell(warrior->get()->getLocation(),
                                        m_user->getPlayerSymbol() + warrior->get()->getSymbol());
-    RoomState::instance().setLastMove(warrior->get()->getLocation(), warrior->get()->getLocation(),
+    RoomState::instance().setLastMove(warrior->get()->getPrevLocation(), warrior->get()->getLocation(),
                                       warrior->get()->getSymbol());
+
     RoomState::instance().changeTurn();
     m_turn = (Turn_t) !myTurn;
 }

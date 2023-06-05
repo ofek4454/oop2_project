@@ -31,6 +31,7 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
 
     if (enteredOnce) {
         enteredOnce = false;
+        EventLoop::instance().addEvent(Event(TimeOver));
         return;
     }
     enteredOnce = true;
