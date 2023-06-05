@@ -129,7 +129,7 @@ void Controller::handleEvents() {
     while (EventLoop::instance().hasEvent()) {
         auto event = EventLoop::instance().popEvent();
         switch (event.getEventType()) {
-            case TimeOver: {
+            case NeedToResetLocation: {
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
                 if(warrior == NULL) return;
                 warrior->get()->resetLocation();
@@ -158,6 +158,12 @@ void Controller::handleEvents() {
             case FightRR: {
                 std::cout << "in Rock Rock \n";
                 animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
+                auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
+                if (warrior != NULL) {
+                    std::cout << "setting undefined\n";
+                    warrior->get()->setWeapon(Undefined_t);
+                }
+
                 updateLastMoveAndChangeTurn();
                 break;
             }
