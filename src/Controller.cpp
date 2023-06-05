@@ -157,13 +157,19 @@ void Controller::handleEvents() {
                 break;
             case FightRR: {
                 std::cout << "in Rock Rock \n";
-                updateLastMoveAndChangeTurn();
-                animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
+
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
-                if (warrior != NULL) {
-                    std::cout << "setting undefined\n";
-                    warrior->get()->setWeapon(Undefined_t);
-                }
+                if (warrior == NULL) return;
+                RoomState::instance().setBoardCell(warrior->get()->getLocation(),
+                                                   m_user->getPlayerSymbol() + warrior->get()->getSymbol());
+                RoomState::instance().setLastMove(warrior->get()->getLocation(), warrior->get()->getLocation(),
+                                                  warrior->get()->getSymbol());
+
+                RoomState::instance().changeTurn();
+                m_turn = (Turn_t) !myTurn;
+
+                animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
+                warrior->get()->setWeapon(Undefined_t);
                 auto warrior1 = m_enemy->getWarrior(m_enemy->getWarriorLocation());
                 if (warrior1 != NULL) {
                     std::cout << "setting undefined\n";
@@ -206,11 +212,6 @@ void Controller::handleEvents() {
         if (event.getWinner() != Tie && event.getWinner() != NoneEvent) {
             m_currentP1->setNeedToBeDraw(true);
             m_currentP2->setNeedToBeDraw(true);
-        } else if (event.getWinner() == Tie) {
-            std::cout << "Tie chanignig turn \n";
-//            RoomState::instance().changeTurn();
-//            m_turn = (Turn_t) !myTurn;
-
         }
     }
     m_user->checkDeletion();
