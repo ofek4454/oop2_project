@@ -68,11 +68,11 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
         std::cout << "warrior not found" << std::endl;
         return;
     }
+    EventLoop::instance().addEvent(Event(NeedToResetLocation));
 
     if(last_move[last_move.size() - 1] != warrior->get()->getSymbol()[0]) {
         std::cout << "changing weapon" << std::endl;
         enteredOnce = true;
-        EventLoop::instance().addEvent(Event(NeedToResetLocation));
         switch (last_move[last_move.size() - 1]) {
             case 'R':
                 warrior->get()->setWeapon(Rock_t);
