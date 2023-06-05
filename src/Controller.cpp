@@ -129,6 +129,12 @@ void Controller::handleEvents() {
     while (EventLoop::instance().hasEvent()) {
         auto event = EventLoop::instance().popEvent();
         switch (event.getEventType()) {
+            case TimeOver: {
+                auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
+                if (warrior == NULL) return;
+                warrior->get()->setWeapon(Undefined_t);
+                break;
+            }
             case NeedToResetLocation: {
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
                 if(warrior == NULL) return;
@@ -160,6 +166,7 @@ void Controller::handleEvents() {
 
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
                 if (warrior == NULL) return;
+                warrior->get()->setWeapon(Undefined_t);
                 RoomState::instance().setBoardCell(warrior->get()->getLocation(),
                                                    m_user->getPlayerSymbol() + warrior->get()->getSymbol());
                 RoomState::instance().setLastMove(warrior->get()->getLocation(), warrior->get()->getLocation(),
@@ -169,12 +176,7 @@ void Controller::handleEvents() {
                 m_turn = (Turn_t) !myTurn;
 
                 animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
-                warrior->get()->setWeapon(Undefined_t);
-                auto warrior1 = m_enemy->getWarrior(m_enemy->getWarriorLocation());
-                if (warrior1 != NULL) {
-                    std::cout << "setting undefined\n";
-                    warrior1->get()->setWeapon(Undefined_t);
-                }
+
                 break;
             }
             case FightPP: {

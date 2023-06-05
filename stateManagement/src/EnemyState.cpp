@@ -73,6 +73,7 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
                 break;
             case 'U':
                 warrior->get()->setWeapon(Undefined_t);
+                EventLoop::instance().addEvent(Event(TimeOver));
                 break;
         }
     }
