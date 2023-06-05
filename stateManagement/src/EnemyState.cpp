@@ -43,7 +43,7 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
         auto warrior = getWarrior(m_selectedPlayerLocation);
         warrior->get()->setWeapon(Undefined_t);
         EventLoop::instance().addEvent(Event(NeedToResetLocation));
-        EventLoop::instance().addEvent(Event(TimeOver));
+        EventLoop::instance().addEvent(Event(TieEvent));
         m_direction = Non_Direction;
         return;
     }
@@ -86,7 +86,7 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
                 break;
             case 'U':
                 warrior->get()->setWeapon(Undefined_t);
-                EventLoop::instance().addEvent(Event(TimeOver));
+                EventLoop::instance().addEvent(Event(TieEvent));
                 break;
         }
     }

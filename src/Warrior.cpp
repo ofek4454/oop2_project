@@ -139,7 +139,6 @@ bool Warrior::setAsHole(bool changeTexture) {
 
 void Warrior::setWeapon(Weapons_t weapon,bool visible) {
     std::unique_ptr<Weapon> new_weapon;
-    std::cout << visible << std::endl;
     switch (weapon) {
         case Rock_t: {
             new_weapon = std::make_unique<Rock>(visible);

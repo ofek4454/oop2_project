@@ -32,6 +32,8 @@ private:
     const Turn_t myTurn;
     Referee m_referee;
     bool m_isFinishUserTurn = false;
+    bool m_isMeAttacked = false;
+
 
     // private functions:
     void initGame();

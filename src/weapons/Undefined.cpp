@@ -4,18 +4,6 @@
 #include "EventLoop.h"
 
 Undefined::Undefined(bool isMine) : Weapon("U")  {
-//    if (isMine) {
-//        int rand = std::rand() % 3;
-//        auto wep = Weapons_t(rand);
-//        auto weapon = ResourcesManager::instance().getTexture(Rps);
-//        m_weapon_sprite.setTexture(*weapon);
-//        if (wep == Rock_t)
-//            m_weapon_sprite.setTextureRect(sf::IntRect(110, 116, 55, 58));
-//        else if (wep == Paper_t)
-//            m_weapon_sprite.setTextureRect(sf::IntRect(110, 232, 55, 58));
-//        else if (wep == Scissors_t)
-//            m_weapon_sprite.setTextureRect(sf::IntRect(110, 0, 55, 58));
-//    }
 }
 
 void Undefined::fight(Weapon &other) {
@@ -28,31 +16,21 @@ void Undefined::fight(Weapon &other) {
 void Undefined::fight(Scissors &other) {
     chooseWeapon();
 
-//    Event event(FightBack);
-//    EventLoop::instance().addEvent(event);
 }
 
 void Undefined::fight(Paper &other) {
     chooseWeapon();
 
-//    Event event(FightBack);
-//    EventLoop::instance().addEvent(event);
 }
 
 void Undefined::fight(Rock &other) {
-    std::cout << " undefined vs rock" << std::endl;
     chooseWeapon();
 
-//    Event event(FightBack);
-//    EventLoop::instance().addEvent(event);
 }
 
 void Undefined::fight(Undefined &other) {
-    std::cout << " undefined" << std::endl;
     chooseWeapon();
 
-//    Event event(FightBack);
-//    EventLoop::instance().addEvent(event);
 }
 
 void Undefined::fight(Hole &other) {

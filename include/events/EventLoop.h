@@ -14,6 +14,7 @@ public:
     void addEvent(Event event);
     Event popEvent();
     bool hasEvent();
+    void clearEvents();
 
 private:
     // private c-tor

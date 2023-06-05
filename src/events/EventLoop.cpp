@@ -34,3 +34,9 @@ Event EventLoop::popEvent() {
 void EventLoop::addEvent(Event event) {
     events.push(event);
 }
+
+void EventLoop::clearEvents() {
+    while (!events.empty()) {
+        events.pop();
+    }
+}

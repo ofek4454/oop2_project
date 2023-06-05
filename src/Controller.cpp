@@ -129,7 +129,7 @@ void Controller::handleEvents() {
     while (EventLoop::instance().hasEvent()) {
         auto event = EventLoop::instance().popEvent();
         switch (event.getEventType()) {
-            case TimeOver: {
+            case TieEvent: {
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
                 warrior->get()->setWeapon(Undefined_t);
                 break;
