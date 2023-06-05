@@ -28,6 +28,13 @@ void EnemyState::init() {
 
 void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
     static bool enteredOnce = false;
+
+    if (enteredOnce) {
+        enteredOnce = false;
+        return;
+    }
+    enteredOnce = true;
+
     m_isAnimating = true;
     std::string last_move = RoomState::instance().getRoom().getLastMove();
     auto locations = extractNumbers(last_move);
@@ -48,17 +55,12 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
     }
 
     auto warrior = getWarrior(m_selectedPlayerLocation);
-    if(warrior == NULL)
-    {
+    if (warrior == NULL) {
         return;
     }
-    if(enteredOnce){
-        enteredOnce = false;
-        return;
-    }
-    if(warrior->get()->getSymbol()[0] != last_move[last_move.size()-1]){
-        enteredOnce = true;
-        switch(last_move[last_move.size()-1]){
+
+    if(last_move[last_move.size() - 1] != warrior->get()->getSymbol()[0]) {
+        switch (last_move[last_move.size() - 1]) {
             case 'R':
                 warrior->get()->setWeapon(Rock_t);
                 break;
@@ -69,7 +71,6 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
                 warrior->get()->setWeapon(Paper_t);
                 break;
             case 'U':
-                std::cout << "changeing undefined\n";
                 warrior->get()->setWeapon(Undefined_t);
                 break;
         }
@@ -81,7 +82,7 @@ bool EnemyState::move() {
     static float shadowOffsetX = -1;
     static int shadowOffsetY = 4;
     auto warrior = getWarrior(m_selectedPlayerLocation);
-    if (warrior == NULL){
+    if (warrior == NULL) {
         m_isAnimating = false;
         return true;
     }
@@ -95,7 +96,7 @@ bool EnemyState::move() {
                                           sf::Vector2f(sf::Vector2f(-shadowOffsetX, 0)));
     else if (m_direction == Right)
         warrior->get()->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0), sf::Vector2f(sf::Vector2f(shadowOffsetX, 0)));
-    else{
+    else {
         m_isAnimating = false;
         return true;
     }
@@ -109,6 +110,7 @@ bool EnemyState::move() {
         imageCounter = 0;
         warrior->get()->setLocation(m_direction);
         m_isAnimating = false;
+        m_selectedPlayerLocation = m_newLocation;
         return true;
     }
     if (imageCounter == 3) {
@@ -127,8 +129,8 @@ std::vector<int> EnemyState::extractNumbers(const std::string &str) {
     for (int i = 0; i < str.size(); i++) {
         char c = str[i];
         if (isdigit(c)) {
-            if(m_playerSymbol == "1")
-                numbers.push_back(BOARD_SIZE - std::atoi(&c) -1);
+            if (m_playerSymbol == "1")
+                numbers.push_back(BOARD_SIZE - std::atoi(&c) - 1);
             else
                 numbers.push_back(std::atoi(&c));
         }

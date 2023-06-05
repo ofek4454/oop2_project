@@ -23,10 +23,8 @@ void Paper::fight(Scissors& other){
 }
 
 void Paper::fight(Paper& other){
-    Event event(FightPP);
+    Event event(FightPP,Tie);
     EventLoop::instance().addEvent(event);
-    m_warrior->setWeapon(Undefined_t);
-    other.m_warrior->setWeapon(Undefined_t);
 }
 
 void Paper::fight(Rock& other){

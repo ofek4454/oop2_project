@@ -28,14 +28,12 @@ public:
     void handleHover(const int row, const int col);
     const PlayerModel &getPlayerModel() const;
     bool isAnimating() const {return m_isAnimating;}
-    void setAnimating(bool animating) {m_isAnimating = animating;}
+
     Location getWarriorLocation() const {return m_selectedPlayerLocation;}
     std::string getPlayerSymbol() {return m_playerSymbol;}
     void setPlayerSymbol(std::string s){m_playerSymbol=s;}
     void checkDeletion();
     void setWarriorLocation(Location location){ m_selectedPlayerLocation = location;}
-    Location getNewLocation() const {return m_newLocation;}
-
 
 protected:
     Location m_newLocation;

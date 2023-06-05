@@ -26,23 +26,31 @@ void Undefined::fight(Weapon &other) {
 }
 
 void Undefined::fight(Scissors &other) {
-    Event event(FightBack);
-    EventLoop::instance().addEvent(event);
+    chooseWeapon();
+
+//    Event event(FightBack);
+//    EventLoop::instance().addEvent(event);
 }
 
 void Undefined::fight(Paper &other) {
-    Event event(FightBack);
-    EventLoop::instance().addEvent(event);
+    chooseWeapon();
+
+//    Event event(FightBack);
+//    EventLoop::instance().addEvent(event);
 }
 
 void Undefined::fight(Rock &other) {
-    Event event(FightBack);
-    EventLoop::instance().addEvent(event);
+    chooseWeapon();
+
+//    Event event(FightBack);
+//    EventLoop::instance().addEvent(event);
 }
 
 void Undefined::fight(Undefined &other) {
-    Event event(FightUndefined);
-    EventLoop::instance().addEvent(event);
+    chooseWeapon();
+
+//    Event event(FightBack);
+//    EventLoop::instance().addEvent(event);
 }
 
 void Undefined::fight(Hole &other) {

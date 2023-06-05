@@ -9,7 +9,7 @@
  */
 class Event{
 public:
-    Event(EventType_t type, Winner_t winner = Tie);
+    Event(EventType_t type, Winner_t winner = NoneEvent);
     EventType_t getEventType() const;
     Winner_t getWinner() const;
 private:

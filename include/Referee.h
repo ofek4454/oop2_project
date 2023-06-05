@@ -1,6 +1,7 @@
 #include "SFML/Graphics.hpp"
 #include "ResourcesManager.h"
 #include "WindowManager.h"
+#include "EventLoop.h"
 
 class Referee {
 public:

@@ -34,19 +34,19 @@ if(APPLE)
     add_subdirectory (stateManagement)
 
     # external libraries
-    add_subdirectory (dependencies/curl-8.1.2)
-    add_subdirectory (dependencies/nlohmann)
+    #add_subdirectory (dependencies/curl-8.1.2)
+    #add_subdirectory (dependencies/nlohmann)
 
 
     set (SFML_STATIC_LIBRARIES FALSE)
     set (SFML_DIR "/usr/local/Cellar/sfml/2.5.1")
 
     find_package (SFML 2.5 COMPONENTS audio graphics REQUIRED)
-    #find_package(CURL REQUIRED)
+    find_package(CURL REQUIRED)
 
     set_target_properties ( PROPERTIES MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELEASE)
 
-    target_link_libraries (${CMAKE_PROJECT_NAME} sfml-graphics sfml-audio)
+    target_link_libraries (${CMAKE_PROJECT_NAME} sfml-graphics sfml-audio sfml-network ${CURL_LIBRARIES})
 
 endif()
 

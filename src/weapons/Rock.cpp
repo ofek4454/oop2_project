@@ -29,11 +29,8 @@ Rock::Rock() : Weapon("R") {
 }
 
  void Rock::fight(Rock& other){
-     Event event(FightRR);
+     Event event(FightRR,Tie);
      EventLoop::instance().addEvent(event);
-     m_warrior->setWeapon(Undefined_t);
-     other.m_warrior->setWeapon(Undefined_t);
-
 }
 
  void Rock::fight(Hole& other){

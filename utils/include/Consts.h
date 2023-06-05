@@ -112,6 +112,7 @@ enum Winner_t{
     P1Won,
     P2Won,
     Tie,
+    NoneEvent
 };
 
 const sf::Color GRAY_COLOR = sf::Color(181, 193, 105);

@@ -1,4 +1,3 @@
-
 #include "UserState.h"
 
 UserState::UserState(PlayerModel &player) : PlayerState(player){
@@ -121,7 +120,6 @@ bool UserState::move() {
         return true;
     }
 
-    static bool skip = true;
     static int imageCounter = 0;
     static float shadowOffsetX = -1;
     static int shadowOffsetY = 4;
@@ -139,25 +137,19 @@ bool UserState::move() {
 
     warrior->get()->setIntRect(imageCounter);
     imageCounter++;
-    if(imageCounter >= IMAGE_COUNT){
-        if(skip){
-            skip = false;
-            imageCounter--;
-            auto oldLocation = warrior->get()->getLocation();
-            warrior->get()->setLocation(m_direction);
-            m_selectedPlayerLocation = warrior->get()->getLocation();
-            RoomState::instance().setBoardCell(oldLocation, "");
-            RoomState::instance().setBoardCell(m_selectedPlayerLocation, m_playerSymbol+warrior->get()->getSymbol());
-            RoomState::instance().setLastMove(oldLocation, m_selectedPlayerLocation, warrior->get()->getSymbol());
-            return false;
-        }
+    if(imageCounter == IMAGE_COUNT){
+        auto oldLocation = warrior->get()->getLocation();
+        warrior->get()->setLocation(m_direction);
+        m_selectedPlayerLocation = warrior->get()->getLocation();
+        RoomState::instance().setBoardCell(oldLocation, "");
+        RoomState::instance().setBoardCell(m_selectedPlayerLocation, m_playerSymbol+warrior->get()->getSymbol());
+        RoomState::instance().setLastMove(oldLocation, m_selectedPlayerLocation, warrior->get()->getSymbol());
 
         shadowOffsetX = -1;
         shadowOffsetY = 4;
         imageCounter = 0;
 
         m_isAnimating = false;
-        skip = true;
         return true;
     }
     if(imageCounter == 3){

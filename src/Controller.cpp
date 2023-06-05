@@ -23,7 +23,7 @@ void Controller::run() {
     print();
     WindowManager::instance().eventHandler(
             [this](auto move, auto exit) {
-                if (isMyTurn())
+                if (isMyTurn() && !m_user->isAnimating())
                     handleHover(move);
                 else return true;
                 return false;
@@ -45,6 +45,7 @@ void Controller::run() {
                         clock.restart().asSeconds();
                         if (RoomState::instance().getTurn() == myTurn) {
                             m_enemy->doTurn();
+//                            enemyCheckCollision();
                         }
                     }
                 }
@@ -79,6 +80,7 @@ void Controller::checkCollision() {
     for (auto &p1: *p1_vec)
         for (auto &p2: *p2_vec)
             if (p1->getLocation() == p2->getLocation()) {
+                m_isFinishUserTurn = false;
                 p2->getWeapon()->get()->fight(**p1->getWeapon());
                 m_currentP1 = p1.get();
                 m_currentP2 = p2.get();
@@ -87,23 +89,19 @@ void Controller::checkCollision() {
 
             }
 
-    m_user->checkDeletion();
-    m_enemy->checkDeletion();
+
 }
 
 void Controller::handleAnimation() {
     m_referee.animate((Turn_t) !isMyTurn());
     if (!m_user->isAnimating() && !m_enemy->isAnimating()) return;
 
-//    std::cout << "user animating " << m_user->isAnimating() << " enemy animating " << m_enemy->isAnimating() << std::endl;
-
     static sf::Clock clock;
     auto time = clock.getElapsedTime().asSeconds();
     if (time > 0.025) {
         clock.restart().asSeconds();
         if (isMyTurn() && m_user->move()) {
-            RoomState::instance().changeTurn();
-            m_turn = (Turn_t) !myTurn;
+            m_isFinishUserTurn = true;
         } else if (!isMyTurn() && m_enemy->move()) {
             // clear waiting events
             sf::Event event;
@@ -123,124 +121,94 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
 }
 
 void Controller::handleEvents() {
-    static bool isMeAttacked = false;
-
+    if (m_isFinishUserTurn && !EventLoop::instance().hasEvent()) {
+        RoomState::instance().changeTurn();
+        m_turn = (Turn_t) !myTurn;
+        m_isFinishUserTurn = false;
+    }
     while (EventLoop::instance().hasEvent()) {
         auto event = EventLoop::instance().popEvent();
         switch (event.getEventType()) {
-            case TimeOver:
-//                m_turn = (Turn_t) myTurn;
-                break;
             case FightRP: {
                 std::cout << "in Rock paper \n";
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BluePR : RedPR), 980,
                              84, 7, winP);
-                RoomState::instance().changeTurn();
-                m_turn = (Turn_t) !myTurn;
+                updateLastMoveAndChangeTurn();
                 break;
             }
-            case FightRS:
+            case FightRS: {
                 std::cout << "in Rock Scisscors \n";
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueRS : RedRS), 994,
                              93, 7, winR);
-                RoomState::instance().changeTurn();
-                m_turn = (Turn_t) !myTurn;
-                break;
-            case FightPS:
-                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP), 900,
-                             96, 6, winS);
-                RoomState::instance().changeTurn();
-                m_turn = (Turn_t) !myTurn;
-                break;
-            case FightRR: {
-                animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
+                updateLastMoveAndChangeTurn();
                 break;
             }
-            case FightPP:{
+            case FightPS:
+                std::cout << "in Paper Scisscors \n";
+                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP), 900,
+                             96, 6, winS);
+                updateLastMoveAndChangeTurn();
+                break;
+            case FightRR: {
+                std::cout << "in Rock Rock \n";
+                animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
+                updateLastMoveAndChangeTurn();
+                break;
+            }
+            case FightPP: {
                 std::cout << "in Paper paper \n";
-                if(isMeAttacked) return;
                 animateFight(ResourcesManager::instance().getTexture(PaperPaper), 453, 63, 3, tieP);
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
                 if (warrior != NULL) {
-                    warrior->get()->getWeapon()->get()->chooseWeapon();
+                    std::cout << "setting undefined\n";
+                    warrior->get()->setWeapon(Undefined_t);
                 }
                 RoomState::instance().setBoardCell(warrior->get()->getLocation(),
                                                    m_user->getPlayerSymbol() + warrior->get()->getSymbol());
                 RoomState::instance().setLastMove(warrior->get()->getLocation(), warrior->get()->getLocation(),
                                                   warrior->get()->getSymbol());
-                RoomState::instance().changeTurn();
-                m_turn = (Turn_t) !myTurn;
             }
                 break;
             case FightSS:
                 animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3, tieS);
                 break;
-            case FightUndefined: {// undefined vs undefined
-                std::cout << "in Fight undefiend \n";
-                if(isMeAttacked){
-                    animateFight(ResourcesManager::instance().getTexture(BlueSP), 300, 96, 2);
-                    ResourcesManager::instance().playSound(ChooseWeapon);
-                    auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
-                    if (warrior != NULL) {
-                        warrior->get()->getWeapon()->get()->chooseWeapon();
-                    }
-                    RoomState::instance().setBoardCell(warrior->get()->getLocation(),
-                                                       m_user->getPlayerSymbol() + warrior->get()->getSymbol());
-                    RoomState::instance().setLastMove(warrior->get()->getLocation(), warrior->get()->getLocation(),
-                                                      warrior->get()->getSymbol());
-                    RoomState::instance().changeTurn();
-                    m_turn = (Turn_t) !myTurn;
-                    return;
-                }
-                animateFight(ResourcesManager::instance().getTexture(BlueSP), 300, 96, 2);
-                ResourcesManager::instance().playSound(ChooseWeapon);
-                auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
-                if (warrior != NULL) {
-                    warrior->get()->getWeapon()->get()->chooseWeapon();
-                }
-                RoomState::instance().setBoardCell(warrior->get()->getLocation(),
-                                                   m_user->getPlayerSymbol() + warrior->get()->getSymbol());
-                RoomState::instance().setLastMove(warrior->get()->getPrevLocation(), warrior->get()->getLocation(),
-                                                  warrior->get()->getSymbol());
-                isMeAttacked = true;
-                break;
-            }
-            case FightBack: {// got attacked by undefined and me also undefined
-                std::cout << "in Fight back \n";
-                isMeAttacked = false;
-                ResourcesManager::instance().playSound(ChooseWeapon);
-                m_user->setWarriorLocation(Location(m_enemy->getNewLocation().row, m_enemy->getNewLocation().col));
-                auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
-                if (warrior != NULL) {
-                    warrior->get()->getWeapon()->get()->chooseWeapon();
-                }
-                RoomState::instance().setBoardCell(warrior->get()->getLocation(),
-                                                   m_user->getPlayerSymbol() + warrior->get()->getSymbol());
-                RoomState::instance().setLastMove(warrior->get()->getLocation(), warrior->get()->getLocation(),
-                                                  warrior->get()->getSymbol());
-                break;
-            }
+//            case FightUndefined: {// undefined vs undefined
+//                std::cout << "in Fight undefiend \n";
+//                animateFight(ResourcesManager::instance().getTexture(BlueSP), 300, 96, 2);
+//                ResourcesManager::instance().playSound(ChooseWeapon);
+//                auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
+//                if (warrior != NULL) {
+//                    warrior->get()->getWeapon()->get()->chooseWeapon();
+//                }
+//                RoomState::instance().setBoardCell(warrior->get()->getLocation(),
+//                                                   m_user->getPlayerSymbol() + warrior->get()->getSymbol());
+//                RoomState::instance().setLastMove(warrior->get()->getPrevLocation(), warrior->get()->getLocation(),
+//                                                  warrior->get()->getSymbol());
+//                break;
+//            }
+//            case FightBack: {
+//                // got attacked by undefined and me also undefined
+//                std::cout << "in Fight back \n";
+//                ResourcesManager::instance().playSound(ChooseWeapon);
+//                m_user->setWarriorLocation(m_enemy->getWarriorLocation());
+//                auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
+//                if (warrior != NULL) {
+//                    warrior->get()->getWeapon()->get()->chooseWeapon();
+//                }
+//                RoomState::instance().setBoardCell(warrior->get()->getLocation(),
+//                                                   m_user->getPlayerSymbol() + warrior->get()->getSymbol());
+//                RoomState::instance().setLastMove(warrior->get()->getLocation(), warrior->get()->getLocation(),
+//                                                  warrior->get()->getSymbol());
+//                break;
+//            }
             case AttackingUndefined: { // I have weapon and attack undefined
-                if(!isMeAttacked){
-                    auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
-                    ResourcesManager::instance().playSound(ChooseWeapon);
-                    if(warrior){
-                        std::cout << "choosing warrior\n";
-                        warrior->get()->getWeapon()->get()->chooseWeapon();
-                    }
-
-                    RoomState::instance().setLastMove(warrior->get()->getLocation(), warrior->get()->getLocation(),
-                                                      warrior->get()->getSymbol());
-                    RoomState::instance().changeTurn();
-                    m_turn = (Turn_t) !myTurn;
-
-                    return;
-                }
-                std::cout << "in attacking undef \n";
-                isMeAttacked = true;
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
+                RoomState::instance().setBoardCell(warrior->get()->getLocation(),
+                                                   m_user->getPlayerSymbol() + warrior->get()->getSymbol());
                 RoomState::instance().setLastMove(warrior->get()->getPrevLocation(), warrior->get()->getLocation(),
                                                   warrior->get()->getSymbol());
+                RoomState::instance().changeTurn();
+                m_turn = (Turn_t) !myTurn;
                 break;
             }
             default:
@@ -248,12 +216,19 @@ void Controller::handleEvents() {
         }
         ResourcesManager::instance().playSound(
                 event.getWinner() == P1Won ? WinFight : event.getWinner() == P2Won ? LoseFight : NUMBER_OF_SOUNDS - 1);
-        if (event.getWinner() != Tie) {
+        if (event.getWinner() != Tie && event.getWinner() != NoneEvent) {
             m_currentP1->setNeedToBeDraw(true);
             m_currentP2->setNeedToBeDraw(true);
+        } else if (event.getWinner() == Tie) {
+            std::cout << "Tie chanignig turn \n";
+            RoomState::instance().changeTurn();
+            m_turn = (Turn_t) !myTurn;
+
         }
-        m_referee.setTurn(m_turn);
     }
+    m_user->checkDeletion();
+    m_enemy->checkDeletion();
+//    m_referee.setTurn(m_turn);
 }
 
 void Controller::animateFight(sf::Texture *fightTexture, const int width, const int height, const int frames,
@@ -368,4 +343,15 @@ void Controller::initGame() {
 
     m_enemy->setAsFlag(opponentFlagAndHole.first.row, opponentFlagAndHole.first.col);
     m_enemy->setAsHole(opponentFlagAndHole.second.row, opponentFlagAndHole.second.col);
+}
+
+void Controller::updateLastMoveAndChangeTurn() {
+    auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
+    if (warrior == NULL) return;
+    RoomState::instance().setBoardCell(warrior->get()->getLocation(),
+                                       m_user->getPlayerSymbol() + warrior->get()->getSymbol());
+    RoomState::instance().setLastMove(warrior->get()->getLocation(), warrior->get()->getLocation(),
+                                      warrior->get()->getSymbol());
+    RoomState::instance().changeTurn();
+    m_turn = (Turn_t) !myTurn;
 }

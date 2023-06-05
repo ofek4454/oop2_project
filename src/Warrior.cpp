@@ -67,9 +67,8 @@ void Warrior::setIntRect(int counter,bool isEnemy) {
 
 Location Warrior::getPrevLocation() const {return m_prevLocation;}
 
-
 void Warrior::setLocation(Direction_t direction) {
-    m_prevLocation = Location(m_location.row,m_location.col);
+    m_prevLocation = m_location;
     switch (direction) {
         case Direction_t::Up:
             m_location = Location(m_location.row - 1, m_location.col);
@@ -152,16 +151,16 @@ void Warrior::setWeapon(Weapons_t weapon) {
             new_weapon = std::make_unique<Scissors>();
             break;
         }
-        case Undefined_t:
+        case Undefined_t: {
             new_weapon = std::make_unique<Undefined>(m_isMine);
-
+            break;
+        }
         default:
             break;
     }
     new_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y + 10));
     new_weapon->setOwner(this);
     m_weapon = std::move(new_weapon);
-
 }
 
 void Warrior::lose() {

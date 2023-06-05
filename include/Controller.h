@@ -31,9 +31,9 @@ private:
     Warrior* m_currentP2 = nullptr;
     const Turn_t myTurn;
     Referee m_referee;
+    bool m_isFinishUserTurn = false;
 
     // private functions:
-    void changeTurnAnimation();
     void initGame();
     void print();
     void handleEvents();
@@ -42,6 +42,7 @@ private:
     void handleHover(sf::Event::MouseMoveEvent &click);
     void handleAnimation();
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
+    void updateLastMoveAndChangeTurn();
 
     bool isMyTurn() const{
         return m_turn == myTurn;

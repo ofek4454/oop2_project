@@ -18,10 +18,8 @@ Scissors::Scissors() : Weapon("S") {
 }
 
 void Scissors::fight(Scissors& other) {
-    Event event(FightSS);
+    Event event(FightSS,Tie);
     EventLoop::instance().addEvent(event);
-    m_warrior->setWeapon(Undefined_t);
-    other.m_warrior->setWeapon(Undefined_t);
 }
 
 void Scissors::fight(Paper& other) {
