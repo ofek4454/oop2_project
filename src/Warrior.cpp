@@ -29,7 +29,7 @@ Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location)
     if (isMine)
         m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 10, m_sprite.getPosition().y));
     else
-        m_weapon->setSpriteLoc(sf::Vector2f(-1000, -1000));
+        m_weapon->setVisible(false);
 
     m_weapon->setOwner(this);
 }
@@ -39,7 +39,9 @@ void Warrior::draw() {
     if (m_needToBeDraw) {
         window->draw(m_shadow);
         window->draw(m_sprite);
-        m_weapon->draw();
+        if(m_weapon->isVisible()){
+            m_weapon->draw();
+        }
     }
 }
 
@@ -135,20 +137,20 @@ bool Warrior::setAsHole(bool changeTexture) {
     return true;
 }
 
-void Warrior::setWeapon(Weapons_t weapon) {
+void Warrior::setWeapon(Weapons_t weapon,bool visible) {
     std::unique_ptr<Weapon> new_weapon;
-
+    std::cout << visible << std::endl;
     switch (weapon) {
         case Rock_t: {
-            new_weapon = std::make_unique<Rock>();
+            new_weapon = std::make_unique<Rock>(visible);
             break;
         }
         case Paper_t: {
-            new_weapon = std::make_unique<Paper>();
+            new_weapon = std::make_unique<Paper>(visible);
             break;
         }
         case Scissors_t: {
-            new_weapon = std::make_unique<Scissors>();
+            new_weapon = std::make_unique<Scissors>(visible);
             break;
         }
         case Undefined_t: {

@@ -130,35 +130,29 @@ void Controller::handleEvents() {
         auto event = EventLoop::instance().popEvent();
         switch (event.getEventType()) {
             case TimeOver: {
-                std::cout << "setting myself undefined\n";
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
-                std::cout << " tie\n" << "location : " << m_user->getWarriorLocation().row << " " << m_user->getWarriorLocation().col << std::endl;
                 warrior->get()->setWeapon(Undefined_t);
                 break;
             }
             case NeedToResetLocation: {
-                std::cout << "reset loc\n";
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
                 if (warrior == NULL) return;
                 warrior->get()->resetLocation();
                 break;
             }
             case FightRP: {
-                std::cout << "in Rock paper \n";
                 updateLastMoveAndChangeTurn();
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BluePR : RedPR), 980,
                              84, 7, winP);
                 break;
             }
             case FightRS: {
-                std::cout << "in Rock Scisscors \n";
                 updateLastMoveAndChangeTurn();
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueRS : RedRS), 994,
                              93, 7, winR);
                 break;
             }
             case FightPS:
-                std::cout << "in Paper Scisscors \n";
                 updateLastMoveAndChangeTurn();
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP), 900,
                              96, 6, winS);
@@ -168,7 +162,6 @@ void Controller::handleEvents() {
                 break;
             }
             case FightPP: {
-                std::cout << "in Paper paper \n";
                 updateTieCase();
             }
                 break;
@@ -176,7 +169,6 @@ void Controller::handleEvents() {
                 updateTieCase();
                 break;
             case AttackingUndefined: { // I have weapon and attack undefined
-                std::cout << "attacking undefined\n";
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
                 RoomState::instance().setBoardCell(warrior->get()->getLocation(),
                                                    m_user->getPlayerSymbol() + warrior->get()->getSymbol());
@@ -194,6 +186,8 @@ void Controller::handleEvents() {
         if (event.getWinner() != Tie && event.getWinner() != NoneEvent) {
             m_currentP1->setNeedToBeDraw(true);
             m_currentP2->setNeedToBeDraw(true);
+            m_currentP1->getWeapon()->get()->setVisible(true);
+            m_currentP2->getWeapon()->get()->setVisible(true);
         }
     }
     m_user->checkDeletion();

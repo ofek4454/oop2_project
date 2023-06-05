@@ -6,7 +6,7 @@
 
 class Scissors : public Weapon{
 public:
-    Scissors();
+    Scissors(bool visible = true);
     virtual void fight(Weapon& other) override;
     virtual void fight(Scissors& other) override;
     virtual void fight(Paper& other) override;

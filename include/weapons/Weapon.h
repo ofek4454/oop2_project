@@ -12,7 +12,7 @@ class Warrior;
 
 class Weapon {
 public:
-    Weapon(const std::string symbol);
+    Weapon(const std::string symbol,bool visible = true);
     virtual ~Weapon() = default;
     virtual void draw();
     void setSpriteLoc(sf::Vector2f pos) {m_weapon_sprite.setPosition(pos);}
@@ -30,6 +30,8 @@ public:
     void lose();
     void chooseWeapon();
     void initChooseBox();
+    void setVisible(bool visible) {m_is_visible = visible;}
+    bool isVisible() const {return m_is_visible;}
 
     std::string getSymbol() const {return m_symbol;}
 
@@ -39,6 +41,7 @@ protected:
     Warrior *m_warrior;
     sf::Sprite m_weapons_textures[3];
 private:
+    bool m_is_visible = true;
     sf::RectangleShape m_ChooseBoxRect;
     sf::Text m_ChooseWeaponText;
     const std::string m_symbol;

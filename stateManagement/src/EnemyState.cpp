@@ -28,6 +28,7 @@ void EnemyState::init() {
 
 void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
     static bool enteredOnce = false;
+    EventLoop::instance().addEvent(Event(NeedToResetLocation));
 
     if (enteredOnce) {
         enteredOnce = false;
@@ -63,25 +64,25 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
         m_direction = Non_Direction;
     }
 
+
     auto warrior = getWarrior(m_selectedPlayerLocation);
     if (warrior == NULL) {
         std::cout << "warrior not found" << std::endl;
         return;
     }
-    EventLoop::instance().addEvent(Event(NeedToResetLocation));
 
     if(last_move[last_move.size() - 1] != warrior->get()->getSymbol()[0]) {
         std::cout << "changing weapon" << std::endl;
         enteredOnce = true;
         switch (last_move[last_move.size() - 1]) {
             case 'R':
-                warrior->get()->setWeapon(Rock_t);
+                warrior->get()->setWeapon(Rock_t,false);
                 break;
             case 'S':
-                warrior->get()->setWeapon(Scissors_t);
+                warrior->get()->setWeapon(Scissors_t,false);
                 break;
             case 'P':
-                warrior->get()->setWeapon(Paper_t);
+                warrior->get()->setWeapon(Paper_t,false);
                 break;
             case 'U':
                 warrior->get()->setWeapon(Undefined_t);

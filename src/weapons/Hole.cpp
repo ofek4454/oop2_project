@@ -9,7 +9,7 @@
 #include "Rock.h"
 #include "Undefined.h"
 
-Hole::Hole() : Weapon("H")  {
+Hole::Hole(bool visible) : Weapon("H",visible)  {
     auto weapon = ResourcesManager::instance().getTexture(Rps);
     m_weapon_sprite.setTexture(*weapon);
     m_weapon_sprite.setColor(sf::Color::Transparent);
