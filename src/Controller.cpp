@@ -137,34 +137,38 @@ void Controller::handleEvents() {
             }
             case FightRP: {
                 std::cout << "in Rock paper \n";
+                updateLastMoveAndChangeTurn();
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BluePR : RedPR), 980,
                              84, 7, winP);
-                updateLastMoveAndChangeTurn();
                 break;
             }
             case FightRS: {
                 std::cout << "in Rock Scisscors \n";
+                updateLastMoveAndChangeTurn();
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueRS : RedRS), 994,
                              93, 7, winR);
-                updateLastMoveAndChangeTurn();
                 break;
             }
             case FightPS:
                 std::cout << "in Paper Scisscors \n";
+                updateLastMoveAndChangeTurn();
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP), 900,
                              96, 6, winS);
-                updateLastMoveAndChangeTurn();
                 break;
             case FightRR: {
                 std::cout << "in Rock Rock \n";
+                updateLastMoveAndChangeTurn();
                 animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
                 if (warrior != NULL) {
                     std::cout << "setting undefined\n";
                     warrior->get()->setWeapon(Undefined_t);
                 }
-
-                updateLastMoveAndChangeTurn();
+                auto warrior1 = m_enemy->getWarrior(m_enemy->getWarriorLocation());
+                if (warrior1 != NULL) {
+                    std::cout << "setting undefined\n";
+                    warrior1->get()->setWeapon(Undefined_t);
+                }
                 break;
             }
             case FightPP: {
@@ -184,35 +188,6 @@ void Controller::handleEvents() {
             case FightSS:
                 animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3, tieS);
                 break;
-//            case FightUndefined: {// undefined vs undefined
-//                std::cout << "in Fight undefiend \n";
-//                animateFight(ResourcesManager::instance().getTexture(BlueSP), 300, 96, 2);
-//                ResourcesManager::instance().playSound(ChooseWeapon);
-//                auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
-//                if (warrior != NULL) {
-//                    warrior->get()->getWeapon()->get()->chooseWeapon();
-//                }
-//                RoomState::instance().setBoardCell(warrior->get()->getLocation(),
-//                                                   m_user->getPlayerSymbol() + warrior->get()->getSymbol());
-//                RoomState::instance().setLastMove(warrior->get()->getPrevLocation(), warrior->get()->getLocation(),
-//                                                  warrior->get()->getSymbol());
-//                break;
-//            }
-//            case FightBack: {
-//                // got attacked by undefined and me also undefined
-//                std::cout << "in Fight back \n";
-//                ResourcesManager::instance().playSound(ChooseWeapon);
-//                m_user->setWarriorLocation(m_enemy->getWarriorLocation());
-//                auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
-//                if (warrior != NULL) {
-//                    warrior->get()->getWeapon()->get()->chooseWeapon();
-//                }
-//                RoomState::instance().setBoardCell(warrior->get()->getLocation(),
-//                                                   m_user->getPlayerSymbol() + warrior->get()->getSymbol());
-//                RoomState::instance().setLastMove(warrior->get()->getLocation(), warrior->get()->getLocation(),
-//                                                  warrior->get()->getSymbol());
-//                break;
-//            }
             case AttackingUndefined: { // I have weapon and attack undefined
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
                 RoomState::instance().setBoardCell(warrior->get()->getLocation(),

@@ -34,7 +34,6 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
         EventLoop::instance().addEvent(Event(NeedToResetLocation));
         return;
     }
-    enteredOnce = true;
 
     m_isAnimating = true;
     std::string last_move = RoomState::instance().getRoom().getLastMove();
@@ -61,6 +60,7 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
     }
 
     if(last_move[last_move.size() - 1] != warrior->get()->getSymbol()[0]) {
+        enteredOnce = true;
         switch (last_move[last_move.size() - 1]) {
             case 'R':
                 warrior->get()->setWeapon(Rock_t);
