@@ -24,6 +24,8 @@ private:
     sf::RenderWindow m_window;
 
     WindowManager() : m_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
-                               "Even juk", sf::Style::Close | sf::Style::Titlebar) {}
+                               "Even juk", sf::Style::Close | sf::Style::Titlebar) {
+        m_window.setFramerateLimit(60);
+    }
 };
 

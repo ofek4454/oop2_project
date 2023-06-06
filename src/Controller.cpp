@@ -6,12 +6,27 @@
 #include "SoundFlip.h"
 #include "RoomState.h"
 #include "exception"
+#include "cmath"
 
 Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerState> *p2, bool isMeP1) : m_window(
         WindowManager::instance().getWindow()), m_user(p1->get()), m_enemy(p2->get()), myTurn(isMeP1 ? P1 : P2),
                                                                                                           m_referee(
                                                                                                                   myTurn) {
-
+    m_countdown.setFont(*ResourcesManager::instance().getFont());
+    m_countdown.setCharacterSize(64);
+    m_countdown.setFillColor(sf::Color::White);
+    m_countdown.setStyle(sf::Text::Bold);
+    m_circle.setFillColor(sf::Color::Transparent);
+    m_circle.setOutlineThickness(2.0f);
+    m_circle.setOutlineColor(sf::Color::White);
+    m_circle.setOrigin(radius, radius);
+    m_circle.setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775 + ((WINDOW_HEIGHT * 0.95 - WINDOW_HEIGHT * 0.775)) + 10,
+                                      WINDOW_HEIGHT * 0.685 - radius +
+                                      (WINDOW_HEIGHT * 0.95 - WINDOW_HEIGHT * 0.685 + 10)));
+    m_shuffleButton.setSize(sf::Vector2f(WINDOW_WIDTH * 0.19, WINDOW_HEIGHT * 0.1));
+    m_shuffleButton.setTexture(ResourcesManager::instance().getTexture(ShuffleButton));
+    m_shuffleButton.setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775 + 10,
+                                             WINDOW_HEIGHT * 0.355 - m_shuffleButton.getGlobalBounds().height - 10));
     m_user->setPlayerSymbol(isMeP1 ? "1" : "2");
     m_enemy->setPlayerSymbol(!isMeP1 ? "1" : "2");
     m_user->init();
@@ -21,6 +36,7 @@ Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerS
 }
 
 void Controller::run() {
+    LoadingGame();
     try {
         print();
         WindowManager::instance().eventHandler(
@@ -64,7 +80,7 @@ void Controller::run() {
 
 }
 
-void Controller::print() {
+void Controller::print(bool printLoad) {
     m_window->clear();
     m_window->draw(*ResourcesManager::instance().getBackground());
     m_board.print();
@@ -74,7 +90,21 @@ void Controller::print() {
     m_enemy->print();
     SoundFlip::instance().draw(*m_window);
     m_referee.print();
-
+    if (printLoad) {
+        m_window->draw(m_circle);
+        float angleIncrement = 2 * M_PI / numLines;
+        for (int i = 0; i < numLines; ++i) {
+            float angle = i * angleIncrement;
+            sf::CircleShape line(radius / 15.0f);
+            line.setFillColor(sf::Color::White);
+            line.setOrigin(line.getRadius(), line.getRadius());
+            line.setPosition(std::cos(angle) * (radius - line.getRadius()) + m_circle.getPosition().x,
+                             std::sin(angle) * (radius - line.getRadius()) + m_circle.getPosition().y);
+            m_window->draw(line);
+        }
+        m_window->draw(m_shuffleButton);
+        m_window->draw(m_countdown);
+    }
     m_window->display();
 }
 
@@ -102,7 +132,6 @@ void Controller::handleAnimation() {
     static sf::Clock clock;
     auto time = clock.getElapsedTime().asSeconds();
     if (m_playHoleAniation) {
-        std::cout << "play hole\n";
         if (time > 0.2) {
             clock.restart();
             if (m_winner == P1) {
@@ -149,6 +178,10 @@ void Controller::handleEvents() {
     while (EventLoop::instance().hasEvent()) {
         auto event = EventLoop::instance().popEvent();
         switch (event.getEventType()) {
+            case CancelSwitchingTurn: {
+                m_switching = false;
+                break;
+            }
             case TieEvent: {
                 auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
                 warrior->get()->setWeapon(Undefined_t);
@@ -311,8 +344,10 @@ void Controller::initGame() {
                 int col = (click.x - rect_pos.left) / rect_pos.width;
                 if (row < BOARD_SIZE - 2) return true;
                 if (!flagChoosed) {
-                    if (m_user->setAsFlag(row, col))
+                    if (m_user->setAsFlag(row, col)){
+                        userFlag = m_user->getWarrior(Location(row, col))->get();
                         flagChoosed = true;
+                    }
                 } else {
                     if (m_user->setAsHole(row, col)) {
                         exit = true;
@@ -346,11 +381,13 @@ void Controller::initGame() {
         m_enemy->setAsHole(7 - opponentFlagAndHole.second.row, 7 - opponentFlagAndHole.second.col);
         enemyHole = m_enemy->getWarrior(
                 Location(7 - opponentFlagAndHole.second.row, 7 - opponentFlagAndHole.second.col))->get();
+        enemyFlag = m_enemy->getWarrior(Location(7 - opponentFlagAndHole.first.row, 7 - opponentFlagAndHole.first.col))->get();
     } else {
         m_enemy->setAsFlag(opponentFlagAndHole.first.row, opponentFlagAndHole.first.col);
         m_enemy->setAsHole(opponentFlagAndHole.second.row, opponentFlagAndHole.second.col);
         enemyHole = m_enemy->getWarrior(
                 Location(opponentFlagAndHole.second.row, opponentFlagAndHole.second.col))->get();
+        enemyFlag = m_enemy->getWarrior(Location(opponentFlagAndHole.first.row, opponentFlagAndHole.first.col))->get();
     }
 
 }
@@ -369,7 +406,10 @@ void Controller::updateLastMoveAndChangeTurn() {
                                        m_user->getPlayerSymbol() + warrior->get()->getSymbol());
     RoomState::instance().setLastMove(warrior->get()->getPrevLocation(), warrior->get()->getLocation(),
                                       warrior->get()->getSymbol());
-
+    if (!m_switching) {
+        m_switching = true;
+        return;
+    }
     RoomState::instance().changeTurn();
     m_turn = (Turn_t) !myTurn;
 }
@@ -387,4 +427,78 @@ void Controller::updateTieCase() {
     m_turn = (Turn_t) !myTurn;
 
     animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
+}
+
+void Controller::LoadingGame() {
+    static sf::Clock timer;
+
+    sf::Clock clock;
+    int countdown = 10;
+    bool animating = false;
+    float scaleFactor = 1.0f;
+    const int numSegments = 60; // Number of line segments
+
+
+    WindowManager::instance().eventHandler(
+            [](auto move, auto exit) {
+                return false;
+            },
+            [this](auto click, auto exit) {
+                SoundFlip::instance().checkIfContains(click);
+                handleClick(&click);
+                return false;
+            },
+            [](auto key, auto exit) { return false; },
+            [](auto type, auto &exit) { return false; },
+            [](auto offset, auto exit) { return false; },
+            [this, &countdown, &clock, &animating, &scaleFactor, &numSegments](auto &exit) {
+
+                sf::Time elapsed = clock.getElapsedTime();
+                if (elapsed.asSeconds() >= 1.0f) {
+                    countdown--;
+                    clock.restart();
+                    animating = true;
+                    scaleFactor = 1.5f;
+
+                    if (countdown < 0) {
+                        exit = true;
+                        return;
+                    }
+                }
+
+                if (animating) {
+                    m_countdown.setScale(scaleFactor, scaleFactor);
+                    scaleFactor -= 0.05f;
+                    if (scaleFactor <= 1.0f) {
+                        animating = false;
+                        m_countdown.setScale(1.0f, 1.0f);
+                    }
+                }
+
+                m_countdown.setString(std::to_string(countdown));
+                sf::FloatRect textBounds = m_countdown.getLocalBounds();
+                m_countdown.setOrigin(textBounds.left + textBounds.width / 2.0f,
+                                      textBounds.top + textBounds.height / 2.0f);
+                m_countdown.setPosition(m_circle.getPosition().x, m_circle.getPosition().y);
+                float completion = std::min(1.0f, elapsed.asSeconds());
+                numLines = static_cast<int>(numSegments * completion);
+
+
+                print(true);
+            }
+    );
+
+}
+
+void Controller::handleClick(sf::Event::MouseButtonEvent *click) {
+    int arr[3] = {116,232,0};
+    if(m_shuffleButton.getGlobalBounds().contains(click->x,click->y)){
+        auto p1_vec = m_user->getAllWarriors();
+        for(auto &warrior : *p1_vec){
+            if(warrior->getLocation() == userHole->getLocation() || warrior->getLocation() == userFlag->getLocation()) continue;
+            int randomNumber = std::rand() % 3;
+            warrior->getWeapon()->get()->setWeaponIntRect(arr[randomNumber]);
+        }
+
+    }
 }

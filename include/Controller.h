@@ -23,24 +23,40 @@ private:
     sf::RenderWindow *m_window;
     sf::Texture m_fightTexture;
     sf::Text m_p1Name, m_p2Name;
+    sf::Text m_countdown;
+    sf::CircleShape m_circle;
+    sf::RectangleShape m_shuffleButton;
+    // Board
     Board m_board;
+
+    // Players
     std::unique_ptr<PlayerState> m_user;
     std::unique_ptr<PlayerState> m_enemy;
-    Turn_t m_turn = P1;
     Warrior* m_currentP1 = nullptr;
     Warrior* m_currentP2 = nullptr;
-    const Turn_t myTurn;
     Referee m_referee;
-    bool m_isFinishUserTurn = false;
-    bool m_playHoleAniation = false;
     Warrior *userHole;
     Warrior *enemyHole;
+    Warrior *userFlag;
+    Warrior *enemyFlag;
+
+    // booleans
+    Turn_t m_turn = P1;
+    const Turn_t myTurn;
+    bool m_isFinishUserTurn = false;
+    bool m_playHoleAniation = false;
     bool m_winner;
+    bool m_switching = true;
+
+    // numbers
+    int numLines;
+    float radius = 100.0f;
 
 
     // private functions:
+    void LoadingGame();
     void initGame();
-    void print();
+    void print(bool printLoad = false);
     void handleEvents();
     void initNames();
     void checkCollision();
@@ -49,6 +65,7 @@ private:
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
     void updateLastMoveAndChangeTurn();
     void updateTieCase();
+    void handleClick(sf::Event::MouseButtonEvent *click);
 
     bool isMyTurn() const{
         return m_turn == myTurn;

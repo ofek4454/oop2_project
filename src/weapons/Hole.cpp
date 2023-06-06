@@ -16,21 +16,25 @@ Hole::Hole(bool visible) : Weapon("H",visible)  {
 }
 
 void Hole::fight(Scissors& other){
+    EventLoop::instance().addEvent(Event(    CancelSwitchingTurn));
     EventLoop::instance().addEvent(Event(HoleFall,P1Won));
     other.lose();
 }
 
 void Hole::fight(Paper& other){
+    EventLoop::instance().addEvent(Event(    CancelSwitchingTurn));
     EventLoop::instance().addEvent(Event(HoleFall,P1Won));
     other.lose();
 }
 
 void Hole::fight(Rock& other){
+    EventLoop::instance().addEvent(Event(    CancelSwitchingTurn));
     EventLoop::instance().addEvent(Event(HoleFall,P1Won));
     other.lose();
 }
 
 void Hole::fight(Undefined& other){
+    EventLoop::instance().addEvent(Event(    CancelSwitchingTurn));
     EventLoop::instance().addEvent(Event(HoleFall,P1Won));
     other.lose();
 }

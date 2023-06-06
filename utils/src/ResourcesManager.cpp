@@ -42,6 +42,8 @@ ResourcesManager::ResourcesManager() {
     m_texture[RoomButton].loadFromFile("button.png");
     m_texture[Trap].loadFromFile("Hole.png");
     m_texture[Trap].setSmooth(true);
+    m_texture[ShuffleButton].loadFromFile("shuffleButton.png");
+
 
 
     m_background.setSize(sf::Vector2f (WINDOW_WIDTH, WINDOW_HEIGHT));

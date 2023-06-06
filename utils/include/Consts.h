@@ -6,7 +6,7 @@
 const float WINDOW_WIDTH = sf::VideoMode::getDesktopMode().width * 0.75;
 const float WINDOW_HEIGHT = sf::VideoMode::getDesktopMode().height * 0.75;
 
-const int NUM_OF_TEXTURES = 17;
+const int NUM_OF_TEXTURES = 18;
 
 // Board Size
 
@@ -62,6 +62,7 @@ enum Textures_t{
     ExitButton,
     RoomButton,
     Trap,
+    ShuffleButton,
 };
 
 
@@ -105,6 +106,7 @@ enum EventType_t{
     AttackingUndefined,
     NeedToResetLocation,
     HoleFall,
+    CancelSwitchingTurn
 };
 
 enum Turn_t{
