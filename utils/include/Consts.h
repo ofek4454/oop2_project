@@ -100,7 +100,7 @@ enum EventType_t{
     FightSS,
     AttackingUndefined,
     NeedToResetLocation,
-    SwitchTurn,
+    Atacking,
 };
 
 enum Turn_t{

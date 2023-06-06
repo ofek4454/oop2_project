@@ -41,7 +41,7 @@ void Controller::run() {
             [this](auto exit) {
                 if (!isMyTurn() && !m_enemy->isAnimating()) {
                     static sf::Clock clock;
-                    if (clock.getElapsedTime().asSeconds() > 0.3) {
+                    if (clock.getElapsedTime().asSeconds() > 0.2) {
                         clock.restart().asSeconds();
                         if (RoomState::instance().getTurn() == myTurn) {
                             m_enemy->doTurn();
@@ -79,6 +79,7 @@ void Controller::checkCollision() {
     for (auto &p1: *p1_vec)
         for (auto &p2: *p2_vec)
             if (p1->getLocation() == p2->getLocation()) {
+                m_user->setWarriorLocation(p1->getLocation());
                 m_isFinishUserTurn = false;
                 p2->getWeapon()->get()->fight(**p1->getWeapon());
                 m_currentP1 = p1.get();
@@ -310,8 +311,17 @@ void Controller::initGame() {
 }
 
 void Controller::updateLastMoveAndChangeTurn() {
+    std::cout << "user location: row: " << m_user->getWarriorLocation().row << " col: " << m_user->getWarriorLocation().col
+    << " enemy location: " << m_enemy->getWarriorLocation().row << " col: " << m_enemy->getWarriorLocation().col << std::endl;
     auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
-    if (warrior == NULL) return;
+    auto enemy = m_enemy->getWarrior(m_enemy->getWarriorLocation());
+    if(enemy == NULL){
+        std::cout << "enemy not found\n" << std::endl;
+    }
+    if (warrior == NULL) {
+        std::cout << "warrior not found\n" << std::endl;
+//        return;
+    }
     RoomState::instance().setBoardCell(warrior->get()->getLocation(),
                                        m_user->getPlayerSymbol() + warrior->get()->getSymbol());
     RoomState::instance().setLastMove(warrior->get()->getPrevLocation(), warrior->get()->getLocation(),

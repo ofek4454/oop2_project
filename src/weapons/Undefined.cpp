@@ -14,21 +14,25 @@ void Undefined::fight(Weapon &other) {
 }
 
 void Undefined::fight(Scissors &other) {
+    std::cout << "undefined ssicors\n";
     chooseWeapon();
 
 }
 
 void Undefined::fight(Paper &other) {
+    std::cout << "undefined paper \n";
     chooseWeapon();
 
 }
 
 void Undefined::fight(Rock &other) {
+    std::cout << "undefined rock\n";
     chooseWeapon();
 
 }
 
 void Undefined::fight(Undefined &other) {
+    std::cout << "undefined undefined\n";
     chooseWeapon();
 
 }
