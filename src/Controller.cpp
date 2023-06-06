@@ -5,6 +5,7 @@
 #include "Controller.h"
 #include "SoundFlip.h"
 #include "RoomState.h"
+#include "exception"
 
 Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerState> *p2, bool isMeP1) : m_window(
         WindowManager::instance().getWindow()), m_user(p1->get()), m_enemy(p2->get()), myTurn(isMeP1 ? P1 : P2),
@@ -20,42 +21,47 @@ Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerS
 }
 
 void Controller::run() {
-    print();
-    WindowManager::instance().eventHandler(
-            [this](auto move, auto exit) {
-                if (isMyTurn() && !m_user->isAnimating())
-                    handleHover(move);
-                else return true;
-                return false;
-            },
-            [this](auto click, auto exit) {
-                SoundFlip::instance().checkIfContains(click);
-                if (isMyTurn() && !m_user->isAnimating()) {
-                    m_user->doTurn(&click);
-                } else return true;
-                return false;
-            },
-            [](auto key, auto exit) { return false; },
-            [](auto type, auto exit) { return false; },
-            [](auto offset, auto exit) { return false; },
-            [this](auto exit) {
-                if (!isMyTurn() && !m_enemy->isAnimating()) {
-                    static sf::Clock clock;
-                    if (clock.getElapsedTime().asSeconds() > 0.2) {
-                        clock.restart().asSeconds();
-                        if (RoomState::instance().getTurn() == myTurn) {
-                            m_enemy->doTurn();
+    try {
+        print();
+        WindowManager::instance().eventHandler(
+                [this](auto move, auto exit) {
+                    if (isMyTurn() && !m_user->isAnimating())
+                        handleHover(move);
+                    else return true;
+                    return false;
+                },
+                [this](auto click, auto exit) {
+                    SoundFlip::instance().checkIfContains(click);
+                    if (isMyTurn() && !m_user->isAnimating()) {
+                        m_user->doTurn(&click);
+                    } else return true;
+                    return false;
+                },
+                [](auto key, auto exit) { return false; },
+                [](auto type, auto exit) { return false; },
+                [](auto offset, auto exit) { return false; },
+                [this](auto exit) {
+                    if (!isMyTurn() && !m_enemy->isAnimating()) {
+                        static sf::Clock clock;
+                        if (clock.getElapsedTime().asSeconds() > 0.2) {
+                            clock.restart().asSeconds();
+                            if (RoomState::instance().getTurn() == myTurn) {
+                                m_enemy->doTurn();
+                            }
                         }
                     }
+                    handleAnimation();
+                    if (isMyTurn()) {
+                        checkCollision();
+                        handleEvents();
+                    }
+                    print();
                 }
-                handleAnimation();
-                if (isMyTurn()) {
-                    checkCollision();
-                    handleEvents();
-                }
-                print();
-            }
-    );
+        );
+    } catch (const std::exception &e) {
+        std::cout << "Caught Exception: " << e.what();
+    }
+
 }
 
 void Controller::print() {
@@ -93,11 +99,24 @@ void Controller::checkCollision() {
 }
 
 void Controller::handleAnimation() {
+    static sf::Clock clock;
+    auto time = clock.getElapsedTime().asSeconds();
+    if (m_playHoleAniation) {
+        std::cout << "play hole\n";
+        if (time > 0.2) {
+            clock.restart();
+            if (m_winner == P1) {
+                if (userHole->setHoleIntRect())
+                    m_playHoleAniation = false;
+            } else {
+                if (enemyHole->setHoleIntRect())
+                    m_playHoleAniation = false;
+            }
+        }
+    }
     m_referee.animate((Turn_t) !isMyTurn());
     if (!m_user->isAnimating() && !m_enemy->isAnimating()) return;
 
-    static sf::Clock clock;
-    auto time = clock.getElapsedTime().asSeconds();
     if (time > 0.025) {
         clock.restart().asSeconds();
         if (isMyTurn() && m_user->move()) {
@@ -143,19 +162,22 @@ void Controller::handleEvents() {
             }
             case FightRP: {
                 updateLastMoveAndChangeTurn();
-                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BluePR : RedPR), 980,
+                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BluePR : RedPR),
+                             980,
                              84, 7, winP);
                 break;
             }
             case FightRS: {
                 updateLastMoveAndChangeTurn();
-                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueRS : RedRS), 994,
+                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueRS : RedRS),
+                             994,
                              93, 7, winR);
                 break;
             }
             case FightPS:
                 updateLastMoveAndChangeTurn();
-                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP), 900,
+                animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP),
+                             900,
                              96, 6, winS);
                 break;
             case FightRR: {
@@ -179,11 +201,20 @@ void Controller::handleEvents() {
                 m_turn = (Turn_t) !myTurn;
                 break;
             }
+            case HoleFall: {
+                std::cout << "HoleFall" << std::endl;
+                m_playHoleAniation = true;
+                if (event.getWinner() == P1Won) m_winner = P1;
+                else m_winner = P2;
+                updateLastMoveAndChangeTurn();
+                break;
+            }
             default:
                 break;
         }
         ResourcesManager::instance().playSound(
-                event.getWinner() == P1Won ? WinFight : event.getWinner() == P2Won ? LoseFight : NUMBER_OF_SOUNDS - 1);
+                event.getWinner() == P1Won ? WinFight : event.getWinner() == P2Won ? LoseFight : NUMBER_OF_SOUNDS -
+                                                                                                 1);
         if (event.getWinner() != Tie && event.getWinner() != NoneEvent) {
             m_currentP1->setNeedToBeDraw(true);
             m_currentP2->setNeedToBeDraw(true);
@@ -283,8 +314,10 @@ void Controller::initGame() {
                     if (m_user->setAsFlag(row, col))
                         flagChoosed = true;
                 } else {
-                    if (m_user->setAsHole(row, col))
+                    if (m_user->setAsHole(row, col)) {
                         exit = true;
+                        userHole = m_user->getWarrior(Location(row, col))->get();
+                    }
                 }
 
                 return false;
@@ -306,16 +339,26 @@ void Controller::initGame() {
         opponentFlagAndHole = RoomState::instance().getOpponentFlagAndHole();
     } while (opponentFlagAndHole.first == Location(-1, -1));
 
-    m_enemy->setAsFlag(opponentFlagAndHole.first.row, opponentFlagAndHole.first.col);
-    m_enemy->setAsHole(opponentFlagAndHole.second.row, opponentFlagAndHole.second.col);
+    m_turn = P1;
+
+    if (myTurn) {
+        m_enemy->setAsFlag(7 - opponentFlagAndHole.first.row, 7 - opponentFlagAndHole.first.col);
+        m_enemy->setAsHole(7 - opponentFlagAndHole.second.row, 7 - opponentFlagAndHole.second.col);
+        enemyHole = m_enemy->getWarrior(
+                Location(7 - opponentFlagAndHole.second.row, 7 - opponentFlagAndHole.second.col))->get();
+    } else {
+        m_enemy->setAsFlag(opponentFlagAndHole.first.row, opponentFlagAndHole.first.col);
+        m_enemy->setAsHole(opponentFlagAndHole.second.row, opponentFlagAndHole.second.col);
+        enemyHole = m_enemy->getWarrior(
+                Location(opponentFlagAndHole.second.row, opponentFlagAndHole.second.col))->get();
+    }
+
 }
 
 void Controller::updateLastMoveAndChangeTurn() {
-    std::cout << "user location: row: " << m_user->getWarriorLocation().row << " col: " << m_user->getWarriorLocation().col
-    << " enemy location: " << m_enemy->getWarriorLocation().row << " col: " << m_enemy->getWarriorLocation().col << std::endl;
     auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
     auto enemy = m_enemy->getWarrior(m_enemy->getWarriorLocation());
-    if(enemy == NULL){
+    if (enemy == NULL) {
         std::cout << "enemy not found\n" << std::endl;
     }
     if (warrior == NULL) {

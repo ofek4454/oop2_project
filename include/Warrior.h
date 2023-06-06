@@ -21,11 +21,12 @@ public:
     void setLocation(Direction_t direction);
     void setSpriteLocation(const sf::Vector2f &offset,const sf::Vector2f &shadowoffset);
     void setHighlighted(bool isHighlighted);
-    void setIntRect(int counter,bool isEnemy = false);
+    void setMovingIntRect(int counter,bool isEnemy = false);
+    bool setHoleIntRect();
     void setTextureFlag(bool isHighlighted);
     void setTextureHole(bool isHighlighted);
-    bool setAsFlag(bool changeTexture);
-    bool setAsHole(bool changeTexture);
+    bool setAsFlag();
+    bool setAsHole();
     bool canMove() const {return m_canMove;}
     void setWeapon(Weapons_t weapon,bool visible = true);
     bool isNeedToBeDeleted() {return m_needToDelete;}
@@ -44,6 +45,7 @@ private:
     sf::Sprite m_sprite;
     sf::Sprite m_shadow;
     sf::IntRect m_initialIntRect;
+    sf::Texture m_initialTexture;
     bool m_isMine;
     bool m_canMove = true;
     bool m_needToDelete = false;

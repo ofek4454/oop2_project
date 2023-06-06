@@ -21,6 +21,7 @@ Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location)
     //TODO set relative size
     m_sprite.setScale(RECT_SIZE / IMAGE_WIDTH, RECT_SIZE / IMAGE_WIDTH);
     m_initialIntRect = m_sprite.getTextureRect();
+    m_initialTexture = *m_sprite.getTexture();
     m_shadow.setColor(sf::Color(0, 0, 0, 30)); // Set shadow color and transparency
     m_shadow.setScale(0.7, 0.35);
     m_shadow.setPosition(m_sprite.getPosition().x - RECT_SIZE / 2 - 30, m_sprite.getPosition().y - RECT_SIZE / 2 + 50);
@@ -59,7 +60,7 @@ void Warrior::setHighlighted(bool isHighlighted) {
     }
 }
 
-void Warrior::setIntRect(int counter,bool isEnemy) {
+void Warrior::setMovingIntRect(int counter,bool isEnemy) {
     if (isEnemy) {
         m_sprite.setTextureRect(sf::IntRect(MOVING_ANIMATION_ARR[counter], IMAGE_HEIGHT * 3, IMAGE_WIDTH, IMAGE_HEIGHT));
     }else{
@@ -103,21 +104,23 @@ void Warrior::setTextureFlag(bool isHighlighted) {
 }
 
 void Warrior::setTextureHole(bool isHighlighted) {
+    static sf::Texture m_hole = *ResourcesManager::instance().getTexture(Trap);
     if (!m_canMove) return;
     if (isHighlighted) {
-        m_sprite.setTextureRect(sf::IntRect(IMAGE_WIDTH * 2, IMAGE_HEIGHT * 4, IMAGE_WIDTH, IMAGE_HEIGHT));
+        m_sprite.setTexture(m_hole);
         m_weapon.get()->setSpriteLoc(sf::Vector2f(-100, -100));
     } else {
+        m_sprite.setTexture(m_initialTexture);
         m_sprite.setTextureRect(m_initialIntRect);
         m_weapon.get()->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 10, m_sprite.getPosition().y));
     }
 }
 
-bool Warrior::setAsFlag(bool changeTexture) {
+bool Warrior::setAsFlag() {
     if (!m_canMove) return false;
     std::unique_ptr<Weapon> flag = std::make_unique<Flag>();
     m_weapon = std::move(flag);
-    if(changeTexture){
+    if(m_isMine){
         m_sprite.setTextureRect(sf::IntRect(0, IMAGE_HEIGHT * 4, IMAGE_WIDTH, IMAGE_HEIGHT));
         m_initialIntRect = m_sprite.getTextureRect();
     }
@@ -125,13 +128,14 @@ bool Warrior::setAsFlag(bool changeTexture) {
     return true;
 }
 
-bool Warrior::setAsHole(bool changeTexture) {
+bool Warrior::setAsHole() {
+    static sf::Texture m_hole = *ResourcesManager::instance().getTexture(Trap);
     if (!m_canMove) return false;
     std::unique_ptr<Weapon> hole = std::make_unique<Hole>();
     m_weapon = std::move(hole);
-    if(changeTexture){
-        m_sprite.setTextureRect(sf::IntRect(IMAGE_WIDTH * 2, IMAGE_HEIGHT * 4, IMAGE_WIDTH, IMAGE_HEIGHT));
-        m_initialIntRect = m_sprite.getTextureRect();
+    if(m_isMine){
+        m_sprite.setTexture(m_hole);
+        m_sprite.setTextureRect(sf::IntRect(0,0,IMAGE_WIDTH, IMAGE_HEIGHT));
     }
     m_canMove = false;
     return true;
@@ -166,4 +170,31 @@ void Warrior::setWeapon(Weapons_t weapon,bool visible) {
 
 void Warrior::lose() {
     m_needToDelete = true;
+}
+
+bool Warrior::setHoleIntRect() {
+    static int rect = 0;
+    static bool set = false;
+    rect += IMAGE_WIDTH;
+    if(!m_isMine && !set){
+        static sf::Texture m_hole = *ResourcesManager::instance().getTexture(Trap);
+        set = true;
+        m_sprite.setTexture(m_hole);
+        m_sprite.setTextureRect(sf::IntRect(0,0,IMAGE_WIDTH, IMAGE_HEIGHT));
+    }
+    m_sprite.setTextureRect(sf::IntRect(rect,0,IMAGE_WIDTH,IMAGE_HEIGHT));
+    if(rect == IMAGE_WIDTH * 3){
+        if(m_isMine)
+            m_sprite.setTextureRect(sf::IntRect(0,0,IMAGE_WIDTH,IMAGE_HEIGHT));
+        else{
+            auto texture = ResourcesManager::instance().getTexture(Warriors);
+            m_sprite.setTexture(*texture);
+            m_sprite.setTextureRect(sf::IntRect(0, IMAGE_HEIGHT * 3, IMAGE_WIDTH,
+                        IMAGE_HEIGHT));
+            set = false;
+        }
+        rect = 0;
+        return true;
+    }
+    return false;
 }

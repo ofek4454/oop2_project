@@ -114,7 +114,7 @@ bool EnemyState::move() {
     }
 
 
-    warrior->get()->setIntRect(imageCounter, true);
+    warrior->get()->setMovingIntRect(imageCounter, true);
     imageCounter++;
     if (imageCounter == IMAGE_COUNT) {
         shadowOffsetX = -1;

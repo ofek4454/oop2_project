@@ -34,6 +34,7 @@ Rock::Rock(bool visible) : Weapon("R",visible) {
 }
 
  void Rock::fight(Hole& other){
+     EventLoop::instance().addEvent(Event(HoleFall,P2Won));
     lose();
 }
 

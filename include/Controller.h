@@ -32,6 +32,10 @@ private:
     const Turn_t myTurn;
     Referee m_referee;
     bool m_isFinishUserTurn = false;
+    bool m_playHoleAniation = false;
+    Warrior *userHole;
+    Warrior *enemyHole;
+    bool m_winner;
 
 
     // private functions:

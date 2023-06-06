@@ -40,6 +40,7 @@ void Scissors::fight(Rock& other) {
 }
 
 void Scissors::fight(Hole& other) {
+    EventLoop::instance().addEvent(Event(HoleFall,P2Won));
     lose();
 }
 

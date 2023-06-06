@@ -6,7 +6,7 @@
 const float WINDOW_WIDTH = sf::VideoMode::getDesktopMode().width * 0.75;
 const float WINDOW_HEIGHT = sf::VideoMode::getDesktopMode().height * 0.75;
 
-const int NUM_OF_TEXTURES = 16;
+const int NUM_OF_TEXTURES = 17;
 
 // Board Size
 
@@ -15,6 +15,8 @@ const int NUMBER_OF_SOUNDS = 16;
 const int MENU_BUTTONS = 5;
 
 const int IMAGE_COUNT = 25;
+
+const int FALL_IMAGE_COUNT = 10;
 
 const int BOARD_SIZE = 8;
 
@@ -26,6 +28,7 @@ const int IMAGE_HEIGHT = 1260 / 5;
 
 const int MOVING_ANIMATION_ARR[IMAGE_COUNT] = {0, 0,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH * 2, IMAGE_WIDTH * 2,
                         IMAGE_WIDTH * 2, IMAGE_WIDTH * 2,IMAGE_WIDTH * 2, IMAGE_WIDTH * 2,IMAGE_WIDTH * 2,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,0,0};
+
 
 const sf::FloatRect BOARD_FRAME((WINDOW_WIDTH * 0.775 - BOARD_SIZE * RECT_SIZE) / 2 + RECT_SIZE / 2, WINDOW_HEIGHT / 2 - RECT_SIZE * (BOARD_SIZE / 2) + RECT_SIZE / 2,RECT_SIZE * 8,RECT_SIZE * 8);
 
@@ -58,6 +61,7 @@ enum Textures_t{
     RefereeTexture,
     ExitButton,
     RoomButton,
+    Trap,
 };
 
 
@@ -100,7 +104,7 @@ enum EventType_t{
     FightSS,
     AttackingUndefined,
     NeedToResetLocation,
-    Atacking,
+    HoleFall,
 };
 
 enum Turn_t{

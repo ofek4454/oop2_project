@@ -38,6 +38,7 @@ void Undefined::fight(Undefined &other) {
 }
 
 void Undefined::fight(Hole &other) {
+    EventLoop::instance().addEvent(Event(HoleFall,P2Won));
     lose();
 }
 

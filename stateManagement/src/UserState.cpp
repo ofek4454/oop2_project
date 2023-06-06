@@ -135,7 +135,7 @@ bool UserState::move() {
     else if (m_direction == Right)
         warrior->get()->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0),sf::Vector2f(sf::Vector2f(shadowOffsetX, 0)));
 
-    warrior->get()->setIntRect(imageCounter);
+    warrior->get()->setMovingIntRect(imageCounter);
     imageCounter++;
     if(imageCounter == IMAGE_COUNT){
         auto oldLocation = warrior->get()->getLocation();

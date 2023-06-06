@@ -39,6 +39,7 @@ void Paper::fight(Undefined& other){
 }
 
 void Paper::fight(Hole& other){
+    EventLoop::instance().addEvent(Event(HoleFall,P2Won));
     lose();
 }
 

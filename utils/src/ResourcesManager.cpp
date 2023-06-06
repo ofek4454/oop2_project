@@ -40,6 +40,8 @@ ResourcesManager::ResourcesManager() {
     m_texture[Background].loadFromFile("background.png");
     m_texture[ExitButton].loadFromFile("exit.png");
     m_texture[RoomButton].loadFromFile("button.png");
+    m_texture[Trap].loadFromFile("Hole.png");
+    m_texture[Trap].setSmooth(true);
 
 
     m_background.setSize(sf::Vector2f (WINDOW_WIDTH, WINDOW_HEIGHT));

@@ -32,7 +32,7 @@ bool PlayerState::setAsFlag(const int row, const int col) {
     if(!warrior)
         return false;
 
-    auto isSet = warrior->get()->setAsFlag(m_playerSymbol == "1");
+    auto isSet = warrior->get()->setAsFlag();
     if(isSet)
         RoomState::instance().setBoardCell(Location(row, col), m_playerSymbol + "F");
     return isSet;
@@ -40,10 +40,11 @@ bool PlayerState::setAsFlag(const int row, const int col) {
 
 bool PlayerState::setAsHole(const int row, const int col) {
     auto warrior = getWarrior(Location(row,col));
-    if(!warrior)
+    if(!warrior){
         return false;
+    }
 
-    auto isSet = warrior->get()->setAsHole(m_playerSymbol == "1");
+    auto isSet = warrior->get()->setAsHole();
     if(isSet)
         RoomState::instance().setBoardCell(Location(row, col), m_playerSymbol + "H");
     return isSet;
