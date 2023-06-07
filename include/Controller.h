@@ -25,6 +25,8 @@ private:
     sf::Text m_p1Name, m_p2Name;
     sf::Text m_countdown;
     sf::CircleShape m_circle;
+    sf::Cursor m_cursor;
+    sf::Cursor m_originalCursor;
     sf::RectangleShape m_shuffleButton;
     // Board
     Board m_board;
@@ -60,7 +62,7 @@ private:
     void handleEvents();
     void initNames();
     void checkCollision();
-    void handleHover(sf::Event::MouseMoveEvent &click);
+    void handleHover(sf::Event::MouseMoveEvent &click,bool loadingMode = false);
     void handleAnimation();
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
     void updateLastMoveAndChangeTurn();

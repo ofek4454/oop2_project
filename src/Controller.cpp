@@ -9,7 +9,7 @@
 #include "cmath"
 
 Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerState> *p2, bool isMeP1) : m_window(
-        WindowManager::instance().getWindow()), m_user(p1->get()), m_enemy(p2->get()), myTurn(isMeP1 ? P1 : P2),
+        WindowManager::instance().getWindow()), m_user(p1->get()),m_enemy(p2->get()), myTurn(isMeP1 ? P1 : P2),
                                                                                                           m_referee(
                                                                                                                   myTurn) {
     m_countdown.setFont(*ResourcesManager::instance().getFont());
@@ -145,8 +145,9 @@ void Controller::handleAnimation() {
     }
     m_referee.animate((Turn_t) !isMyTurn());
     if (!m_user->isAnimating() && !m_enemy->isAnimating()) return;
+    auto time2 = clock.getElapsedTime().asSeconds();
 
-    if (time > 0.025) {
+    if (time2 > 0.001) { //0.025
         clock.restart().asSeconds();
         if (isMyTurn() && m_user->move()) {
             m_isFinishUserTurn = true;
@@ -160,12 +161,19 @@ void Controller::handleAnimation() {
     }
 }
 
-void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
+void Controller::handleHover(sf::Event::MouseMoveEvent &event,bool loadingMode) {
     if (BOARD_FRAME.contains(event.x, event.y)) {
         sf::FloatRect rect_pos = BOARD_TOP_LEFT;
         int row = (event.y - rect_pos.top) / RECT_SIZE;
         int col = (event.x - rect_pos.left) / RECT_SIZE;
         m_user->handleHover(row, col);
+    }
+    if(loadingMode){
+        if(m_shuffleButton.getGlobalBounds().contains(event.x,event.y)){
+            m_window->setMouseCursor(m_cursor);
+        }else{
+            m_window->setMouseCursor(m_originalCursor);
+        }
     }
 }
 
@@ -431,7 +439,6 @@ void Controller::updateTieCase() {
 
 void Controller::LoadingGame() {
     static sf::Clock timer;
-
     sf::Clock clock;
     int countdown = 10;
     bool animating = false;
@@ -440,7 +447,8 @@ void Controller::LoadingGame() {
 
 
     WindowManager::instance().eventHandler(
-            [](auto move, auto exit) {
+            [this](auto move, auto exit) {
+                handleHover(move, true);
                 return false;
             },
             [this](auto click, auto exit) {
@@ -451,8 +459,7 @@ void Controller::LoadingGame() {
             [](auto key, auto exit) { return false; },
             [](auto type, auto &exit) { return false; },
             [](auto offset, auto exit) { return false; },
-            [this, &countdown, &clock, &animating, &scaleFactor, &numSegments](auto &exit) {
-
+            [this, &countdown, &clock, &animating, &scaleFactor](auto &exit) {
                 sf::Time elapsed = clock.getElapsedTime();
                 if (elapsed.asSeconds() >= 1.0f) {
                     countdown--;
