@@ -29,8 +29,16 @@ Rock::Rock(bool visible) : Weapon("R",visible) {
 }
 
  void Rock::fight(Rock& other){
+//    static bool first = true;
+//    if(!first){
+//        chooseWeapon();
+//        first = true;
+//        return;
+//    }
+//    first = false;
      Event event(FightRR,Tie);
      EventLoop::instance().addEvent(event);
+//     chooseWeapon();
 }
 
  void Rock::fight(Hole& other){

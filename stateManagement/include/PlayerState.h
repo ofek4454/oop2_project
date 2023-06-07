@@ -36,7 +36,6 @@ public:
     void setWarriorLocation(Location location){ m_selectedPlayerLocation = location;}
     void setTie(bool isTie){m_isTie = isTie;}
 
-
 protected:
     bool m_isTie = false;
     Location m_newLocation;
@@ -48,6 +47,7 @@ protected:
     PlayerModel m_player;
     float m_pixelOffset = RECT_SIZE / IMAGE_COUNT;
     std::string m_playerSymbol;
+
 private:
 
 };

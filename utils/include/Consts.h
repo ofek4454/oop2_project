@@ -96,7 +96,6 @@ enum Direction_t {
 enum EventType_t{
     Won,
     Lose,
-    TieEvent,
     FightRP,
     FightRS,
     FightRR,
@@ -106,7 +105,6 @@ enum EventType_t{
     AttackingUndefined,
     NeedToResetLocation,
     HoleFall,
-    CancelSwitchingTurn
 };
 
 enum Turn_t{

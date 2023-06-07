@@ -27,7 +27,7 @@ private:
     sf::CircleShape m_circle;
     sf::Cursor m_cursor;
     sf::Cursor m_originalCursor;
-    sf::RectangleShape m_shuffleButton;
+//    sf::RectangleShape m_shuffleButton;
     // Board
     Board m_board;
 
@@ -37,10 +37,10 @@ private:
     Warrior* m_currentP1 = nullptr;
     Warrior* m_currentP2 = nullptr;
     Referee m_referee;
-    Warrior *userHole;
-    Warrior *enemyHole;
-    Warrior *userFlag;
-    Warrior *enemyFlag;
+//    Warrior *userHole;
+//    Warrior *enemyHole;
+//    Warrior *userFlag;
+//    Warrior *enemyFlag;
 
     // booleans
     Turn_t m_turn = P1;
@@ -48,7 +48,6 @@ private:
     bool m_isFinishUserTurn = false;
     bool m_playHoleAniation = false;
     bool m_winner;
-    bool m_switching = true;
 
     // numbers
     int numLines;
@@ -66,8 +65,9 @@ private:
     void handleAnimation();
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
     void updateLastMoveAndChangeTurn();
-    void updateTieCase();
+    void updateTieCase(std::string msg);
     void handleClick(sf::Event::MouseButtonEvent *click);
+    void handleTie();
 
     bool isMyTurn() const{
         return m_turn == myTurn;

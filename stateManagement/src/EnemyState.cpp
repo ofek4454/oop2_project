@@ -38,14 +38,6 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
 
 
     std::string last_move = RoomState::instance().getRoom().getLastMove();
-    if(last_move == "tie"){
-        auto warrior = getWarrior(m_selectedPlayerLocation);
-        warrior->get()->setWeapon(Undefined_t);
-        EventLoop::instance().addEvent(Event(NeedToResetLocation));
-        EventLoop::instance().addEvent(Event(TieEvent));
-        m_direction = Non_Direction;
-        return;
-    }
     auto locations = extractNumbers(last_move);
 
     m_selectedPlayerLocation = Location(locations[0], locations[1]);
@@ -83,7 +75,6 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
                 break;
             case 'U':
                 warrior->get()->setWeapon(Undefined_t);
-                EventLoop::instance().addEvent(Event(TieEvent));
                 break;
         }
     }
