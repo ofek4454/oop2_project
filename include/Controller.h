@@ -37,10 +37,10 @@ private:
     Warrior* m_currentP1 = nullptr;
     Warrior* m_currentP2 = nullptr;
     Referee m_referee;
-//    Warrior *userHole;
-//    Warrior *enemyHole;
-//    Warrior *userFlag;
-//    Warrior *enemyFlag;
+    Warrior *userHole;
+    Warrior *enemyHole;
+    Warrior *userFlag;
+    Warrior *enemyFlag;
 
     // booleans
     Turn_t m_turn = P1;

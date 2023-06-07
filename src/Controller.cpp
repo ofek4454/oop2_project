@@ -124,19 +124,19 @@ void Controller::checkCollision() {
 
 void Controller::handleAnimation() {
     static sf::Clock clock;
-//    auto time = clock.getElapsedTime().asSeconds();
-//    if (m_playHoleAniation) {
-//        if (time > 0.2) {
-//            clock.restart();
-//            if (m_winner == P1) {
-//                if (userHole->setHoleIntRect())
-//                    m_playHoleAniation = false;
-//            } else{
-//                if (enemyHole->setHoleIntRect())
-//                    m_playHoleAniation = false;
-//            }
-//        }
-//    }
+    auto time = clock.getElapsedTime().asSeconds();
+    if (m_playHoleAniation) {
+        if (time > 0.2) {
+            clock.restart();
+            if (m_winner == P1) {
+                if (userHole->setHoleIntRect())
+                    m_playHoleAniation = false;
+            } else{
+                if (enemyHole->setHoleIntRect())
+                    m_playHoleAniation = false;
+            }
+        }
+    }
     m_referee.animate((Turn_t) !isMyTurn());
     if (!m_user->isAnimating() && !m_enemy->isAnimating()) return;
     auto time2 = clock.getElapsedTime().asSeconds();
@@ -222,7 +222,6 @@ void Controller::handleEvents() {
                 break;
             }
             case HoleFall: {
-                std::cout << "HoleFall" << std::endl;
                 m_playHoleAniation = true;
                 if (event.getWinner() == P1Won) m_winner = P1;
                 else m_winner = P2;
@@ -243,12 +242,10 @@ void Controller::handleEvents() {
     }
     m_user->checkDeletion();
     m_enemy->checkDeletion();
-//    m_referee.setTurn(m_turn);
 }
 
 void Controller::animateFight(sf::Texture *fightTexture, const int width, const int height, const int frames,
                               Sounds_t soundToPlay) {
-    std::cout << "animate fight\n";
     ResourcesManager::instance().playSound(JumpFight);
     float frameWidth = width / frames;
     float frame = 0;
@@ -332,13 +329,13 @@ void Controller::initGame() {
                 if (row < BOARD_SIZE - 2) return true;
                 if (!flagChoosed) {
                     if (m_user->setAsFlag(row, col)){
-//                        userFlag = m_user->getWarrior(Location(row, col))->get();
+                        userFlag = m_user->getWarrior(Location(row, col))->get();
                         flagChoosed = true;
                     }
                 } else {
                     if (m_user->setAsHole(row, col)) {
                         exit = true;
-//                        userHole = m_user->getWarrior(Location(row, col))->get();
+                        userHole = m_user->getWarrior(Location(row, col))->get();
                     }
                 }
 
@@ -371,19 +368,8 @@ void Controller::initGame() {
     m_enemy->setAsFlag(flagLoc.row,flagLoc.col);
     m_enemy->setAsHole(holeLoc.row,holeLoc.col);
 
-//    if (myTurn) {
-//        m_enemy->setAsFlag(7 - opponentFlagAndHole.first.row, 7 - opponentFlagAndHole.first.col);
-//        m_enemy->setAsHole(7 - opponentFlagAndHole.second.row, 7 - opponentFlagAndHole.second.col);
-//        enemyHole = m_enemy->getWarrior(
-//                Location(7 - opponentFlagAndHole.second.row, 7 - opponentFlagAndHole.second.col))->get();
-//        enemyFlag = m_enemy->getWarrior(Location(7 - opponentFlagAndHole.first.row, 7 - opponentFlagAndHole.first.col))->get();
-//    } else {
-//        m_enemy->setAsFlag(opponentFlagAndHole.first.row, opponentFlagAndHole.first.col);
-//        m_enemy->setAsHole(opponentFlagAndHole.second.row, opponentFlagAndHole.second.col);
-//        enemyHole = m_enemy->getWarrior(
-//                Location(opponentFlagAndHole.second.row, opponentFlagAndHole.second.col))->get();
-//        enemyFlag = m_enemy->getWarrior(Location(opponentFlagAndHole.first.row, opponentFlagAndHole.first.col))->get();
-//    }
+    enemyFlag = m_enemy->getWarrior(flagLoc)->get();
+    enemyHole = m_enemy->getWarrior(holeLoc)->get();
 
 }
 
