@@ -11,9 +11,10 @@
 #include "Warrior.h"
 
 Paper::Paper(bool visible) : Weapon("P",visible) {
-    auto weapon = ResourcesManager::instance().getTexture(Rps);
+    auto weapon = ResourcesManager::instance().getTexture(PaperFlip);
     m_weapon_sprite.setTexture(*weapon);
-    m_weapon_sprite.setTextureRect(sf::IntRect(110, 232, 55, 58));
+    m_weapon_sprite.setTextureRect(sf::IntRect(0, 169.5f, 55, 58));
+    m_weaponIntRect = m_weapon_sprite.getTextureRect();
 }
 
 void Paper::fight(Scissors& other){

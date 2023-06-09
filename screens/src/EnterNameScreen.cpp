@@ -2,8 +2,8 @@
 // Created by Ofek Gorgi on 27/05/2023.
 //
 
-#include "EnterNameScreen.h"
-#include "AvailableRooms.h"
+#include "../include/EnterNameScreen.h"
+#include "../include/AvailableRooms.h"
 
 EnterNameScreen::EnterNameScreen(Mode_t mode) : m_mode(mode) , m_window(WindowManager::instance().getWindow()) , m_name(""){
     init();

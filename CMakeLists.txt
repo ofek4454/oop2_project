@@ -32,6 +32,8 @@ if(APPLE)
     add_subdirectory (services)
     add_subdirectory (models)
     add_subdirectory (stateManagement)
+    add_subdirectory (screens)
+
 
     # external libraries
     #add_subdirectory (dependencies/curl-8.1.2)
@@ -52,7 +54,7 @@ endif()
 
 if(WIN32)
 
-    add_executable (${CMAKE_PROJECT_NAME} main.cpp)
+    add_executable (${CMAKE_PROJECT_NAME} main.cpp screens/src/AfterGameScreen.cpp screens/include/AfterGameScreen.h)
 
     target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-fsanitize=address>)
 
@@ -63,6 +65,7 @@ if(WIN32)
     add_subdirectory (services)
     add_subdirectory (models)
     add_subdirectory (stateManagement)
+    add_subdirectory (screens)
 
     set (SFML_STATIC_LIBRARIES TRUE)
     set (SFML_DIR "C:/SFML/SFML-2.5.1/lib/cmake/SFML")

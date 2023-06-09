@@ -7,6 +7,7 @@
 #include "iostream"
 #include "EventLoop.h"
 #include "Referee.h"
+#include "AfterGameScreen.h"
 
 
 class Controller {
@@ -41,6 +42,7 @@ private:
     Warrior *enemyHole;
     Warrior *userFlag;
     Warrior *enemyFlag;
+    Warrior *ChosenWarrior;
 
     // booleans
     Turn_t m_turn = P1;
@@ -49,6 +51,7 @@ private:
     bool m_playHoleAniation = false;
     bool m_winner;
     bool m_switchTurnAfterTie = false;
+    bool m_animatingWeapon = false;
 
     // numbers
     int numLines;
@@ -67,9 +70,11 @@ private:
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
     void updateLastMoveAndChangeTurn(bool changeTurn);
     void updateTieCase(std::string msg);
+    void updateWin();
     void handleClick(sf::Event::MouseButtonEvent *click);
     void handleTie();
-
+    void animateWeapons();
+    void animateHole();
     bool isMyTurn() const{
         return m_turn == myTurn;
     }

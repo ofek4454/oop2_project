@@ -1,5 +1,5 @@
 #include "Menu.h"
-#include "EnterNameScreen.h"
+#include "../screens/include/EnterNameScreen.h"
 
 Menu::Menu() : m_window(WindowManager::instance().getWindow()) {
     ResourcesManager::instance().playBackgroundMusic();

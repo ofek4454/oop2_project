@@ -1,4 +1,3 @@
-
 #include "PlayerState.h"
 #include "iostream"
 
@@ -48,4 +47,18 @@ bool PlayerState::setAsHole(const int row, const int col) {
     if(isSet)
         RoomState::instance().setBoardCell(Location(row, col), m_playerSymbol + "H");
     return isSet;
+}
+
+Warrior *PlayerState::pickRandomWarrior() {
+    std::vector<Warrior*> tempVector;
+    for(auto& warrior : m_warriors){
+        if(warrior->getWeapon()->get()->isVisible()){
+            tempVector.push_back(warrior.get());
+        }
+    }
+    if(tempVector.size() == 0)
+        return NULL;
+
+    int randomnumber = rand() % tempVector.size();
+    return tempVector[randomnumber];
 }
