@@ -37,7 +37,6 @@ public:
 
     void lose();
     void resetLocation(){m_prevLocation = m_location;}
-    std::string getLastWeapon()const {return m_lastWeapon;}
 
 private:
     Location m_location;
@@ -51,6 +50,4 @@ private:
     bool m_canMove = true;
     bool m_needToDelete = false;
     bool m_needToBeDraw = true;
-
-    std::string m_lastWeapon;
 };

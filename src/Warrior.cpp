@@ -142,7 +142,6 @@ bool Warrior::setAsHole() {
 }
 
 void Warrior::setWeapon(Weapons_t weapon,bool visible) {
-    m_lastWeapon = getSymbol();
 
     std::unique_ptr<Weapon> new_weapon;
     switch (weapon) {

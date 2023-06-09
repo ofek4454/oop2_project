@@ -60,6 +60,7 @@ void Controller::run() {
                         clock.restart().asSeconds();
                         if (RoomState::instance().getTurn() == myTurn){
                             if(RoomState::instance().getRoom().getLastMove().starts_with("tie")){
+                                // attacker only
                                 handleTie();
                             } else
                                 m_enemy->doTurn();
@@ -186,18 +187,21 @@ void Controller::handleEvents() {
                 break;
             }
             case FightRP: {
-                updateLastMoveAndChangeTurn();
+                updateLastMoveAndChangeTurn(!m_switchTurnAfterTie);
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BluePR : RedPR),980,84, 7, winP);
+                m_switchTurnAfterTie = false;
                 break;
             }
             case FightRS: {
-                updateLastMoveAndChangeTurn();
+                updateLastMoveAndChangeTurn(!m_switchTurnAfterTie);
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueRS : RedRS),994,93, 7, winR);
+                m_switchTurnAfterTie = false;
                 break;
             }
             case FightPS:
-                updateLastMoveAndChangeTurn();
+                updateLastMoveAndChangeTurn(!m_switchTurnAfterTie);
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP),900,96, 6, winS);
+                m_switchTurnAfterTie = false;
                 break;
             case FightRR:
                 updateTieCase("tie R");
@@ -212,20 +216,15 @@ void Controller::handleEvents() {
                 animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3, tieS);
                 break;
             case AttackingUndefined: {
-                auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
-                RoomState::instance().setBoardCell(warrior->get()->getLocation(),
-                                                   m_user->getPlayerSymbol() + warrior->get()->getSymbol());
-                RoomState::instance().setLastMove(warrior->get()->getPrevLocation(), warrior->get()->getLocation(),
-                                                  warrior->get()->getSymbol());
-                RoomState::instance().changeTurn();
-                m_turn = (Turn_t) !myTurn;
+                // attacker only
+                updateLastMoveAndChangeTurn(true);
                 break;
             }
             case HoleFall: {
                 m_playHoleAniation = true;
                 if (event.getWinner() == P1Won) m_winner = P1;
                 else m_winner = P2;
-                updateLastMoveAndChangeTurn();
+                updateLastMoveAndChangeTurn(true);
                 break;
             }
             default:
@@ -373,17 +372,20 @@ void Controller::initGame() {
 
 }
 
-void Controller::updateLastMoveAndChangeTurn() {
+void Controller::updateLastMoveAndChangeTurn(bool changeTurn) {
     auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
     RoomState::instance().setBoardCell(warrior->get()->getLocation(),
                                        m_user->getPlayerSymbol() + warrior->get()->getSymbol());
     RoomState::instance().setLastMove(warrior->get()->getPrevLocation(), warrior->get()->getLocation(),
                                       warrior->get()->getSymbol());
-    RoomState::instance().changeTurn();
-    m_turn = (Turn_t) !myTurn;
+    if(changeTurn){
+        RoomState::instance().changeTurn();
+        m_turn = (Turn_t) !myTurn;
+    }
 }
 
 void Controller::updateTieCase(std::string msg){
+    // attacked only
     RoomState::instance().setLastMove(msg);
     RoomState::instance().changeTurn();
     m_turn = (Turn_t) !myTurn;
@@ -392,6 +394,7 @@ void Controller::updateTieCase(std::string msg){
     warrior->get()->setWeapon(Undefined_t);
     auto enemy = m_enemy->getWarrior(m_enemy->getWarriorLocation());
     enemy->get()->setWeapon(Undefined_t);
+    m_switchTurnAfterTie = true;
 }
 
 void Controller::LoadingGame() {

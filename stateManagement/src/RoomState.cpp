@@ -26,6 +26,8 @@ void RoomState::joinRoom(std::string roomId, std::string uid) {
 
 void RoomState::deleteRoom() {
     RoomService::deleteRoom(room.roomId);
+    if(room.player2_uid == "")
+        HttpRequestsManager::instance().deleteRequest(BASE_URL + "/available_rooms/" + room.roomId + ".json");
 }
 
 bool RoomState::isOpponentJoined() {
@@ -34,7 +36,7 @@ bool RoomState::isOpponentJoined() {
         return false;
 
     room.player2_uid = tmpRoom.player2_uid;
-    HttpRequestsManager::instance().deleteRequest(BASE_URL + "/available_rooms" + room.roomId + ".json");
+    HttpRequestsManager::instance().deleteRequest(BASE_URL + "/available_rooms/" + room.roomId + ".json");
     return true;
 }
 

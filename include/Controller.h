@@ -48,6 +48,7 @@ private:
     bool m_isFinishUserTurn = false;
     bool m_playHoleAniation = false;
     bool m_winner;
+    bool m_switchTurnAfterTie = false;
 
     // numbers
     int numLines;
@@ -64,7 +65,7 @@ private:
     void handleHover(sf::Event::MouseMoveEvent &click,bool loadingMode = false);
     void handleAnimation();
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
-    void updateLastMoveAndChangeTurn();
+    void updateLastMoveAndChangeTurn(bool changeTurn);
     void updateTieCase(std::string msg);
     void handleClick(sf::Event::MouseButtonEvent *click);
     void handleTie();

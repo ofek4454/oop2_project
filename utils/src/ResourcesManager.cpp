@@ -84,6 +84,7 @@ void ResourcesManager::playSound(const int index) {
 }
 
 void ResourcesManager::playBackgroundMusic() {
+    return;
     if(!SettingsManager::instance().getMusicSwitch())
         return;
 
