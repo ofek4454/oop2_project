@@ -27,7 +27,7 @@ void AvailableRooms::init() {
         auto it = availableRooms.begin();
         std::advance(it, i);
         text.setFont(*ResourcesManager::instance().getFont());
-        text.setCharacterSize(60);
+        text.setCharacterSize(H1);
         text.setString(it->second);
         text.setPosition(temp.getPosition().x - text.getGlobalBounds().width / 2,
                          temp.getPosition().y - text.getGlobalBounds().height);
@@ -39,7 +39,7 @@ void AvailableRooms::init() {
     m_text.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 0.1);
     m_text.setCharacterSize(H1);
     m_text.setOrigin(m_text.getGlobalBounds().width / 2, m_text.getGlobalBounds().height / 2);
-
+    m_text.setFillColor(sf::Color::White);
     m_background = *ResourcesManager::instance().getBackground();
 }
 
@@ -51,10 +51,16 @@ void AvailableRooms::chooseRoom() {
                 clickHandler(click,exit);
                 return false;
             },
-            [](auto key, auto &exit) { return false; },
+            [this](auto key, auto &exit) {
+                if(key.code == sf::Keyboard::Escape){
+                    exit = true;
+                    UserService::deleteUser(p.m_uid);
+                }
+                return false;
+            },
             [](auto type, auto exit) { return false; },
             [this](auto offset, auto exit) {
-                print(offset);
+                if(!availableRooms.empty()) print(offset);
                 return false;
             },
             [](auto &exit) {}
@@ -64,6 +70,15 @@ void AvailableRooms::chooseRoom() {
 void AvailableRooms::print(int offset) {
     m_window.clear();
     m_window.draw(m_background);
+    if(m_buttons.empty()){
+        m_text.setString("No Available room to join in...");
+        m_text.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2);
+        m_text.setOrigin(m_text.getGlobalBounds().width / 2, m_text.getGlobalBounds().height / 2);
+        m_window.draw(m_text);
+        m_window.display();
+        return;
+    }
+
     if ((m_buttons[0].getGlobalBounds().height * m_buttons.size() * 1.5) < WINDOW_HEIGHT * 0.85)
         offset = 0;
     else if (m_buttons[0].getPosition().y + offset > (WINDOW_HEIGHT * 0.15))
@@ -73,16 +88,16 @@ void AvailableRooms::print(int offset) {
 
     for (int i = 0; i < m_buttons.size(); i++) {
         m_buttons[i].move(sf::Vector2f(0, offset));
-        m_texts[i].setPosition(m_buttons[i].getPosition().x - m_texts[i].getGlobalBounds().width / 2,
-                               m_buttons[i].getPosition().y - m_texts[i].getGlobalBounds().height);
+        m_texts[i].setPosition(sf::Vector2f(0, offset));
         m_window.draw(m_buttons[i]);
         m_window.draw(m_texts[i]);
     }
+    m_window.draw(m_text);
     m_window.display();
 }
 
 void AvailableRooms::clickHandler(sf::Event::MouseButtonEvent &click,bool &exit) {
-    for (int i = 0; i < MENU_BUTTONS; i++) {
+    for (int i = 0; i < m_buttons.size(); i++) {
         if (m_buttons[i].getGlobalBounds().contains(m_window.mapPixelToCoords({click.x, click.y}))) {
             auto map_it = availableRooms.begin();
             std::advance(map_it,i);

@@ -4,6 +4,7 @@
 #include "RoomService.h"
 #include "Location.h"
 #include "PlayerModel.h"
+#include "UserService.h"
 
 class RoomState {
 public:
@@ -11,7 +12,10 @@ public:
         static RoomState roomState;
         return roomState;
     }
-    ~RoomState() {deleteRoom();}
+    ~RoomState(){
+        if(m_isMeP1)
+            deleteRoom();
+    }
 
     RoomModel &getRoom(){ return room;}
     bool isOpponentJoined();

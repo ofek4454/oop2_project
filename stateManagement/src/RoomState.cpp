@@ -28,6 +28,10 @@ void RoomState::deleteRoom() {
     RoomService::deleteRoom(room.roomId);
     if(room.player2_uid == "")
         HttpRequestsManager::instance().deleteRequest(BASE_URL + "/available_rooms/" + room.roomId + ".json");
+    if(m_isMeP1)
+        UserService::deleteUser(room.creator_uid);
+    else
+        UserService::deleteUser(room.player2_uid);
 }
 
 bool RoomState::isOpponentJoined() {

@@ -31,6 +31,7 @@ void EnterNameScreen::handleEvents() {
             [](auto move, auto exit) {return false;},
             [](auto click, auto exit) {return false;},
             [this](auto key, auto &exit) {
+                if(key.code == sf::Keyboard::Escape){ exit = true; }
                 if(key.code == sf::Keyboard::Enter){
                     auto user = UserService::createUser(m_name);
                     if(m_mode == Create){

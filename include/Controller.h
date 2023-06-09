@@ -62,7 +62,7 @@ private:
     void handleEvents();
     void initNames();
     void checkCollision();
-    void handleHover(sf::Event::MouseMoveEvent &click,bool loadingMode = false);
+    void handleHover(sf::Event::MouseMoveEvent &click);
     void handleAnimation();
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
     void updateLastMoveAndChangeTurn(bool changeTurn);

@@ -155,20 +155,13 @@ void Controller::handleAnimation() {
     }
 }
 
-void Controller::handleHover(sf::Event::MouseMoveEvent &event,bool loadingMode) {
+void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
     if (BOARD_FRAME.contains(event.x, event.y)) {
         sf::FloatRect rect_pos = BOARD_TOP_LEFT;
         int row = (event.y - rect_pos.top) / RECT_SIZE;
         int col = (event.x - rect_pos.left) / RECT_SIZE;
         m_user->handleHover(row, col);
     }
-//    if(loadingMode){
-//        if(m_shuffleButton.getGlobalBounds().contains(event.x,event.y)){
-//            m_window->setMouseCursor(m_cursor);
-//        }else{
-//            m_window->setMouseCursor(m_originalCursor);
-//        }
-//    }
 }
 
 void Controller::handleEvents() {
@@ -405,31 +398,47 @@ void Controller::LoadingGame() {
     float scaleFactor = 1.0f;
     const int numSegments = 60; // Number of line segments
 
+    int arr[3] = {0,116,232};
+    auto p1_vec = m_user->getAllWarriors();
+    for(auto &warrior : *p1_vec){
+        if(warrior->getLocation() == userHole->getLocation() || warrior->getLocation() == userFlag->getLocation()) continue;
+        int randomNumber = std::rand() % 3;
+        warrior->getWeapon()->get()->setWeaponIntRect(arr[randomNumber]);
+    }
 
     WindowManager::instance().eventHandler(
-            [this](auto move, auto exit) {
-                handleHover(move, true);
-                return false;
-            },
+            [this](auto move, auto exit) { return false; },
             [this](auto click, auto exit) {
                 SoundFlip::instance().checkIfContains(click);
-//                handleClick(&click);
                 return false;
             },
             [](auto key, auto exit) { return false; },
             [](auto type, auto &exit) { return false; },
             [](auto offset, auto exit) { return false; },
             [this, &countdown, &clock, &animating, &scaleFactor](auto &exit) {
+
                 sf::Time elapsed = clock.getElapsedTime();
                 if (elapsed.asSeconds() >= 1.0f) {
                     countdown--;
                     clock.restart();
                     animating = true;
                     scaleFactor = 1.5f;
-
                     if (countdown < 1) {
                         exit = true;
+                        auto p1_vec = m_user->getAllWarriors();
+                        for(auto &warrior : *p1_vec){
+                            if(warrior->getLocation() == userHole->getLocation() || warrior->getLocation() == userFlag->getLocation()) continue;
+                            warrior->getWeapon()->get()->removeWeaponTexture();
+                        }
                         return;
+                    }
+
+                    int arr[3] = {0,116,232};
+                    auto p1_vec = m_user->getAllWarriors();
+                    for(auto &warrior : *p1_vec){
+                        if(warrior->getLocation() == userHole->getLocation() || warrior->getLocation() == userFlag->getLocation()) continue;
+                        int randomNumber = std::rand() % 3;
+                        warrior->getWeapon()->get()->setWeaponIntRect(arr[randomNumber]);
                     }
                 }
 
@@ -450,25 +459,11 @@ void Controller::LoadingGame() {
                 float completion = std::min(1.0f, elapsed.asSeconds());
                 numLines = static_cast<int>(numSegments * completion);
 
-
                 print(true);
             }
     );
 
 }
-
-//void Controller::handleClick(sf::Event::MouseButtonEvent *click) {
-//    int arr[3] = {116,232,0};
-//    if(m_shuffleButton.getGlobalBounds().contains(click->x,click->y)){
-//        auto p1_vec = m_user->getAllWarriors();
-//        for(auto &warrior : *p1_vec){
-//            if(warrior->getLocation() == userHole->getLocation() || warrior->getLocation() == userFlag->getLocation()) continue;
-//            int randomNumber = std::rand() % 3;
-//            warrior->getWeapon()->get()->setWeaponIntRect(arr[randomNumber]);
-//        }
-//
-//    }
-//}
 
 void Controller::handleTie() {
     std::string lastMove = RoomState::instance().getRoom().getLastMove();

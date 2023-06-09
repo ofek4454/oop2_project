@@ -8,7 +8,7 @@
 #include "RoomState.h"
 
 Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location)
-        : m_weapon(std::make_unique<Undefined>(isMine)), m_location(location), m_isMine(isMine) {
+        : m_weapon(std::make_unique<Undefined>()), m_location(location){
 
     auto texture = ResourcesManager::instance().getTexture(Warriors);
     m_sprite.setTexture(*texture);
@@ -158,7 +158,7 @@ void Warrior::setWeapon(Weapons_t weapon,bool visible) {
             break;
         }
         case Undefined_t: {
-            new_weapon = std::make_unique<Undefined>(m_isMine);
+            new_weapon = std::make_unique<Undefined>();
             break;
         }
         default:

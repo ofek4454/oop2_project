@@ -48,7 +48,7 @@ void Menu::handleEvents() {
 void Menu::print() {
     m_window->clear();
     m_window->draw(m_background);
-    for (auto &btn: m_menuButtons) {
+    for (const auto &btn: m_menuButtons) {
         m_window->draw(btn);
     }
     SoundFlip::instance().draw(*m_window);

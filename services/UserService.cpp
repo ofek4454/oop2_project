@@ -26,16 +26,8 @@ namespace UserService{
     }
 
     json UserService::deleteUser(std::string uid) {
-        CURL *curl = curl_easy_init();
         std::string url = BASE_URL + "/users/" + uid + ".json";
-        std::string s;
-
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-
-        CURLcode res = curl_easy_perform(curl);
-        curl_easy_cleanup(curl);
-
-        json response = json::parse(s.c_str());
+        auto response = HttpRequestsManager::instance().deleteRequest(url);
+        return response;
     }
 }

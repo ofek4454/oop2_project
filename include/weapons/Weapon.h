@@ -32,7 +32,10 @@ public:
     void initChooseBox();
     void setVisible(bool visible) {m_is_visible = visible;}
     bool isVisible() const {return m_is_visible;}
-    void setWeaponIntRect(int rect) {m_weapon_sprite.setTextureRect(sf::IntRect(110,rect,55,58));}
+    void setWeaponIntRect(int rect) {
+        m_weapon_sprite.setTextureRect(sf::IntRect(110,rect,55,58));
+    }
+    void removeWeaponTexture(){m_weapon_sprite.setTextureRect(sf::IntRect(0,0,0,0));}
 
     std::string getSymbol() const {return m_symbol;}
 

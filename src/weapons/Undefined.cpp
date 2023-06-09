@@ -3,7 +3,11 @@
 #include "Warrior.h"
 #include "EventLoop.h"
 
-Undefined::Undefined(bool isMine) : Weapon("U")  {}
+Undefined::Undefined() : Weapon("U")  {
+    auto weapon = ResourcesManager::instance().getTexture(Rps);
+    m_weapon_sprite.setTexture(*weapon);
+    m_weapon_sprite.setTextureRect(sf::IntRect(0, 0, 0, 0));
+}
 
 void Undefined::fight(Weapon &other) {
     if (&other == this)

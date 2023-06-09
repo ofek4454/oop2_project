@@ -5,7 +5,7 @@
 
 class Undefined : public Weapon{
 public:
-    Undefined(bool isMine);
+    Undefined();
 
     virtual void fight(Weapon& other) override;
     virtual void fight(Scissors& other) override;
