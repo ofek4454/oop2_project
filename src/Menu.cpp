@@ -15,7 +15,7 @@ Menu::Menu() : m_window(WindowManager::instance().getWindow()) {
         m_menuButtons[i].setOrigin(m_menuButtons[i].getGlobalBounds().width / 2,
                                    m_menuButtons[i].getGlobalBounds().height / 2);
         m_menuButtons[i].setPosition(sf::Vector2f(starting_x, starting_y));
-        starting_y += m_menuButtons[i].getGlobalBounds().height * 2;
+        starting_y += H2 * 2;
     }
 
     handleEvents();
