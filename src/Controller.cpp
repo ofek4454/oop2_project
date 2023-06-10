@@ -506,7 +506,6 @@ void Controller::handleTie() {
             break;
     }
 
-
     auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
     warrior->get()->setWeapon(Undefined_t);
 
@@ -521,7 +520,6 @@ void Controller::animateWeapons() {
         ChosenWarrior = m_user->pickRandomWarrior();
         if (ChosenWarrior != NULL && ChosenWarrior->getLocation() != userHole->getLocation() &&
             ChosenWarrior->getLocation() != userFlag->getLocation()) {
-            std::cout << "Animating\n ";
             m_animatingWeapon = true;
             ChosenWarrior->setTexture();
             chose = true;

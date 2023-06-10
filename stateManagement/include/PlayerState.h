@@ -33,12 +33,12 @@ public:
     std::string getPlayerSymbol() {return m_playerSymbol;}
     void setPlayerSymbol(std::string s){m_playerSymbol=s;}
     void checkDeletion();
-    void setWarriorLocation(Location location){ m_selectedPlayerLocation = location;}
-    void setTie(bool isTie){m_isTie = isTie;}
+    void setWarriorLocation(Location location){ m_selectedPlayerLocation = location; }
     Warrior* pickRandomWarrior();
 
+    void resetWarriorLocation(){m_selectedPlayerLocation = m_newLocation;}
+
 protected:
-    bool m_isTie = false;
     Location m_newLocation;
     std::vector<std::unique_ptr<Warrior>> m_warriors;
     bool m_playerChose = false;

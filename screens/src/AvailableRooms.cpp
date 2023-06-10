@@ -14,10 +14,20 @@ void AvailableRooms::init() {
         std::string roomName = room["name"];
         availableRooms[roomId] = roomName;
     }
-    for (int i = 0; i < availableRooms.size(); i++) {
+
+    m_text.setFont(*ResourcesManager::instance().getFont());
+    m_text.setString("Choose room to join");
+    m_text.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 0.1);
+    m_text.setCharacterSize(H2);
+    m_text.setOrigin(m_text.getGlobalBounds().width / 2, m_text.getGlobalBounds().height / 2);
+    m_text.setFillColor(sf::Color::White);
+    m_background = *ResourcesManager::instance().getBackground();
+
+    float start_y = m_text.getGlobalBounds().top + m_text.getGlobalBounds().height*2 + WINDOW_HEIGHT*0.1;
+    for (int i = 0; i < availableRooms.size(); i++){
         auto temp = sf::RectangleShape();
         temp.setSize(sf::Vector2f(WINDOW_WIDTH * 0.7, WINDOW_HEIGHT * 0.2));
-        temp.setPosition(WINDOW_WIDTH / 2, (WINDOW_HEIGHT * 0.2) + (i * temp.getGlobalBounds().height * 1.5));
+        temp.setPosition(WINDOW_WIDTH / 2, (start_y) + (i * temp.getGlobalBounds().height * 1.5));
         temp.setOrigin((WINDOW_WIDTH * 0.7) / 2, (WINDOW_HEIGHT * 0.2) / 2);
         temp.setFillColor(GRAY_COLOR);
         temp.setOutlineThickness(1);
@@ -34,13 +44,6 @@ void AvailableRooms::init() {
         m_texts.push_back(text);
 
     }
-    m_text.setFont(*ResourcesManager::instance().getFont());
-    m_text.setString("Choose room to join");
-    m_text.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 0.1);
-    m_text.setCharacterSize(H1);
-    m_text.setOrigin(m_text.getGlobalBounds().width / 2, m_text.getGlobalBounds().height / 2);
-    m_text.setFillColor(sf::Color::White);
-    m_background = *ResourcesManager::instance().getBackground();
 }
 
 void AvailableRooms::chooseRoom() {
@@ -88,7 +91,7 @@ void AvailableRooms::print(int offset) {
 
     for (int i = 0; i < m_buttons.size(); i++) {
         m_buttons[i].move(sf::Vector2f(0, offset));
-        m_texts[i].setPosition(sf::Vector2f(0, offset));
+        m_texts[i].move(sf::Vector2f(0, offset));
         m_window.draw(m_buttons[i]);
         m_window.draw(m_texts[i]);
     }

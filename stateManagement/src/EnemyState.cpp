@@ -87,6 +87,7 @@ bool EnemyState::move() {
     static int shadowOffsetY = 4;
     auto warrior = getWarrior(m_selectedPlayerLocation);
     if (warrior == NULL) {
+        std::cout << "null here\n";
         m_isAnimating = false;
         return true;
     }
@@ -101,10 +102,10 @@ bool EnemyState::move() {
     else if (m_direction == Right)
         warrior->get()->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0), sf::Vector2f(sf::Vector2f(shadowOffsetX, 0)));
     else {
+        m_selectedPlayerLocation = m_newLocation;
         m_isAnimating = false;
         return true;
     }
-
 
     warrior->get()->setMovingIntRect(imageCounter, true);
     imageCounter++;
@@ -114,7 +115,6 @@ bool EnemyState::move() {
         imageCounter = 0;
         warrior->get()->setLocation(m_direction);
         m_isAnimating = false;
-        std::cout << "equalize :" << m_selectedPlayerLocation.row << " " << m_selectedPlayerLocation.col << std::endl;
         m_selectedPlayerLocation = m_newLocation;
         return true;
     }
