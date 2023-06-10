@@ -35,6 +35,7 @@ public:
     void checkDeletion();
     void setWarriorLocation(Location location){ m_selectedPlayerLocation = location;}
     void setTie(bool isTie){m_isTie = isTie;}
+    Warrior* pickRandomWarrior();
 
 protected:
     bool m_isTie = false;

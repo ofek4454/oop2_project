@@ -27,8 +27,10 @@ Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location)
     m_shadow.setPosition(m_sprite.getPosition().x - RECT_SIZE / 2 - 30, m_sprite.getPosition().y - RECT_SIZE / 2 + 50);
     m_shadow.setTextureRect(sf::IntRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT));
 
-    if (isMine)
-        m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 10, m_sprite.getPosition().y));
+    if (isMine){
+        m_throwTexture = *ResourcesManager::instance().getTexture(ThrowPlayer);
+        m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - m_sprite.getGlobalBounds().width * 0.125, m_sprite.getPosition().y - m_sprite.getGlobalBounds().height * 0.125));
+    }
     else
         m_weapon->setVisible(false);
 
@@ -89,6 +91,7 @@ void Warrior::setLocation(Direction_t direction) {
             break;
     }
     m_shadow.setPosition(m_sprite.getPosition().x - RECT_SIZE / 2 - 30, m_sprite.getPosition().y - RECT_SIZE / 2 + 50);
+    m_weapon->setSpriteLoc(sf::Vector2f (m_sprite.getPosition().x - m_sprite.getGlobalBounds().width * 0.125, m_sprite.getPosition().y - m_sprite.getGlobalBounds().height * 0.125));
 }
 
 void Warrior::setTextureFlag(bool isHighlighted) {
@@ -98,7 +101,7 @@ void Warrior::setTextureFlag(bool isHighlighted) {
         m_weapon.get()->setSpriteLoc(sf::Vector2f(-100, -100));
     } else {
         m_sprite.setTextureRect(m_initialIntRect);
-        m_weapon.get()->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 10, m_sprite.getPosition().y));
+        m_weapon.get()->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - m_sprite.getGlobalBounds().width * 0.125, m_sprite.getPosition().y - m_sprite.getGlobalBounds().height * 0.125));
     }
 
 }
@@ -112,7 +115,7 @@ void Warrior::setTextureHole(bool isHighlighted) {
     } else {
         m_sprite.setTexture(m_initialTexture);
         m_sprite.setTextureRect(m_initialIntRect);
-        m_weapon.get()->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 10, m_sprite.getPosition().y));
+        m_weapon.get()->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - m_sprite.getGlobalBounds().width * 0.125, m_sprite.getPosition().y - m_sprite.getGlobalBounds().height * 0.15));
     }
 }
 
@@ -164,7 +167,7 @@ void Warrior::setWeapon(Weapons_t weapon,bool visible) {
         default:
             break;
     }
-    new_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - 5, m_sprite.getPosition().y + 10));
+    new_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - m_sprite.getGlobalBounds().width * 0.125, m_sprite.getPosition().y - m_sprite.getGlobalBounds().height * 0.15));
     new_weapon->setOwner(this);
     m_weapon = std::move(new_weapon);
 }

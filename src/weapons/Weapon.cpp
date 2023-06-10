@@ -3,7 +3,8 @@
 #include "Weapon.h"
 #include "Warrior.h"
 
-Weapon::Weapon(const std::string symbol,bool visible) : m_is_visible(visible),m_symbol(symbol){}
+Weapon::Weapon(const std::string symbol, bool visible) : m_is_visible(visible), m_symbol(symbol) {
+}
 
 void Weapon::draw() {
     auto window = WindowManager::instance().getWindow();
@@ -106,4 +107,35 @@ void Weapon::initChooseBox() {
     m_ChooseWeaponText.setOrigin(m_ChooseWeaponText.getGlobalBounds().width / 2, 0);
     m_ChooseWeaponText.setOutlineColor(DARK_GREEN_COLOR);
     m_ChooseWeaponText.setOutlineThickness(3);
+}
+
+bool Weapon::animateWeapon() {
+    static bool middle = false;
+    static int offset = 15;
+    if(!middle)
+        m_weaponIntRect.top -= 56.5;
+    else
+        m_weaponIntRect.top += 56.5;
+
+    if (m_weaponIntRect.top < 0 && !middle) {
+        middle = true;
+        m_weaponIntRect.top = 0;
+        m_weapon_sprite.setTextureRect(m_weaponIntRect);
+        m_weapon_sprite.move(sf::Vector2f(0,-offset));
+        return false;
+    }
+    if(m_weaponIntRect.top >= 169.5 && middle){
+        middle = false;
+        m_weaponIntRect.top = 169.5;
+        m_weapon_sprite.setTextureRect(m_weaponIntRect);
+        m_weapon_sprite.move(sf::Vector2f(0,offset));
+        return true;
+    }
+    if(!middle)
+        m_weapon_sprite.move(sf::Vector2f(0,-offset));
+    else
+        m_weapon_sprite.move(sf::Vector2f(0,offset));
+
+    m_weapon_sprite.setTextureRect(m_weaponIntRect);
+    return false;
 }

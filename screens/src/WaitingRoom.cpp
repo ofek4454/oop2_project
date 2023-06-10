@@ -1,5 +1,5 @@
 
-#include "WaitingRoom.h"
+#include "../include/WaitingRoom.h"
 
 WaitingRoom::WaitingRoom(PlayerModel player): p(player), m_window(*WindowManager::instance().getWindow()),m_background(*ResourcesManager::instance().getBackground()) {
     init();

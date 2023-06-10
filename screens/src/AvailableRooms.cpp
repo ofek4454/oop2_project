@@ -1,5 +1,5 @@
 
-#include "AvailableRooms.h"
+#include "../include/AvailableRooms.h"
 
 AvailableRooms::AvailableRooms(PlayerModel player) : p(player), m_window(*WindowManager::instance().getWindow()),
                                                      m_background(*ResourcesManager::instance().getBackground()) {

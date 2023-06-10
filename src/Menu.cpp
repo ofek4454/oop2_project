@@ -1,5 +1,5 @@
 #include "Menu.h"
-#include "EnterNameScreen.h"
+#include "../screens/include/EnterNameScreen.h"
 
 Menu::Menu() : m_window(WindowManager::instance().getWindow()) {
     ResourcesManager::instance().playBackgroundMusic();
@@ -17,9 +17,7 @@ Menu::Menu() : m_window(WindowManager::instance().getWindow()) {
         m_menuButtons[i].setPosition(sf::Vector2f(starting_x, starting_y));
         starting_y += H2 * 2;
     }
-
     handleEvents();
-
 }
 
 void Menu::handleEvents() {

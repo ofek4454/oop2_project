@@ -43,6 +43,14 @@ ResourcesManager::ResourcesManager() {
     m_texture[Trap].loadFromFile("Hole.png");
     m_texture[Trap].setSmooth(true);
     m_texture[ShuffleButton].loadFromFile("shuffleButton.png");
+    m_texture[ScissorsFlip].loadFromFile("ScissorsFlipping.png");
+    m_texture[PaperFlip].loadFromFile("PaperFlipping.png");
+    m_texture[RockFlip].loadFromFile("RockFlipping.png");
+    m_texture[ThrowPlayer].loadFromFile("throwAnimationPlayer.png");
+    m_texture[RefereeDeclareWinning].loadFromFile("end.png");
+    m_texture[WinningJump].loadFromFile("winner.png");
+
+
 
 
 
