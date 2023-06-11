@@ -17,8 +17,7 @@ void EnemyState::init() {
             col = 0;
         }
         std::string warriorId = m_playerSymbol == "2" ? std::to_string(row) + std::to_string(col)
-                                                      : std::to_string(BOARD_SIZE - 1 - row) +
-                                                        std::to_string(BOARD_SIZE - 1 - col);
+                                                      : std::to_string(BOARD_SIZE -1 - row) + std::to_string(BOARD_SIZE-1-col);
         m_warriors[warriorId] = std::make_unique<Warrior>(warriorId, sf::Vector2f(x, y), false, Location(row, col));
         x += RECT_SIZE;
         if (i == BOARD_SIZE - 1) {
@@ -131,8 +130,8 @@ bool EnemyState::move() {
 
 Location EnemyState::extractLocation(const std::string &str) {
     Location loc;
-    if (m_playerSymbol == "1")
-        loc = Location(BOARD_SIZE - 1 - std::atoi(&str[3]), BOARD_SIZE - 1 - std::atoi(&str[5]));
+    if(m_playerSymbol == "1")
+        loc = Location(BOARD_SIZE-1-std::atoi(&str[3]), BOARD_SIZE-1-std::atoi(&str[5]));
     else
         loc = Location(std::atoi(&str[3]), std::atoi(&str[5]));
     return loc;

@@ -105,6 +105,7 @@ void Controller::print(bool printLoad) {
                              std::sin(angle) * (radius - line.getRadius()) + m_circle.getPosition().y);
             m_window->draw(line);
         }
+//        m_window->draw(m_shuffleButton);
         m_window->draw(m_countdown);
     }
     m_window->display();
@@ -131,6 +132,7 @@ void Controller::checkCollision() {
                 m_currentP2 = p2.second.get();
                 m_currentP1->setNeedToBeDraw(false);
                 m_currentP2->setNeedToBeDraw(false);
+
             }
     if((!collision && m_meAttacked) || (m_meAttacked && weapon_of_p2 == "U"))
         m_meAttacked = false;
@@ -183,8 +185,6 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
 }
 
 void Controller::handleEvents() {
-    if(m_meAttacked)
-        std::cout << "is me attacked : " << m_meAttacked << std::endl;
     if (m_isFinishUserTurn && !EventLoop::instance().hasEvent()) {
         RoomState::instance().changeTurn();
         m_turn = (Turn_t) !myTurn;
@@ -263,7 +263,6 @@ void Controller::handleEvents() {
             m_currentP2->getWeapon()->get()->setVisible(true);
         }
     }
-
     m_user->checkDeletion();
     m_enemy->checkDeletion();
 }
@@ -447,6 +446,7 @@ void Controller::handleTie() {
 
     auto enemy = m_enemy->getWarrior();
     enemy->get()->setWeapon(Undefined_t);
+
 
     m_turn = myTurn;
 }
