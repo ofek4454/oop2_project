@@ -30,7 +30,7 @@ public:
     void changeTurn();
     void setBoardCell(Location loc , std::string str);
     Turn_t getTurn();
-    void setLastMove(Location oldLocation, Location newLocation, std::string weapon);
+    void setLastMove(std::string warriorId, Location location, std::string weapon);
     void setLastMove(std::string last_move);
 
 private:

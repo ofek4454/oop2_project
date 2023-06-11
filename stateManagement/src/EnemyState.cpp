@@ -16,7 +16,9 @@ void EnemyState::init() {
             row++;
             col = 0;
         }
-        m_warriors.push_back(std::make_unique<Warrior>(sf::Vector2f(x, y), false, Location(row, col)));
+        std::string warriorId = m_playerSymbol == "2" ? std::to_string(row) + std::to_string(col)
+                                                      : std::to_string(BOARD_SIZE -1 - row) + std::to_string(BOARD_SIZE-1-col);
+        m_warriors[warriorId] = std::make_unique<Warrior>(warriorId, sf::Vector2f(x, y), false, Location(row, col));
         x += RECT_SIZE;
         if (i == BOARD_SIZE - 1) {
             y += RECT_SIZE;
@@ -28,38 +30,35 @@ void EnemyState::init() {
 
 void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
     static bool enteredOnce = false;
-    EventLoop::instance().addEvent(Event(NeedToResetLocation));
-
     if (enteredOnce) {
         enteredOnce = false;
         return;
     }
+
     m_isAnimating = true;
 
-
     std::string last_move = RoomState::instance().getRoom().getLastMove();
-    auto locations = extractNumbers(last_move);
+    std::stringstream ss(last_move);
 
-    m_selectedPlayerLocation = Location(locations[0], locations[1]);
-    m_newLocation = Location(locations[2], locations[3]);
+    ss >> m_selectedWarriorId;
+    auto location = extractLocation(ss.str());
 
-    if (m_selectedPlayerLocation.row + 1 == m_newLocation.row)
-        m_direction = Down;
-    else if (m_selectedPlayerLocation.row - 1 == m_newLocation.row)
-        m_direction = Up;
-    else if (m_selectedPlayerLocation.col - 1 == m_newLocation.col)
-        m_direction = Left;
-    else if (m_selectedPlayerLocation.col + 1 == m_newLocation.col)
-        m_direction = Right;
-    else {
-        m_direction = Non_Direction;
-    }
-
-
-    auto warrior = getWarrior(m_selectedPlayerLocation);
+    auto warrior = getWarrior();
     if (warrior == NULL) {
         std::cout << "warrior not found\n" << std::endl;
         return;
+    }
+
+    if (warrior->get()->getLocation().row + 1 == location.row)
+        m_direction = Down;
+    else if (warrior->get()->getLocation().row - 1 == location.row)
+        m_direction = Up;
+    else if (warrior->get()->getLocation().col - 1 == location.col)
+        m_direction = Left;
+    else if (warrior->get()->getLocation().col + 1 == location.col)
+        m_direction = Right;
+    else {
+        m_direction = Non_Direction;
     }
 
     if (last_move[last_move.size() - 1] != warrior->get()->getSymbol()[0]) {
@@ -85,7 +84,7 @@ bool EnemyState::move() {
     static int imageCounter = 0;
     static float shadowOffsetX = -1;
     static int shadowOffsetY = 4;
-    auto warrior = getWarrior(m_selectedPlayerLocation);
+    auto warrior = getWarrior();
     if (warrior == NULL) {
         std::cout << "null here\n";
         m_isAnimating = false;
@@ -102,8 +101,8 @@ bool EnemyState::move() {
     else if (m_direction == Right)
         warrior->get()->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0), sf::Vector2f(sf::Vector2f(shadowOffsetX, 0)));
     else {
-        m_selectedPlayerLocation = m_newLocation;
         m_isAnimating = false;
+        warrior->get()->setLocation(m_direction);
         return true;
     }
 
@@ -115,7 +114,6 @@ bool EnemyState::move() {
         imageCounter = 0;
         warrior->get()->setLocation(m_direction);
         m_isAnimating = false;
-        m_selectedPlayerLocation = m_newLocation;
         return true;
     }
     if (imageCounter == 3) {
@@ -126,19 +124,13 @@ bool EnemyState::move() {
         shadowOffsetY = -12;
     }
     return false;
-
 }
 
-std::vector<int> EnemyState::extractNumbers(const std::string &str) {
-    std::vector<int> numbers;
-    for (int i = 0; i < str.size(); i++) {
-        char c = str[i];
-        if (isdigit(c)) {
-            if (m_playerSymbol == "1")
-                numbers.push_back(BOARD_SIZE - std::atoi(&c) - 1);
-            else
-                numbers.push_back(std::atoi(&c));
-        }
-    }
-    return numbers;
+Location EnemyState::extractLocation(const std::string &str) {
+    Location loc;
+    if(m_playerSymbol == "1")
+        loc = Location(BOARD_SIZE-1-std::atoi(&str[3]), BOARD_SIZE-1-std::atoi(&str[5]));
+    else
+        loc = Location(std::atoi(&str[3]), std::atoi(&str[5]));
+    return loc;
 }

@@ -7,8 +7,8 @@
 #include "Weapon.h"
 #include "RoomState.h"
 
-Warrior::Warrior(const sf::Vector2f pos, const bool isMine, Location location)
-        : m_weapon(std::make_unique<Undefined>()), m_location(location){
+Warrior::Warrior(const std::string id,const sf::Vector2f pos, const bool isMine, Location location)
+        : m_id(id), m_weapon(std::make_unique<Undefined>()), m_location(location){
 
     auto texture = ResourcesManager::instance().getTexture(Warriors);
     m_sprite.setTexture(*texture);
@@ -70,10 +70,7 @@ void Warrior::setMovingIntRect(int counter,bool isEnemy) {
     }
 }
 
-Location Warrior::getPrevLocation() const {return m_prevLocation;}
-
 void Warrior::setLocation(Direction_t direction) {
-    m_prevLocation = m_location;
     switch (direction) {
         case Direction_t::Up:
             m_location = Location(m_location.row - 1, m_location.col);
@@ -201,4 +198,17 @@ bool Warrior::setHoleIntRect() {
         return true;
     }
     return false;
+}
+
+void Warrior::setTexture(bool reset) {
+    if (reset) {
+        m_sprite.setTexture(m_initialTexture);
+        m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x - m_sprite.getGlobalBounds().width * 0.125,
+                                            m_sprite.getPosition().y - m_sprite.getGlobalBounds().height * 0.125));
+        return;
+    } else {
+        m_sprite.setTexture(m_throwTexture);
+        m_sprite.setTextureRect(sf::IntRect(2,0,IMAGE_WIDTH,IMAGE_HEIGHT));
+        m_sprite.setScale(RECT_SIZE / IMAGE_WIDTH, RECT_SIZE / IMAGE_WIDTH);
+    }
 }

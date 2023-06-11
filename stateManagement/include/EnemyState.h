@@ -18,10 +18,10 @@ public:
 
     virtual void print() {
         for (auto &warrior: m_warriors)
-            warrior->draw();
+            warrior.second->draw();
     }
 
-    std::vector<int> extractNumbers(const std::string& str);
+    Location extractLocation(const std::string& str);
 protected:
 
 private:

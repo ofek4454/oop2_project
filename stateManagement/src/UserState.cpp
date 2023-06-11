@@ -18,7 +18,9 @@ void UserState::init() {
             row--;
             col = 0;
         }
-        m_warriors.push_back(std::make_unique<Warrior>(sf::Vector2f(x, y), true, Location(row, col)));
+        std::string warriorId = m_playerSymbol == "1" ? std::to_string(row) + std::to_string(col)
+                                                      : std::to_string(BOARD_SIZE -1 - row) + std::to_string(BOARD_SIZE-1-col);
+        m_warriors[warriorId] = std::make_unique<Warrior>(warriorId, sf::Vector2f(x, y), true, Location(row, col));
         x += RECT_SIZE;
         if (i == BOARD_SIZE - 1) {
             y -= RECT_SIZE;
@@ -29,12 +31,12 @@ void UserState::init() {
 
 void UserState::hoverFlag(const int row, const int col) {
     for (auto &warrior: m_warriors)
-        warrior->setTextureFlag(warrior->getLocation() == Location(row, col));
+        warrior.second->setTextureFlag(warrior.second->getLocation() == Location(row, col));
 }
 
 void UserState::hoverHole(const int row, const int col) {
     for (auto &warrior: m_warriors)
-        warrior->setTextureHole(warrior->getLocation() == Location(row, col));
+        warrior.second->setTextureHole(warrior.second->getLocation() == Location(row, col));
 }
 
 void UserState::doTurn(sf::Event::MouseButtonEvent *click) {
@@ -49,10 +51,10 @@ void UserState::doTurn(sf::Event::MouseButtonEvent *click) {
     if (BOARD_FRAME.contains(click->x, click->y)) { // choose warrior
         int row = (click->y - BOARD_TOP_LEFT.top) / RECT_SIZE;
         int col = (click->x - BOARD_TOP_LEFT.left) / RECT_SIZE;
-        auto bool_arr = checkAvailableLocations(Location(row, col));
-        if (bool_arr) {
-            m_selectedPlayerLocation = Location(row, col);
-            setArrows(bool_arr, m_selectedPlayerLocation, true);
+        auto availableLocations = checkAvailableLocations(Location(row, col));
+        if (availableLocations != NULL) {
+            setArrows(availableLocations, Location(row, col), true);
+            m_selectedWarriorId = getWarrior(Location(row, col))->get()->getId();
             m_playerChose = true;
         }
     }
@@ -107,7 +109,7 @@ Direction_t UserState::getDirection(const sf::Vector2f pos) const {
 void UserState::print() {
     auto window = WindowManager::instance().getWindow();
     for (auto &warrior: m_warriors)
-        warrior->draw();
+        warrior.second->draw();
 
     for (auto &arrow: m_arrows) {
         window->draw(arrow);
@@ -123,9 +125,11 @@ bool UserState::move() {
     static int imageCounter = 0;
     static float shadowOffsetX = -1;
     static int shadowOffsetY = 4;
-    auto warrior = getWarrior(m_selectedPlayerLocation);
+
+    auto warrior = getWarrior();
     if(warrior == NULL)
         return true;
+
     if (m_direction == Up)
         warrior->get()->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset),sf::Vector2f(shadowOffsetX, shadowOffsetY));
     else if (m_direction == Down)
@@ -140,10 +144,9 @@ bool UserState::move() {
     if(imageCounter == IMAGE_COUNT){
         auto oldLocation = warrior->get()->getLocation();
         warrior->get()->setLocation(m_direction);
-        m_selectedPlayerLocation = warrior->get()->getLocation();
         RoomState::instance().setBoardCell(oldLocation, "");
-        RoomState::instance().setBoardCell(m_selectedPlayerLocation, m_playerSymbol+warrior->get()->getSymbol());
-        RoomState::instance().setLastMove(oldLocation, m_selectedPlayerLocation, warrior->get()->getSymbol());
+        RoomState::instance().setBoardCell(warrior->get()->getLocation(), m_playerSymbol+warrior->get()->getSymbol());
+        RoomState::instance().setLastMove(warrior->get()->getId(), warrior->get()->getLocation(), warrior->get()->getSymbol());
 
         shadowOffsetX = -1;
         shadowOffsetY = 4;
@@ -173,8 +176,8 @@ bool *UserState::checkAvailableLocations(Location location) {
     locations[2] = true;
     locations[3] = true;
 
-    for (int i = 0; i < m_warriors.size(); i++) {
-        auto warrior_loc = m_warriors[i]->getLocation();
+    for(auto &warrior : m_warriors){
+        auto warrior_loc = warrior.second->getLocation();
         if (warrior_loc == location)
             continue;
         if (location.row <= 0 || (location.row - 1 == warrior_loc.row && location.col == warrior_loc.col))

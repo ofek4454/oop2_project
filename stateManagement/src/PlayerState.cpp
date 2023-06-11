@@ -5,20 +5,23 @@ PlayerState::PlayerState(PlayerModel &player) : m_player(player){}
 
 void PlayerState::handleHover(const int row, const int col) {
     for (auto &warrior: m_warriors){
-        warrior->setHighlighted(warrior->getLocation() == Location(row, col));
+        warrior.second->setHighlighted(warrior.second->getLocation() == Location(row, col));
     }
 }
 
-std::unique_ptr<Warrior> *PlayerState::getWarrior(const Location location) {
-    for (int i = 0; i < m_warriors.size(); i++)
-        if (m_warriors[i]->getLocation() == location)
-            return &m_warriors[i];
+std::unique_ptr<Warrior> *PlayerState::getWarrior(const Location location){
+    for(auto &warrior : m_warriors)
+        if (warrior.second->getLocation() == location)
+            return &warrior.second;
     return NULL;
 }
 
+std::unique_ptr<Warrior> *PlayerState::getWarrior(const std::string warriorId){
+    return m_warriors.contains(warriorId) ? &m_warriors[warriorId] : NULL;
+}
 
 void PlayerState::checkDeletion() {
-    std::erase_if(m_warriors,[](auto& warrior) {return warrior->isNeedToBeDeleted();});
+    std::erase_if(m_warriors,[](auto& warrior) {return warrior.second->isNeedToBeDeleted();});
 }
 
 const PlayerModel &PlayerState::getPlayerModel() const {
@@ -52,13 +55,13 @@ bool PlayerState::setAsHole(const int row, const int col) {
 Warrior *PlayerState::pickRandomWarrior() {
     std::vector<Warrior*> tempVector;
     for(auto& warrior : m_warriors){
-        if(warrior->getWeapon()->get()->isVisible()){
-            tempVector.push_back(warrior.get());
+        if(warrior.second->getWeapon()->get()->isVisible()){
+            tempVector.push_back(warrior.second.get());
         }
     }
     if(tempVector.size() == 0)
         return NULL;
 
-    int randomnumber = rand() % tempVector.size();
-    return tempVector[randomnumber];
+    int randomNumber = rand() % tempVector.size();
+    return tempVector[randomNumber];
 }

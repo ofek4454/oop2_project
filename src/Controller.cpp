@@ -120,12 +120,11 @@ void Controller::checkCollision() {
     auto p2_vec = m_enemy->getAllWarriors();
     for (auto &p1: *p1_vec)
         for (auto &p2: *p2_vec)
-            if (p1->getLocation() == p2->getLocation()) {
-                m_user->setWarriorLocation(p1->getLocation());
+            if (p1.second->getLocation() == p2.second->getLocation()) {
                 m_isFinishUserTurn = false;
-                p2->getWeapon()->get()->fight(**p1->getWeapon());
-                m_currentP1 = p1.get();
-                m_currentP2 = p2.get();
+                p2.second->getWeapon()->get()->fight(**p1.second->getWeapon());
+                m_currentP1 = p1.second.get();
+                m_currentP2 = p2.second.get();
                 m_currentP1->setNeedToBeDraw(false);
                 m_currentP2->setNeedToBeDraw(false);
 
@@ -178,12 +177,6 @@ void Controller::handleEvents() {
     while (EventLoop::instance().hasEvent()) {
         auto event = EventLoop::instance().popEvent();
         switch (event.getEventType()) {
-            case NeedToResetLocation: {
-                auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
-                if (warrior == NULL) return;
-                warrior->get()->resetLocation();
-                break;
-            }
             case FightRP: {
                 updateLastMoveAndChangeTurn(!m_switchTurnAfterTie);
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BluePR : RedPR), 980,
@@ -231,12 +224,12 @@ void Controller::handleEvents() {
             case Won:{
                 updateWin();
                 AfterGameScreen(true,m_user->getPlayerModel(),m_enemy->getPlayerModel(),myTurn);
-                exit(EXIT_SUCCESS);
+                // TODO raise flag to exit run loop
                 break;
             }
             case Lose:{
                 AfterGameScreen(false,m_user->getPlayerModel(),m_enemy->getPlayerModel(),myTurn);
-                exit(EXIT_SUCCESS);
+                // TODO raise flag to exit run loop
                 break;
             }
             default:
@@ -384,13 +377,16 @@ void Controller::initGame() {
     enemyFlag = m_enemy->getWarrior(flagLoc)->get();
     enemyHole = m_enemy->getWarrior(holeLoc)->get();
 
+    // clear waiting events
+    sf::Event event;
+    while (m_window->pollEvent(event));
 }
 
 void Controller::updateLastMoveAndChangeTurn(bool changeTurn) {
-    auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
+    auto warrior = m_user->getWarrior();
     RoomState::instance().setBoardCell(warrior->get()->getLocation(),
                                        m_user->getPlayerSymbol() + warrior->get()->getSymbol());
-    RoomState::instance().setLastMove(warrior->get()->getPrevLocation(), warrior->get()->getLocation(),
+    RoomState::instance().setLastMove(warrior->get()->getId(), warrior->get()->getLocation(),
                                       warrior->get()->getSymbol());
     if (changeTurn) {
         RoomState::instance().changeTurn();
@@ -404,11 +400,33 @@ void Controller::updateTieCase(std::string msg) {
     RoomState::instance().changeTurn();
     m_turn = (Turn_t) !myTurn;
 
-    auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
+    auto warrior = m_user->getWarrior();
     warrior->get()->setWeapon(Undefined_t);
-    auto enemy = m_enemy->getWarrior(m_enemy->getWarriorLocation());
+    auto enemy = m_enemy->getWarrior();
     enemy->get()->setWeapon(Undefined_t);
     m_switchTurnAfterTie = true;
+}
+
+void Controller::handleTie() {
+    std::string lastMove = RoomState::instance().getRoom().getLastMove();
+    switch (lastMove[lastMove.size() - 1]) {
+        case 'R':
+            animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
+            break;
+        case 'P':
+            animateFight(ResourcesManager::instance().getTexture(PaperPaper), 453, 63, 3, tieP);
+            break;
+        case 'S':
+            animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3, tieS);
+            break;
+    }
+
+    auto warrior = m_user->getWarrior();
+    warrior->get()->setWeapon(Undefined_t);
+
+    auto enemy = m_enemy->getWarrior();
+    enemy->get()->setWeapon(Undefined_t);
+    m_turn = myTurn;
 }
 
 void Controller::LoadingGame() {
@@ -422,11 +440,11 @@ void Controller::LoadingGame() {
     int arr[3] = {0, 116, 232};
     auto p1_vec = m_user->getAllWarriors();
     for (auto &warrior: *p1_vec) {
-        if (warrior->getLocation() == userHole->getLocation() ||
-            warrior->getLocation() == userFlag->getLocation())
+        if (warrior.second->getLocation() == userHole->getLocation() ||
+            warrior.second->getLocation() == userFlag->getLocation())
             continue;
         int randomNumber = std::rand() % 3;
-        warrior->getWeapon()->get()->setWeaponIntRect(arr[randomNumber]);
+        warrior.second->getWeapon()->get()->setWeaponIntRect(arr[randomNumber]);
     }
 
     WindowManager::instance().eventHandler(
@@ -450,22 +468,21 @@ void Controller::LoadingGame() {
                         exit = true;
                         auto p1_vec = m_user->getAllWarriors();
                         for (auto &warrior: *p1_vec) {
-                            if (warrior->getLocation() == userHole->getLocation() ||
-                                warrior->getLocation() == userFlag->getLocation())
+                            if (warrior.second->getLocation() == userHole->getLocation() ||
+                                warrior.second->getLocation() == userFlag->getLocation())
                                 continue;
-                            warrior->getWeapon()->get()->removeWeaponTexture();
+                            warrior.second->getWeapon()->get()->removeWeaponTexture();
                         }
                         return;
                     }
-
                     int arr[3] = {58, 174, 290};
                     auto p1_vec = m_user->getAllWarriors();
                     for (auto &warrior: *p1_vec) {
-                        if (warrior->getLocation() == userHole->getLocation() ||
-                            warrior->getLocation() == userFlag->getLocation())
+                        if (warrior.second->getLocation() == userHole->getLocation() ||
+                            warrior.second->getLocation() == userFlag->getLocation())
                             continue;
                         int randomNumber = std::rand() % 3;
-                        warrior->getWeapon()->get()->setWeaponIntRect(arr[randomNumber]);
+                        warrior.second->getWeapon()->get()->setWeaponIntRect(arr[randomNumber]);
                     }
                 }
 
@@ -490,28 +507,6 @@ void Controller::LoadingGame() {
             }
     );
 
-}
-
-void Controller::handleTie() {
-    std::string lastMove = RoomState::instance().getRoom().getLastMove();
-    switch (lastMove[lastMove.size() - 1]) {
-        case 'R':
-            animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
-            break;
-        case 'P':
-            animateFight(ResourcesManager::instance().getTexture(PaperPaper), 453, 63, 3, tieP);
-            break;
-        case 'S':
-            animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3, tieS);
-            break;
-    }
-
-    auto warrior = m_user->getWarrior(m_user->getWarriorLocation());
-    warrior->get()->setWeapon(Undefined_t);
-
-    auto enemy = m_enemy->getWarrior(m_enemy->getWarriorLocation());
-    enemy->get()->setWeapon(Undefined_t);
-    m_turn = myTurn;
 }
 
 void Controller::animateWeapons() {
