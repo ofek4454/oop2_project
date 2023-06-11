@@ -31,7 +31,7 @@ public:
     void handleHover(const int row, const int col);
     const PlayerModel &getPlayerModel() const;
     bool isAnimating() const {return m_isAnimating;}
-
+    void setSelectedWarriorId(std::string id) { m_selectedWarriorId = id;}
     std::string getPlayerSymbol() {return m_playerSymbol;}
     void setPlayerSymbol(std::string s){m_playerSymbol=s;}
     void checkDeletion();

@@ -18,6 +18,7 @@ public:
     void draw();
     Location getLocation() const { return m_location; }
     void setLocation(Direction_t direction);
+    void setLocation(Location location) {m_location = location;}
     void setSpriteLocation(const sf::Vector2f &offset, const sf::Vector2f &shadowoffset);
     void setHighlighted(bool isHighlighted);
     void setMovingIntRect(int counter, bool isEnemy = false);

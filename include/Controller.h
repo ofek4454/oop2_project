@@ -48,11 +48,11 @@ private:
     Turn_t m_turn = P1;
     const Turn_t myTurn;
     bool m_isFinishUserTurn = false;
-    bool m_skip = false;
     bool m_playHoleAnimation = false;
     bool m_winner;
-    bool m_keepTurnAfterTie = false;
+    bool m_switchTurn = false;
     bool m_animatingWeapon = false;
+    bool m_meAttacked = false;
 
     // numbers
     int numLines;

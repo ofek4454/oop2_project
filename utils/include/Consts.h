@@ -110,6 +110,7 @@ enum EventType_t{
     FightSS,
     AttackingUndefined,
     HoleFall,
+    Test // TODO remove
 };
 
 enum Turn_t{
