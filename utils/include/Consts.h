@@ -109,7 +109,6 @@ enum EventType_t{
     FightPP,
     FightSS,
     AttackingUndefined,
-    NeedToResetLocation,
     HoleFall,
 };
 

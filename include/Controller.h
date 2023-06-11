@@ -48,9 +48,10 @@ private:
     Turn_t m_turn = P1;
     const Turn_t myTurn;
     bool m_isFinishUserTurn = false;
-    bool m_playHoleAniation = false;
+    bool m_skip = false;
+    bool m_playHoleAnimation = false;
     bool m_winner;
-    bool m_switchTurnAfterTie = false;
+    bool m_keepTurnAfterTie = false;
     bool m_animatingWeapon = false;
 
     // numbers
@@ -70,7 +71,6 @@ private:
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
     void updateLastMoveAndChangeTurn(bool changeTurn);
     void updateTieCase(std::string msg);
-    void updateWin();
     void handleClick(sf::Event::MouseButtonEvent *click);
     void handleTie();
     void animateWeapons();

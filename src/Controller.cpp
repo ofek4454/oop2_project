@@ -67,10 +67,6 @@ void Controller::run() {
                                 // attacker only
                                 handleTie();
                             }
-                            else if (RoomState::instance().getRoom().getLastMove().starts_with("Win")){
-                                m_turn = myTurn;
-                                EventLoop::instance().addEvent(Lose);
-                            }
                             else
                                 m_enemy->doTurn();
                         }
@@ -139,7 +135,7 @@ void Controller::handleAnimation() {
         animateWeapons();
     }
     m_referee.animate((Turn_t) !isMyTurn());
-    if (m_playHoleAniation) {
+    if (m_playHoleAnimation) {
         animateHole();
     }
     if (!m_user->isAnimating() && !m_enemy->isAnimating()) return;
@@ -178,32 +174,32 @@ void Controller::handleEvents() {
         auto event = EventLoop::instance().popEvent();
         switch (event.getEventType()) {
             case FightRP: {
-                updateLastMoveAndChangeTurn(!m_switchTurnAfterTie);
+                updateLastMoveAndChangeTurn(!m_keepTurnAfterTie);
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BluePR : RedPR), 980,
                              84, 7, winP);
-                m_switchTurnAfterTie = false;
+                m_keepTurnAfterTie = false;
                 break;
             }
             case FightRS: {
-                updateLastMoveAndChangeTurn(!m_switchTurnAfterTie);
+                updateLastMoveAndChangeTurn(!m_keepTurnAfterTie);
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueRS : RedRS), 994,
                              93, 7, winR);
-                m_switchTurnAfterTie = false;
+                m_keepTurnAfterTie = false;
                 break;
             }
             case FightPS:
-                updateLastMoveAndChangeTurn(!m_switchTurnAfterTie);
+                updateLastMoveAndChangeTurn(!m_keepTurnAfterTie);
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP), 900,
                              96, 6, winS);
-                m_switchTurnAfterTie = false;
+                m_keepTurnAfterTie = false;
                 break;
             case FightRR:
-                updateTieCase("tie R");
                 animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
+                updateTieCase("tie R");
                 break;
             case FightPP:
-                updateTieCase("tie P");
                 animateFight(ResourcesManager::instance().getTexture(PaperPaper), 453, 63, 3, tieP);
+                updateTieCase("tie P");
                 break;
             case FightSS:
                 updateTieCase("tie S");
@@ -215,14 +211,14 @@ void Controller::handleEvents() {
                 break;
             }
             case HoleFall: {
-                m_playHoleAniation = true;
+                m_playHoleAnimation = true;
                 if (event.getWinner() == P1Won) m_winner = P1;
                 else m_winner = P2;
                 updateLastMoveAndChangeTurn(true);
                 break;
             }
             case Won:{
-                updateWin();
+                updateLastMoveAndChangeTurn(true);
                 AfterGameScreen(true,m_user->getPlayerModel(),m_enemy->getPlayerModel(),myTurn);
                 // TODO raise flag to exit run loop
                 break;
@@ -396,15 +392,17 @@ void Controller::updateLastMoveAndChangeTurn(bool changeTurn) {
 
 void Controller::updateTieCase(std::string msg) {
     // attacked only
+//    warrior->get()->getWeapon()->get()->chooseWeapon();
     RoomState::instance().setLastMove(msg);
     RoomState::instance().changeTurn();
     m_turn = (Turn_t) !myTurn;
 
     auto warrior = m_user->getWarrior();
     warrior->get()->setWeapon(Undefined_t);
+
     auto enemy = m_enemy->getWarrior();
     enemy->get()->setWeapon(Undefined_t);
-    m_switchTurnAfterTie = true;
+    m_keepTurnAfterTie = true;
 }
 
 void Controller::handleTie() {
@@ -420,12 +418,24 @@ void Controller::handleTie() {
             animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3, tieS);
             break;
     }
-
+//    switch (lastMove[lastMove.size() - 1]) {
+//        case 'R':
+//            enemy->get()->setWeapon(Rock_t);
+//            break;
+//        case 'P':
+//            enemy->get()->setWeapon(Paper_t);
+//            break;
+//        case 'S':
+//            enemy->get()->setWeapon(Scissors_t);
+//            break;
+//    }
     auto warrior = m_user->getWarrior();
     warrior->get()->setWeapon(Undefined_t);
 
     auto enemy = m_enemy->getWarrior();
     enemy->get()->setWeapon(Undefined_t);
+
+
     m_turn = myTurn;
 }
 
@@ -548,17 +558,10 @@ void Controller::animateHole() {
         clock.restart();
         if (m_winner == P1) {
             if (userHole->setHoleIntRect())
-                m_playHoleAniation = false;
+                m_playHoleAnimation = false;
         } else {
             if (enemyHole->setHoleIntRect())
-                m_playHoleAniation = false;
+                m_playHoleAnimation = false;
         }
     }
 }
-
-void Controller::updateWin() {
-    RoomState::instance().setLastMove("Win");
-    RoomState::instance().changeTurn();
-    m_turn = (Turn_t) !myTurn;
-}
-
