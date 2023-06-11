@@ -49,7 +49,7 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
         return;
     }
 
-    if (warrior->get()->getLocation().row + 1 == location.row)
+    if      (warrior->get()->getLocation().row + 1 == location.row)
         m_direction = Down;
     else if (warrior->get()->getLocation().row - 1 == location.row)
         m_direction = Up;
@@ -63,6 +63,7 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
 
     if (last_move[last_move.size() - 1] != warrior->get()->getSymbol()[0]) {
         enteredOnce = true;
+
         switch (last_move[last_move.size() - 1]) {
             case 'R':
                 warrior->get()->setWeapon(Rock_t, false);
@@ -73,7 +74,7 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
             case 'P':
                 warrior->get()->setWeapon(Paper_t, false);
                 break;
-            case 'U':
+            case 'U': // NOT HAPPEN
                 warrior->get()->setWeapon(Undefined_t);
                 break;
         }
