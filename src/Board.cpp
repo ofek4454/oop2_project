@@ -45,7 +45,7 @@ void Board::print() {
 
 void Board::setFrames() {
     // board white frame
-    m_boardFrame[0].setSize(sf::Vector2f(RECT_SIZE * 8, RECT_SIZE * 8));
+    m_boardFrame[0].setSize(sf::Vector2f(RECT_SIZE * 8, RECT_SIZE * 6));
     m_boardFrame[0].setPosition(sf::Vector2f(m_matrix[0][0].getPosition().x - RECT_SIZE / 2,
                                              m_matrix[0][0].getPosition().y - RECT_SIZE / 2));
     m_boardFrame[0].setFillColor(sf::Color::Transparent);

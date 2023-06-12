@@ -69,7 +69,7 @@ void Weapon::chooseWeapon() {
 }
 
 void Weapon::initChooseBox() {
-    m_ChooseBoxRect.setSize(sf::Vector2f(RECT_SIZE * (BOARD_SIZE - 2), RECT_SIZE * (BOARD_SIZE - 2)));
+    m_ChooseBoxRect.setSize(sf::Vector2f(RECT_SIZE * (BOARD_SIZE - 2), RECT_SIZE * (ROWS - 2)));
     sf::Vector2f boxPos(BOARD_TOP_LEFT.left + RECT_SIZE, BOARD_TOP_LEFT.top + RECT_SIZE);
     m_ChooseBoxRect.setPosition(boxPos);
     m_ChooseBoxRect.setFillColor(sf::Color(sf::Color(181, 193, 105, 100)));
