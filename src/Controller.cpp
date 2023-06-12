@@ -8,8 +8,8 @@
 #include "exception"
 #include "cmath"
 
-Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerState> *p2, bool isMeP1) : m_window(
-        WindowManager::instance().getWindow()), m_user(p1->get()), m_enemy(p2->get()), myTurn(isMeP1 ? P1 : P2),
+Controller::Controller(PlayerModel p1, PlayerModel p2, bool isMeP1) : m_window(
+        WindowManager::instance().getWindow()), m_user(std::make_unique<UserState>(p1)), m_enemy(std::make_unique<EnemyState>(p2)), myTurn(isMeP1 ? P1 : P2),
                                                                                                           m_referee(
                                                                                                                   isMeP1
                                                                                                                   ? P1
@@ -57,7 +57,7 @@ void Controller::run() {
             [](auto key, auto exit) { return false; },
             [](auto type, auto exit) { return false; },
             [](auto offset, auto exit) { return false; },
-            [this](auto exit) {
+            [this](auto &exit) {
                 if (!isMyTurn() && !m_enemy->isAnimating()) {
                     static sf::Clock clock;
                     if (clock.getElapsedTime().asSeconds() > 0.2) {
@@ -67,9 +67,8 @@ void Controller::run() {
                                 // attacker only
                                 handleTie();
                             }
-                            else{
+                            else
                                 m_enemy->doTurn();
-                            }
                         }
                     }
                 }
@@ -79,6 +78,7 @@ void Controller::run() {
                     handleEvents();
                 }
                 print();
+                if(m_gameDone) exit = true;
             }
     );
 }
@@ -105,7 +105,6 @@ void Controller::print(bool printLoad) {
                              std::sin(angle) * (radius - line.getRadius()) + m_circle.getPosition().y);
             m_window->draw(line);
         }
-//        m_window->draw(m_shuffleButton);
         m_window->draw(m_countdown);
     }
     m_window->display();
@@ -127,7 +126,7 @@ void Controller::checkCollision() {
                 weapon_of_p2 = p2.second->getSymbol();
                 weapon_of_p1 = p1.second->getSymbol();
                 m_isFinishUserTurn = false;
-                p2.second->getWeapon()->get()->fight(**p1.second->getWeapon());
+                p2.second->getWeapon()->fight(*p1.second->getWeapon());
                 m_currentP1 = p1.second.get();
                 m_currentP2 = p2.second.get();
                 m_currentP1->setNeedToBeDraw(false);
@@ -166,7 +165,6 @@ void Controller::handleAnimation() {
             while (m_window->pollEvent(event));
             m_turn = (Turn_t) myTurn;
             if(m_switchTurn){
-                std::cout << "Switch\n";
                 m_switchTurn = false;
                 RoomState::instance().changeTurn();
                 m_turn = (Turn_t) !myTurn;
@@ -243,12 +241,12 @@ void Controller::handleEvents() {
             case Won:{
                 updateLastMoveAndChangeTurn(true);
                 AfterGameScreen(true,m_user->getPlayerModel(),m_enemy->getPlayerModel(),myTurn);
-                // TODO raise flag to exit run loop
+                m_gameDone = true;
                 break;
             }
             case Lose:{
                 AfterGameScreen(false,m_user->getPlayerModel(),m_enemy->getPlayerModel(),myTurn);
-                // TODO raise flag to exit run loop
+                m_gameDone = true;
                 break;
             }
             default:
@@ -259,8 +257,8 @@ void Controller::handleEvents() {
         if (event.getWinner() != Tie && event.getWinner() != NoneEvent) {
             m_currentP1->setNeedToBeDraw(true);
             m_currentP2->setNeedToBeDraw(true);
-            m_currentP1->getWeapon()->get()->setVisible(true);
-            m_currentP2->getWeapon()->get()->setVisible(true);
+            m_currentP1->getWeapon()->setVisible(true);
+            m_currentP2->getWeapon()->setVisible(true);
         }
     }
     m_user->checkDeletion();
@@ -352,13 +350,13 @@ void Controller::initGame() {
                 if (row < BOARD_SIZE - 2) return true;
                 if (!flagChoosed) {
                     if (m_user->setAsFlag(row, col)) {
-                        userFlag = m_user->getWarrior(Location(row, col))->get();
+                        userFlag = m_user->getWarrior(Location(row, col));
                         flagChoosed = true;
                     }
                 } else {
                     if (m_user->setAsHole(row, col)) {
                         exit = true;
-                        userHole = m_user->getWarrior(Location(row, col))->get();
+                        userHole = m_user->getWarrior(Location(row, col));
                     }
                 }
 
@@ -393,17 +391,17 @@ void Controller::initGame() {
     m_enemy->setAsFlag(flagLoc.row, flagLoc.col);
     m_enemy->setAsHole(holeLoc.row, holeLoc.col);
 
-    enemyFlag = m_enemy->getWarrior(flagLoc)->get();
-    enemyHole = m_enemy->getWarrior(holeLoc)->get();
+    enemyFlag = m_enemy->getWarrior(flagLoc);
+    enemyHole = m_enemy->getWarrior(holeLoc);
 
 }
 
 void Controller::updateLastMoveAndChangeTurn(bool changeTurn) {
     auto warrior = m_user->getWarrior();
-    RoomState::instance().setBoardCell(warrior->get()->getLocation(),
-                                       m_user->getPlayerSymbol() + warrior->get()->getSymbol());
-    RoomState::instance().setLastMove(warrior->get()->getId(), warrior->get()->getLocation(),
-                                      warrior->get()->getSymbol());
+    RoomState::instance().setBoardCell(warrior->getLocation(),
+                                       m_user->getPlayerSymbol() + warrior->getSymbol());
+    RoomState::instance().setLastMove(warrior->getId(), warrior->getLocation(),
+                                      warrior->getSymbol());
     if (true){
         RoomState::instance().changeTurn();
         m_turn = (Turn_t) !myTurn;
@@ -412,15 +410,15 @@ void Controller::updateLastMoveAndChangeTurn(bool changeTurn) {
 
 void Controller::updateTieCase(std::string msg) {
     // attacked only
-    RoomState::instance().setLastMove(msg,m_user->getWarrior()->get()->getLocation(),m_user->getWarrior()->get()->getId(),false);
+    RoomState::instance().setLastMove(msg,m_user->getWarrior()->getLocation(),m_user->getWarrior()->getId(),false);
     RoomState::instance().changeTurn();
     m_turn = (Turn_t) !myTurn;
 
     auto warrior = m_user->getWarrior();
-    warrior->get()->setWeapon(Undefined_t);
+    warrior->setWeapon(Undefined_t);
 
     auto enemy = m_enemy->getWarrior();
-    enemy->get()->setWeapon(Undefined_t);
+    enemy->setWeapon(Undefined_t);
 }
 
 void Controller::handleTie() {
@@ -438,14 +436,14 @@ void Controller::handleTie() {
     }
     std::string id = lastMove.substr(6,2);
     auto war = m_enemy->getWarrior(id);
-    war->get()->setLocation(Location(std::atoi(&lastMove[lastMove.size() - 3]),std::atoi(&lastMove[lastMove.size() - 1])));
-    m_enemy->setSelectedWarriorId(war->get()->getId());
+    war->setLocation(Location(std::atoi(&lastMove[lastMove.size() - 3]),std::atoi(&lastMove[lastMove.size() - 1])));
+    m_enemy->setSelectedWarriorId(war->getId());
 //    m_user->setSelectedWarriorId(war->get()->getId());
     auto warrior = m_user->getWarrior();
-    warrior->get()->setWeapon(Undefined_t);
+    warrior->setWeapon(Undefined_t);
 
     auto enemy = m_enemy->getWarrior();
-    enemy->get()->setWeapon(Undefined_t);
+    enemy->setWeapon(Undefined_t);
 
 
     m_turn = myTurn;
@@ -466,7 +464,7 @@ void Controller::LoadingGame() {
             warrior.second->getLocation() == userFlag->getLocation())
             continue;
         int randomNumber = std::rand() % 3;
-        warrior.second->getWeapon()->get()->setWeaponIntRect(arr[randomNumber]);
+        warrior.second->getWeapon()->setWeaponIntRect(arr[randomNumber]);
     }
 
     WindowManager::instance().eventHandler(
@@ -493,7 +491,7 @@ void Controller::LoadingGame() {
                             if (warrior.second->getLocation() == userHole->getLocation() ||
                                 warrior.second->getLocation() == userFlag->getLocation())
                                 continue;
-                            warrior.second->getWeapon()->get()->removeWeaponTexture();
+                            warrior.second->getWeapon()->removeWeaponTexture();
                         }
                         return;
                     }
@@ -504,7 +502,7 @@ void Controller::LoadingGame() {
                             warrior.second->getLocation() == userFlag->getLocation())
                             continue;
                         int randomNumber = std::rand() % 3;
-                        warrior.second->getWeapon()->get()->setWeaponIntRect(arr[randomNumber]);
+                        warrior.second->getWeapon()->setWeaponIntRect(arr[randomNumber]);
                     }
                 }
 
@@ -546,20 +544,13 @@ void Controller::animateWeapons() {
         auto time = clock.getElapsedTime().asSeconds();
         if (time > 0.04) {
             clock.restart();
-            if (ChosenWarrior->getWeapon()->get()->animateWeapon()) {
+            if (ChosenWarrior->getWeapon()->animateWeapon()) {
                 chose = false;
                 m_animatingWeapon = false;
                 ChosenWarrior->setTexture(true);
             }
 
         }
-
-//        for (auto &war: *m_enemy->getAllWarriors()) {
-//            auto weapon = war->getWeapon()->get();
-//            if (weapon->isVisible()) {
-//                weapon->animateWeapon();
-//            }
-//        }
     }
 }
 

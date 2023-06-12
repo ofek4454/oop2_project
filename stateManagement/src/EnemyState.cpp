@@ -29,11 +29,6 @@ void EnemyState::init() {
 
 
 void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
-//    static bool enteredOnce = false;
-//    if (enteredOnce) {
-//        enteredOnce = false;
-//        return;
-//    }
     std::string last_move = RoomState::instance().getRoom().getLastMove();
     if (last_move.empty()) {
         return;
@@ -45,38 +40,33 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
     auto location = extractLocation(ss.str());
 
     auto warrior = getWarrior();
-    if (warrior == NULL) {
-        std::cout << "warrior not found\n" << std::endl;
-        return;
-    }
+    if (warrior == NULL) return;
 
-    if (warrior->get()->getLocation().row + 1 == location.row)
+    if (warrior->getLocation().row + 1 == location.row)
         m_direction = Down;
-    else if (warrior->get()->getLocation().row - 1 == location.row)
+    else if (warrior->getLocation().row - 1 == location.row)
         m_direction = Up;
-    else if (warrior->get()->getLocation().col - 1 == location.col)
+    else if (warrior->getLocation().col - 1 == location.col)
         m_direction = Left;
-    else if (warrior->get()->getLocation().col + 1 == location.col)
+    else if (warrior->getLocation().col + 1 == location.col)
         m_direction = Right;
     else {
         m_direction = Non_Direction;
     }
 
-    if (last_move[last_move.size() - 1] != warrior->get()->getSymbol()[0]) {
-//        enteredOnce = true;
-
+    if (last_move[last_move.size() - 1] != warrior->getSymbol()[0]) {
         switch (last_move[last_move.size() - 1]) {
             case 'R':
-                warrior->get()->setWeapon(Rock_t, false);
+                warrior->setWeapon(Rock_t, false);
                 break;
             case 'S':
-                warrior->get()->setWeapon(Scissors_t, false);
+                warrior->setWeapon(Scissors_t, false);
                 break;
             case 'P':
-                warrior->get()->setWeapon(Paper_t, false);
+                warrior->setWeapon(Paper_t, false);
                 break;
             case 'U': // NOT HAPPEN
-                warrior->get()->setWeapon(Undefined_t);
+                warrior->setWeapon(Undefined_t);
                 break;
         }
     }
@@ -88,33 +78,32 @@ bool EnemyState::move() {
     static int shadowOffsetY = 4;
     auto warrior = getWarrior();
     if (warrior == NULL) {
-        std::cout << "null here\n";
         m_isAnimating = false;
         return true;
     }
     if (m_direction == Up)
-        warrior->get()->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset), sf::Vector2f(shadowOffsetX, shadowOffsetY));
+        warrior->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset), sf::Vector2f(shadowOffsetX, shadowOffsetY));
     else if (m_direction == Down)
-        warrior->get()->setSpriteLocation(sf::Vector2f(0, m_pixelOffset),
+        warrior->setSpriteLocation(sf::Vector2f(0, m_pixelOffset),
                                           sf::Vector2f(sf::Vector2f(shadowOffsetX * 0.5, -shadowOffsetY * 0.8)));
     else if (m_direction == Left)
-        warrior->get()->setSpriteLocation(sf::Vector2f(-m_pixelOffset, 0),
+        warrior->setSpriteLocation(sf::Vector2f(-m_pixelOffset, 0),
                                           sf::Vector2f(sf::Vector2f(-shadowOffsetX, 0)));
     else if (m_direction == Right)
-        warrior->get()->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0), sf::Vector2f(sf::Vector2f(shadowOffsetX, 0)));
+        warrior->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0), sf::Vector2f(sf::Vector2f(shadowOffsetX, 0)));
     else {
         m_isAnimating = false;
-        warrior->get()->setLocation(m_direction);
+        warrior->setLocation(m_direction);
         return true;
     }
 
-    warrior->get()->setMovingIntRect(imageCounter, true);
+    warrior->setMovingIntRect(imageCounter, true);
     imageCounter++;
     if (imageCounter == IMAGE_COUNT) {
         shadowOffsetX = -1;
         shadowOffsetY = 4;
         imageCounter = 0;
-        warrior->get()->setLocation(m_direction);
+        warrior->setLocation(m_direction);
         m_isAnimating = false;
         return true;
     }
