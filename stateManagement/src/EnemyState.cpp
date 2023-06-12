@@ -54,7 +54,7 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
         m_direction = Non_Direction;
     }
 
-    if (last_move[last_move.size() - 1] != warrior->get()->getSymbol()[0]) {
+    if (last_move[last_move.size() - 1] != warrior->getSymbol()[0]) {
 
         switch (last_move[last_move.size() - 1]) {
             case 'R':
