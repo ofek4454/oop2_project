@@ -13,11 +13,11 @@ public:
 
     sf::RenderWindow *getWindow() { return &m_window; }
 
-    void eventHandler(std::function<bool(sf::Event::MouseMoveEvent, bool exit)> moveHandler,
+    void eventHandler(std::function<bool(sf::Event::MouseMoveEvent, bool &exit)> moveHandler,
                       std::function<bool(sf::Event::MouseButtonEvent, bool &exit)> clickHandler,
                       std::function<bool(sf::Event::KeyEvent, bool &exit)> keyPressedHandler,
                       std::function<bool(sf::Event::TextEvent, bool &exit)> typeHandler,
-                      std::function<bool(int offset, bool &exit)> printScroll,
+                      std::function<bool(int offset, bool &exit)> scrollHandler,
                       std::function<void(bool &exit)> afterFunction);
 
 private:

@@ -23,9 +23,10 @@ public:
     bool setAsHole(const int row, const int col);
 
     virtual bool move() = 0;
-    std::unique_ptr<Warrior>* getWarrior() {return getWarrior(m_selectedWarriorId);};
-    std::unique_ptr<Warrior>* getWarrior(const std::string warrior_id);
-    std::unique_ptr<Warrior>* getWarrior(const Location location);
+    Warrior* getWarrior() {return getWarrior(m_selectedWarriorId);};
+    Warrior* getWarrior(const std::string warrior_id);
+    Warrior* getWarrior(const Location location);
+    Warrior* pickRandomWarrior();
 
     std::unordered_map<std::string,std::unique_ptr<Warrior>>* getAllWarriors() { return &m_warriors;}
     void handleHover(const int row, const int col);
@@ -35,7 +36,7 @@ public:
     std::string getPlayerSymbol() {return m_playerSymbol;}
     void setPlayerSymbol(std::string s){m_playerSymbol=s;}
     void checkDeletion();
-    Warrior* pickRandomWarrior();
+
 
 protected:
     std::unordered_map<std::string,std::unique_ptr<Warrior>> m_warriors;

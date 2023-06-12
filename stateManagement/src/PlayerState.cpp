@@ -9,15 +9,15 @@ void PlayerState::handleHover(const int row, const int col) {
     }
 }
 
-std::unique_ptr<Warrior> *PlayerState::getWarrior(const Location location){
+Warrior *PlayerState::getWarrior(const Location location){
     for(auto &warrior : m_warriors)
         if (warrior.second->getLocation() == location)
-            return &warrior.second;
+            return warrior.second.get();
     return NULL;
 }
 
-std::unique_ptr<Warrior> *PlayerState::getWarrior(const std::string warriorId){
-    return m_warriors.contains(warriorId) ? &m_warriors[warriorId] : NULL;
+Warrior *PlayerState::getWarrior(const std::string warriorId){
+    return m_warriors.contains(warriorId) ? m_warriors[warriorId].get() : NULL;
 }
 
 void PlayerState::checkDeletion() {
@@ -34,7 +34,7 @@ bool PlayerState::setAsFlag(const int row, const int col) {
     if(!warrior)
         return false;
 
-    auto isSet = warrior->get()->setAsFlag();
+    auto isSet = warrior->setAsFlag();
     if(isSet)
         RoomState::instance().setBoardCell(Location(row, col), m_playerSymbol + "F");
     return isSet;
@@ -46,16 +46,16 @@ bool PlayerState::setAsHole(const int row, const int col) {
         return false;
     }
 
-    auto isSet = warrior->get()->setAsHole();
+    auto isSet = warrior->setAsHole();
     if(isSet)
         RoomState::instance().setBoardCell(Location(row, col), m_playerSymbol + "H");
     return isSet;
 }
 
-Warrior *PlayerState::pickRandomWarrior() {
+Warrior* PlayerState::pickRandomWarrior() {
     std::vector<Warrior*> tempVector;
     for(auto& warrior : m_warriors){
-        if(warrior.second->getWeapon()->get()->isVisible()){
+        if(warrior.second->getWeapon()->isVisible()){
             tempVector.push_back(warrior.second.get());
         }
     }

@@ -63,6 +63,9 @@ void AfterGameScreen::playLosingAnimation() {
                 return false;
             },
             [this](auto key, auto &exit) {
+                if(key.code == sf::Keyboard::Escape){
+                    exit = true;
+                }
                 return false;
             },
             [](auto type, auto exit) { return false; },

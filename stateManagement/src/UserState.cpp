@@ -55,7 +55,7 @@ void UserState::doTurn(sf::Event::MouseButtonEvent *click) {
         auto availableLocations = checkAvailableLocations(Location(row, col));
         if (availableLocations != NULL) {
             setArrows(availableLocations, Location(row, col), true);
-            m_selectedWarriorId = getWarrior(Location(row, col))->get()->getId();
+            m_selectedWarriorId = getWarrior(Location(row, col))->getId();
             m_playerChose = true;
         }
     }
@@ -133,22 +133,22 @@ bool UserState::move() {
     }
 
     if (m_direction == Up)
-        warrior->get()->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset),sf::Vector2f(shadowOffsetX, shadowOffsetY));
+        warrior->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset),sf::Vector2f(shadowOffsetX, shadowOffsetY));
     else if (m_direction == Down)
-        warrior->get()->setSpriteLocation(sf::Vector2f(0, m_pixelOffset),sf::Vector2f(sf::Vector2f(shadowOffsetX * 0.5, -shadowOffsetY * 0.8)));
+        warrior->setSpriteLocation(sf::Vector2f(0, m_pixelOffset),sf::Vector2f(sf::Vector2f(shadowOffsetX * 0.5, -shadowOffsetY * 0.8)));
     else if (m_direction == Left)
-        warrior->get()->setSpriteLocation(sf::Vector2f(-m_pixelOffset, 0),sf::Vector2f(sf::Vector2f(-shadowOffsetX, 0)));
+        warrior->setSpriteLocation(sf::Vector2f(-m_pixelOffset, 0),sf::Vector2f(sf::Vector2f(-shadowOffsetX, 0)));
     else if (m_direction == Right)
-        warrior->get()->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0),sf::Vector2f(sf::Vector2f(shadowOffsetX, 0)));
+        warrior->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0),sf::Vector2f(sf::Vector2f(shadowOffsetX, 0)));
 
-    warrior->get()->setMovingIntRect(imageCounter);
+    warrior->setMovingIntRect(imageCounter);
     imageCounter++;
     if(imageCounter == IMAGE_COUNT){
-        auto oldLocation = warrior->get()->getLocation();
-        warrior->get()->setLocation(m_direction);
+        auto oldLocation = warrior->getLocation();
+        warrior->setLocation(m_direction);
         RoomState::instance().setBoardCell(oldLocation, "");
-        RoomState::instance().setBoardCell(warrior->get()->getLocation(), m_playerSymbol+warrior->get()->getSymbol());
-        RoomState::instance().setLastMove(warrior->get()->getId(), warrior->get()->getLocation(), warrior->get()->getSymbol());
+        RoomState::instance().setBoardCell(warrior->getLocation(), m_playerSymbol+warrior->getSymbol());
+        RoomState::instance().setLastMove(warrior->getId(), warrior->getLocation(), warrior->getSymbol());
 
         shadowOffsetX = -1;
         shadowOffsetY = 4;
@@ -169,7 +169,7 @@ bool UserState::move() {
 
 bool *UserState::checkAvailableLocations(Location location) {
     auto warrior = getWarrior(location);
-    if (warrior == NULL || !warrior->get()->canMove())
+    if (warrior == NULL || !warrior->canMove())
         return nullptr;
 
     bool *locations = new bool[4];

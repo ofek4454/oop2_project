@@ -13,7 +13,7 @@
 class Controller {
 public:
     // C-Tor
-    Controller(std::unique_ptr<PlayerState>* p1,std::unique_ptr<PlayerState>* p2, bool isMeP1) ;
+    Controller(PlayerModel p1, PlayerModel p2, bool isMeP1) ;
     // D-Tor
     ~Controller() = default;
     // function
@@ -38,11 +38,11 @@ private:
     Warrior* m_currentP1 = nullptr;
     Warrior* m_currentP2 = nullptr;
     Referee m_referee;
-    Warrior *userHole;
-    Warrior *enemyHole;
-    Warrior *userFlag;
-    Warrior *enemyFlag;
-    Warrior *ChosenWarrior;
+    Warrior* userHole;
+    Warrior* enemyHole;
+    Warrior* userFlag;
+    Warrior* enemyFlag;
+    Warrior* ChosenWarrior;
 
     // booleans
     Turn_t m_turn = P1;
@@ -53,6 +53,7 @@ private:
     bool m_switchTurn = false;
     bool m_animatingWeapon = false;
     bool m_meAttacked = false;
+    bool m_gameDone = false;
 
     // numbers
     int numLines;

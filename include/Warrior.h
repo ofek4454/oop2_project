@@ -14,7 +14,7 @@ class Warrior {
 public:
     Warrior(const std::string id, const sf::Vector2f pos, bool isMine, Location location);
     ~Warrior() = default;
-    std::unique_ptr<Weapon> *getWeapon() { return &m_weapon; }
+    Weapon *getWeapon() { return m_weapon.get(); }
     void draw();
     Location getLocation() const { return m_location; }
     void setLocation(Direction_t direction);
