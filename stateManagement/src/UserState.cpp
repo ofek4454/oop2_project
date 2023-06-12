@@ -10,16 +10,16 @@ UserState::UserState(PlayerModel &player) : PlayerState(player){
 
 void UserState::init() {
     float x = BOARD_TOP_LEFT.left + RECT_SIZE/2;
-    float y = BOARD_TOP_LEFT.top + RECT_SIZE*7 - 30 + RECT_SIZE/2;
+    float y = BOARD_TOP_LEFT.top + RECT_SIZE*5 - 30 + RECT_SIZE/2;
 
-    int row = 7, col = 0;
+    int row = 5, col = 0;
     for (int i = 0; i < BOARD_SIZE * 2; i++, col++) {
         if (i == BOARD_SIZE) {
             row--;
             col = 0;
         }
         std::string warriorId = m_playerSymbol == "1" ? std::to_string(row) + std::to_string(col)
-                                                      : std::to_string(BOARD_SIZE -1 - row) + std::to_string(BOARD_SIZE-1-col);
+                                                      : std::to_string(ROWS -1 - row) + std::to_string(BOARD_SIZE-1-col);
         m_warriors[warriorId] = std::make_unique<Warrior>(warriorId, sf::Vector2f(x, y), true, Location(row, col));
         x += RECT_SIZE;
         if (i == BOARD_SIZE - 1) {

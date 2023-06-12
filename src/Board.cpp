@@ -5,7 +5,7 @@ Board::Board() {
 
     float x = BOARD_FRAME.left;
     float y = BOARD_FRAME.top;
-    for (int i = 0; i < BOARD_SIZE; i++) {
+    for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             auto rect = sf::RectangleShape();
             rect.setSize(sf::Vector2f(RECT_SIZE, RECT_SIZE));

@@ -347,7 +347,7 @@ void Controller::initGame() {
                 sf::FloatRect rect_pos = BOARD_TOP_LEFT;
                 int row = (click.y - rect_pos.top) / rect_pos.height;
                 int col = (click.x - rect_pos.left) / rect_pos.width;
-                if (row < BOARD_SIZE - 2) return true;
+                if (row < BOARD_SIZE - 4) return true;
                 if (!flagChoosed) {
                     if (m_user->setAsFlag(row, col)) {
                         userFlag = m_user->getWarrior(Location(row, col));
@@ -382,10 +382,10 @@ void Controller::initGame() {
     m_turn = P1;
 
     Location flagLoc = myTurn == P1 ? opponentFlagAndHole.first
-                                    : Location(BOARD_SIZE - opponentFlagAndHole.first.row - 1,
+                                    : Location(ROWS - opponentFlagAndHole.first.row - 1,
                                                BOARD_SIZE - opponentFlagAndHole.first.col - 1);
     Location holeLoc = myTurn == P1 ? opponentFlagAndHole.second
-                                    : Location(BOARD_SIZE - opponentFlagAndHole.second.row - 1,
+                                    : Location(ROWS - opponentFlagAndHole.second.row - 1,
                                                BOARD_SIZE - opponentFlagAndHole.second.col - 1);
 
     m_enemy->setAsFlag(flagLoc.row, flagLoc.col);
@@ -435,7 +435,7 @@ void Controller::handleTie() {
     std::string id = lastMove.substr(6, 2);
 
     int row = myTurn == P1 ? std::atoi(&lastMove[lastMove.size() - 3])
-                           : BOARD_SIZE-1- std::atoi(&lastMove[lastMove.size() - 3]);
+                           : ROWS-1- std::atoi(&lastMove[lastMove.size() - 3]);
 
     int col = myTurn == P1 ? std::atoi(&lastMove[lastMove.size() - 1])
                            : BOARD_SIZE-1- std::atoi(&lastMove[lastMove.size() - 1]);

@@ -6,7 +6,7 @@ void RoomState::createRoom(PlayerModel &creator) {
         for (int i = 0; i < BOARD_SIZE; i++)
             room.board[row][i] = "2U";
 
-    for (int row = BOARD_SIZE - 2; row < BOARD_SIZE; row++)
+    for (int row = ROWS - 2; row < ROWS; row++)
         for (int i = 0; i < BOARD_SIZE; i++)
             room.board[row][i] = "1U";
 
@@ -46,7 +46,7 @@ bool RoomState::isOpponentJoined() {
 
 void RoomState::setBoardCell(Location loc, std::string str) {
     if (m_isMeP1) room.board[loc.row][loc.col] = str;
-    else room.board[BOARD_SIZE - loc.row - 1][BOARD_SIZE - loc.col - 1] = str;
+    else room.board[ROWS - loc.row - 1][BOARD_SIZE - loc.col - 1] = str;
 }
 
 void RoomState::upload() {
@@ -67,7 +67,7 @@ std::pair<Location, Location> RoomState::getOpponentFlagAndHole() {
     Location location;
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
-            location = m_isMeP1 ? Location(i, j) : Location(BOARD_SIZE - i - 1, BOARD_SIZE - j - 1);
+            location = m_isMeP1 ? Location(i, j) : Location(ROWS - i - 1, BOARD_SIZE - j - 1);
             if (tmpRoom.board[location.row][location.col] == flagStr)
                 flag = Location(location.row, location.col);
             else if (tmpRoom.board[location.row][location.col] == holeStr)
@@ -83,8 +83,8 @@ Turn_t RoomState::getTurn() {
 }
 
 void RoomState::uploadFlagAndHole() {
-    int row1 = m_isMeP1 ? BOARD_SIZE - 1 : 0;
-    int row2 = m_isMeP1 ? BOARD_SIZE - 2 : 1;
+    int row1 = m_isMeP1 ? ROWS - 1 : 0;
+    int row2 = m_isMeP1 ? ROWS - 2 : 1;
     RoomService::setFlagAndHole(room, row1, row2);
 }
 
@@ -95,7 +95,7 @@ void RoomState::setLastMove(std::string warriorId, Location location, std::strin
     if (m_isMeP1)
         move += std::to_string(location.row) + "," + std::to_string(location.col);
     else
-        move += std::to_string(BOARD_SIZE - location.row - 1) + "," +
+        move += std::to_string(ROWS - location.row - 1) + "," +
                 std::to_string(BOARD_SIZE - location.col - 1);
 
     move += " , " + weapon;
@@ -108,7 +108,7 @@ void RoomState::setLastMove(std::string last_move , Location location,std::strin
     if (m_isMeP1)
         move += std::to_string(location.row) + "," + std::to_string(location.col);
     else
-        move += std::to_string(BOARD_SIZE - location.row - 1) + "," +
+        move += std::to_string(ROWS - location.row - 1) + "," +
                 std::to_string(BOARD_SIZE - location.col - 1);
 
     room.enemyLastMove = move;

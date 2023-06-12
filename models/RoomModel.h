@@ -69,7 +69,7 @@ private:
     std::string creator_uid;
     std::string player2_uid;
     std::vector<std::string> watchers_uids;
-    std::array<std::array<std::string, BOARD_SIZE>,BOARD_SIZE> board;
+    std::array<std::array<std::string, BOARD_SIZE>,ROWS> board;
     Turn_t turn;
     std::string enemyLastMove = "";
 
