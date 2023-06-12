@@ -46,4 +46,8 @@ configure_file ("arrow.png" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
 configure_file ("AlfaSlabOne-Regular.ttf" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
 configure_file ("button.png" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
 configure_file ("exit.png" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
+configure_file ("Help-Page1.png" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
+configure_file ("Help-Page2.png" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
+configure_file ("Help-Page3.png" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
+configure_file ("Help-Page4.png" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
 
