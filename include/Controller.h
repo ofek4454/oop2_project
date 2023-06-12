@@ -70,9 +70,8 @@ private:
     void handleHover(sf::Event::MouseMoveEvent &click);
     void handleAnimation();
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
-    void updateLastMoveAndChangeTurn(bool changeTurn);
+    void updateLastMoveAndChangeTurn();
     void updateTieCase(std::string msg);
-    void handleClick(sf::Event::MouseButtonEvent *click);
     void handleTie();
     void animateWeapons();
     void animateHole();

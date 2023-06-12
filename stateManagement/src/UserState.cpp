@@ -129,7 +129,7 @@ bool UserState::move() {
 
     auto warrior = getWarrior();
     if(warrior == NULL){
-        return  true;
+        return true;
     }
 
     if (m_direction == Up)
