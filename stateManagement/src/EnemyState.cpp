@@ -29,16 +29,13 @@ void EnemyState::init() {
 
 
 void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
-//    static bool enteredOnce = false;
-//    if (enteredOnce) {
-//        enteredOnce = false;
-//        return;
-//    }
     std::string last_move = RoomState::instance().getRoom().getLastMove();
     if (last_move.empty()) {
+        std::cout << "is empty\n";
         return;
     }
     m_isAnimating = true;
+    std::cout << "is animating enemy\n";
     std::stringstream ss(last_move);
 
     ss >> m_selectedWarriorId;
@@ -63,7 +60,6 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
     }
 
     if (last_move[last_move.size() - 1] != warrior->get()->getSymbol()[0]) {
-//        enteredOnce = true;
 
         switch (last_move[last_move.size() - 1]) {
             case 'R':

@@ -25,10 +25,7 @@ Controller::Controller(std::unique_ptr<PlayerState> *p1, std::unique_ptr<PlayerS
     m_circle.setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775 + ((WINDOW_HEIGHT * 0.95 - WINDOW_HEIGHT * 0.775)) + 10,
                                       WINDOW_HEIGHT * 0.685 - radius +
                                       (WINDOW_HEIGHT * 0.95 - WINDOW_HEIGHT * 0.685 + 10)));
-//    m_shuffleButton.setSize(sf::Vector2f(WINDOW_WIDTH * 0.19, WINDOW_HEIGHT * 0.1));
-//    m_shuffleButton.setTexture(ResourcesManager::instance().getTexture(ShuffleButton));
-//    m_shuffleButton.setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775 + 10,
-//                                             WINDOW_HEIGHT * 0.355 - m_shuffleButton.getGlobalBounds().height - 10));
+
     m_user->setPlayerSymbol(isMeP1 ? "1" : "2");
     m_enemy->setPlayerSymbol(!isMeP1 ? "1" : "2");
     m_user->init();
@@ -186,6 +183,7 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
 
 void Controller::handleEvents() {
     if (m_isFinishUserTurn && !EventLoop::instance().hasEvent()) {
+        std::cout << "is finish and not events\n";
         RoomState::instance().changeTurn();
         m_turn = (Turn_t) !myTurn;
         m_isFinishUserTurn = false;
@@ -379,7 +377,7 @@ void Controller::initGame() {
         if (clock.getElapsedTime().asSeconds() < 1) continue;
         clock.restart();
         opponentFlagAndHole = RoomState::instance().getOpponentFlagAndHole();
-    } while (opponentFlagAndHole.first == Location(-1, -1));
+    } while (opponentFlagAndHole.first == Location(-1, -1) && opponentFlagAndHole.second == Location(-1, -1));
 
     m_turn = P1;
 

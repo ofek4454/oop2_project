@@ -45,6 +45,7 @@ void UserState::doTurn(sf::Event::MouseButtonEvent *click) {
         setArrows();
         m_playerChose = false;
         if (m_direction != Non_Direction){ // finish turn
+            std::cout << "m_animating user = true\n";
             m_isAnimating = true;
         }
     }
@@ -127,8 +128,9 @@ bool UserState::move() {
     static int shadowOffsetY = 4;
 
     auto warrior = getWarrior();
-    if(warrior == NULL)
-        return true;
+    if(warrior == NULL){
+        return  true;
+    }
 
     if (m_direction == Up)
         warrior->get()->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset),sf::Vector2f(shadowOffsetX, shadowOffsetY));
