@@ -6,6 +6,8 @@
 #include "Controller.h"
 #include "../screens/include/SettingsScreen.h"
 #include "SoundFlip.h"
+#include "EnterNameScreen.h"
+#include "HelpScreen.h"
 
 class Menu{
 public:

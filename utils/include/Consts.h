@@ -7,33 +7,22 @@ const float WINDOW_WIDTH = sf::VideoMode::getDesktopMode().width * 0.75;
 const float WINDOW_HEIGHT = sf::VideoMode::getDesktopMode().height * 0.75;
 
 const int NUM_OF_TEXTURES = 24;
+const int NUM_OF_HELP_SCREEN_PAGES = 4;
 
 // Board Size
-
 const int NUMBER_OF_SOUNDS = 16;
-
 const int MENU_BUTTONS = 5;
-
 const int IMAGE_COUNT = 25;
-
 const int FALL_IMAGE_COUNT = 10;
-
 const int BOARD_SIZE = 8;
-
 const float RECT_SIZE = (std::min(WINDOW_WIDTH,WINDOW_HEIGHT) * 0.7) / BOARD_SIZE;
-
 const int IMAGE_WIDTH = 480 / 3;
-
 const int IMAGE_HEIGHT = 1260 / 5;
-
 const int MOVING_ANIMATION_ARR[IMAGE_COUNT] = {0, 0,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH * 2, IMAGE_WIDTH * 2,
                         IMAGE_WIDTH * 2, IMAGE_WIDTH * 2,IMAGE_WIDTH * 2, IMAGE_WIDTH * 2,IMAGE_WIDTH * 2,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,IMAGE_WIDTH,0,0};
 
-
 const sf::FloatRect BOARD_FRAME((WINDOW_WIDTH * 0.775 - BOARD_SIZE * RECT_SIZE) / 2 + RECT_SIZE / 2, WINDOW_HEIGHT / 2 - RECT_SIZE * (BOARD_SIZE / 2) + RECT_SIZE / 2,RECT_SIZE * 8,RECT_SIZE * 8);
-
 const sf::FloatRect BOARD_TOP_LEFT(BOARD_FRAME.left - RECT_SIZE/2 ,BOARD_FRAME.top - RECT_SIZE/2 ,RECT_SIZE,RECT_SIZE);
-
 
 enum Weapons_t{
     Rock_t,

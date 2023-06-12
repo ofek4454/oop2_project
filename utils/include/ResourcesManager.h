@@ -18,12 +18,14 @@ public:
     void pauseBackgroundMusic();
     bool isBGMusicPlaying();
     sf::Texture *getSoundButton(const int loc);
+    sf::Texture* getHelpScreenPages();
 
 private:
     ResourcesManager();
     sf::Sound m_sounds[NUMBER_OF_SOUNDS];
     sf::SoundBuffer m_sounds_buffs[NUMBER_OF_SOUNDS];
     sf::Texture m_texture[NUM_OF_TEXTURES];
+    sf::Texture m_helpScreenPages[NUM_OF_HELP_SCREEN_PAGES];
     sf::RectangleShape m_background;
     sf::Music m_backgroundMusic;
     sf::Font m_font;

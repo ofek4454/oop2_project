@@ -1,5 +1,4 @@
 #include "Menu.h"
-#include "../screens/include/EnterNameScreen.h"
 
 Menu::Menu() : m_window(WindowManager::instance().getWindow()) {
     ResourcesManager::instance().playBackgroundMusic();
@@ -81,6 +80,7 @@ void Menu::handleClick(sf::Event::MouseButtonEvent &click) {
                     break;
                 }
                 case 3: {
+                    HelpScreen();
                     break;
                 }
                 case 4: {
