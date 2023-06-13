@@ -29,7 +29,7 @@ private:
     //members
     int m_volume, m_BGMVolume;
 
-    bool m_fxsound,m_music;
+    bool m_fxSound,m_music;
 
     // private function
     void load_settings();

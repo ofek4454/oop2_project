@@ -342,6 +342,7 @@ void Controller::initGame() {
                 return false;
             },
             [this, &flagChoosed](auto click, auto &exit) {
+                SoundFlip::instance().checkIfContains(click);
                 if (!BOARD_FRAME.contains(click.x, click.y)) return true;
                 sf::FloatRect rect_pos = BOARD_TOP_LEFT;
                 int row = (click.y - rect_pos.top) / rect_pos.height;
