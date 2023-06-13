@@ -32,16 +32,15 @@ AfterGameScreen::AfterGameScreen(bool isMeWon, PlayerModel userModel, PlayerMode
     m_text.setFont(*ResourcesManager::instance().getFont());
     m_text.setString(text);
     m_text.setCharacterSize(H1);
-    m_text.setPosition(sf::Vector2f(WINDOW_WIDTH / 2 - m_text.getGlobalBounds().width / 2, WINDOW_HEIGHT * 0.2));
+    m_text.setPosition(sf::Vector2f(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 0.2));
+    m_text.setOrigin(m_text.getGlobalBounds().width/2,m_text.getGlobalBounds().height/2);
     m_text.setOutlineThickness(2);
     m_text.setOutlineColor(sf::Color::Black);
     m_rematchText.setFont(*ResourcesManager::instance().getFont());
     m_rematchText.setString("Rematch?");
     m_rematchText.setCharacterSize(H2);
-    m_rematchText.setOrigin(
-            sf::Vector2f(m_rematchText.getGlobalBounds().width / 2, m_rematchText.getGlobalBounds().height / 2));
-    m_rematchText.setPosition(
-            sf::Vector2f(WINDOW_WIDTH / 2 - m_rematchText.getGlobalBounds().width / 2, WINDOW_HEIGHT * 0.8));
+    m_rematchText.setPosition(WINDOW_WIDTH/2, WINDOW_HEIGHT * 0.7);
+    m_rematchText.setOrigin(m_rematchText.getGlobalBounds().width / 2, m_rematchText.getGlobalBounds().height / 2);
     m_rematchText.setOutlineThickness(2);
     m_rematchText.setOutlineColor(sf::Color::Black);
     m_originalCursor.loadFromSystem(sf::Cursor::Arrow);
@@ -55,19 +54,16 @@ AfterGameScreen::AfterGameScreen(bool isMeWon, PlayerModel userModel, PlayerMode
     for (auto &txt: m_yesNoTexts) {
         txt.setFont(*ResourcesManager::instance().getFont());
         txt.setCharacterSize(H3);
-        txt.setOrigin(
-                sf::Vector2f(txt.getGlobalBounds().width / 2, txt.getGlobalBounds().height / 2));
-        txt.setPosition(sf::Vector2f(
-                m_rematchText.getPosition().x,
-                m_rematchText.getPosition().y + m_rematchText.getGlobalBounds().height + txt.getGlobalBounds().height));
+        txt.setPosition(m_rematchText.getPosition().x,
+                        m_rematchText.getPosition().y + m_rematchText.getGlobalBounds().height*2);
+        txt.setOrigin(txt.getGlobalBounds().width / 2, txt.getGlobalBounds().height / 2);
         txt.setOutlineThickness(2);
         txt.setOutlineColor(sf::Color::Black);
     }
-    m_yesNoTexts[0].move(WINDOW_WIDTH * -0.1,0);
-    m_yesNoTexts[1].move(WINDOW_WIDTH * 0.1,0);
+    m_yesNoTexts[0].move(-m_rematchText.getGlobalBounds().width,0);
+    m_yesNoTexts[1].move(m_rematchText.getGlobalBounds().width,0);
 
     playLosingAnimation();
-
 }
 
 void AfterGameScreen::playLosingAnimation() {
@@ -135,22 +131,26 @@ void AfterGameScreen::print() {
 }
 
 void AfterGameScreen::handleHover(sf::Event::MouseMoveEvent &event) {
-    if (m_rematchText.getGlobalBounds().contains(event.x, event.y)) {
-        m_rematchText.setScale(1.1, 1.1);
-        m_window->setMouseCursor(m_clickable);
-    } else {
-        m_rematchText.setScale(1, 1);
-        m_window->setMouseCursor(m_originalCursor);
+    bool hover = false;
+    for(auto btn : m_yesNoTexts){
+        if (btn.getGlobalBounds().contains(event.x, event.y)) {
+            btn.setScale(1.1, 1.1);
+            m_window->setMouseCursor(m_clickable);
+            hover = true;
+        } else {
+            btn.setScale(1, 1);
+        }
     }
+    m_window->setMouseCursor(hover ? m_clickable : m_originalCursor);
 }
 
 void AfterGameScreen::handleClick(sf::Event::MouseButtonEvent &event, bool &exit) {
-    bool rematch;
     if (m_yesNoTexts[0].getGlobalBounds().contains(event.x, event.y)) {
         RoomState::instance().wantToRematch(true);
         m_waitingForOpponent = true;
         m_text.setString("Waiting For Opponent..");
-        m_text.setOrigin(sf::Vector2f(m_text.getGlobalBounds().width / 2,m_text.getGlobalBounds().height / 2));
+        m_text.setPosition(WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
+        m_text.setOrigin(m_text.getGlobalBounds().width / 2,m_text.getGlobalBounds().height / 2);
     }
     if (m_yesNoTexts[1].getGlobalBounds().contains(event.x, event.y)) {
         RoomState::instance().wantToRematch(false);
