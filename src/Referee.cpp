@@ -18,20 +18,25 @@ Referee::Referee(Turn_t turn) : m_window(WindowManager::instance().getWindow()) 
 
 void Referee::animate(Turn_t turn) {
     static sf::Clock clock;
-    if(turn == m_turn) return;
 
     if(clock.getElapsedTime().asSeconds() < 0.15)
         return;
     clock.restart();
+
     m_rect += (turn == P1) ? -241.5 : 241.5;
+    if(m_rect < 0) m_rect = 0;
+    if(m_rect > 724.5) m_rect = 724.5;
+
     m_sprite.setTextureRect(sf::IntRect(m_rect, 0, 241.5, 164));
 
     if (m_rect <= 0 && turn == P1) {
-        ResourcesManager::instance().playSound(blueTurn);
+        if(turn != m_turn)
+            ResourcesManager::instance().playSound(blueTurn);
         m_turn = turn;
     }
     else if (m_rect >= 724.5 && turn == P2) {
-        ResourcesManager::instance().playSound(redTurn);
+        if(turn != m_turn)
+            ResourcesManager::instance().playSound(redTurn);
         m_turn = turn;
     }
 }
