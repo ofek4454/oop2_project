@@ -151,6 +151,6 @@ void RoomState::resetRoom() {
 }
 
 bool RoomState::isRoomReset() {
-    auto tmpRoom = RoomService::getRoom(room.roomId);
-    return tmpRoom.board[0][0] == "1";
+    room = RoomService::getRoom(room.roomId);
+    return room.board[0][0] == "1";
 }

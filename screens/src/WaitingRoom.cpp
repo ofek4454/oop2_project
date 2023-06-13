@@ -45,6 +45,7 @@ void WaitingRoom::waitForOpponent() {
                         enemy = UserService::getUser(RoomState::instance().getRoom().player2Uid());
                         do{
                             Controller controller(p, enemy, true);
+                            if(!EventLoop::instance().hasEvent()) break;
                             RoomState::instance().resetRoom();
                         }while(EventLoop::instance().hasEvent() && (EventLoop::instance().popEvent().getEventType() == Rematch));
                         exit = true;

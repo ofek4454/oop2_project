@@ -4,6 +4,7 @@
 
 #include "../include/EnterNameScreen.h"
 #include "../include/AvailableRooms.h"
+#include "ErrorScreen.h"
 
 EnterNameScreen::EnterNameScreen(Mode_t mode) : m_mode(mode) , m_window(WindowManager::instance().getWindow()) , m_name(""){
     init();
@@ -33,13 +34,30 @@ void EnterNameScreen::handleEvents() {
             [this](auto key, auto &exit) {
                 if(key.code == sf::Keyboard::Escape){ exit = true; }
                 if(key.code == sf::Keyboard::Enter){
-                    auto user = UserService::createUser(m_name);
-                    if(m_mode == Create){
-                        RoomState::instance().createRoom(user);
-                        WaitingRoom(PlayerModel(user));
+                    if(m_name.empty()) return true;
+
+                    try{
+                        auto user = UserService::createUser(m_name);
+
+                        if(m_mode == Create){
+                            RoomState::instance().createRoom(user);
+                            WaitingRoom(PlayerModel(user));
+                            exit = true;
+                        } else {
+                            AvailableRooms(PlayerModel(user));
+                            exit = true;
+                        }
+                    }catch(HttpException &e) {
+                        std::cerr << e.what() << std::endl;
+                        ErrorScreen(e.what());
                         exit = true;
-                    } else {
-                        AvailableRooms(PlayerModel(user));
+                    } catch (json::exception &e) {
+                        std::cerr << e.what() << std::endl;
+                        ErrorScreen(e.what());
+                        exit = true;
+                    }catch (...){
+                        std::cerr << "Unknown exception was caught!" << std::endl;
+                        ErrorScreen("Unknown exception was caught!");
                         exit = true;
                     }
                 }
@@ -54,7 +72,7 @@ void EnterNameScreen::handleEvents() {
                 return false;
             },
             [this](auto type, auto exit) {
-                if (type.unicode == '\b')
+                if (!std::isalnum(type.unicode) && type.unicode != ' ')
                     return true;
                 if (m_name.size() < 20)
                     m_name += type.unicode;

@@ -3,7 +3,7 @@
 
 namespace RoomService {
 
-    json createRoom(RoomModel &room, std::string creator_name) {
+    json createRoom(RoomModel &room, const std::string &creator_name) {
         auto response = HttpRequestsManager::instance().postRequest(room.toJson(), BASE_URL + "/rooms.json");
         std::string roomId = response["name"];
         json data;
@@ -18,12 +18,12 @@ namespace RoomService {
         return response;
     }
 
-    json deleteRoom(std::string roomId) {
+    json deleteRoom(const std::string &roomId) {
         auto response = HttpRequestsManager::instance().deleteRequest(BASE_URL + "/rooms/" + roomId + ".json");
         return response;
     }
 
-    RoomModel getRoom(std::string roomId) {
+    RoomModel getRoom(const std::string &roomId) {
         auto response = HttpRequestsManager::instance().getRequest(BASE_URL + "/rooms/" + roomId + ".json");
         return RoomModel::fromJson(roomId, response);
     }
@@ -33,7 +33,7 @@ namespace RoomService {
         return response;
     }
 
-    json deleteAvailableRoom(std::string roomId) {
+    json deleteAvailableRoom(const std::string &roomId) {
         auto response = HttpRequestsManager::instance().deleteRequest(BASE_URL + "/available_rooms/" + roomId + ".json");
         return response;
     }
@@ -46,7 +46,7 @@ namespace RoomService {
         return response;
     }
 
-    json updateRematch(std::string roomId,std::string wantToRematch,int cell){
+    json updateRematch(const std::string &roomId, const std::string &wantToRematch,int cell){
         std::string url = BASE_URL + "/rooms/" + roomId + "/board/0/" + std::to_string(cell) + ".json";
         auto response = HttpRequestsManager::instance().putRequest(wantToRematch,url);
         return response;

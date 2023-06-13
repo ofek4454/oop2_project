@@ -21,10 +21,12 @@ private:
     std::unordered_map<std::string,std::string> availableRooms;
     std::vector<sf::RectangleShape> m_buttons;
     std::vector<sf::Text> m_texts;
+    sf::Cursor m_originalCursor;
+    sf::Cursor m_clickable;
 
     void print(int offset = 0);
     void init();
     void chooseRoom();
-    void clickHandler(sf::Event::MouseButtonEvent &click,bool &exit);
-
+    void clickHandler(sf::Event::MouseButtonEvent &click, bool &exit);
+    void hoverHandler(sf::Event::MouseMoveEvent &move);
 };

@@ -10,6 +10,8 @@ Menu::Menu() : m_window(WindowManager::instance().getWindow()) {
         m_menuButtons[i].setFont(*ResourcesManager::instance().getFont());
         m_menuButtons[i].setCharacterSize(H2);
         m_menuButtons[i].setFillColor(sf::Color::White);
+        m_menuButtons[i].setOutlineColor(sf::Color::Black);
+        m_menuButtons[i].setOutlineThickness(0);
         m_menuButtons[i].setString(m_textNames[i]);
         m_menuButtons[i].setOrigin(m_menuButtons[i].getGlobalBounds().width / 2,
                                    m_menuButtons[i].getGlobalBounds().height / 2);
@@ -45,21 +47,20 @@ void Menu::handleEvents() {
 void Menu::print() {
     m_window->clear();
     m_window->draw(m_background);
-    for (const auto &btn: m_menuButtons) {
-        m_window->draw(btn);
-    }
     SoundFlip::instance().draw(*m_window);
+
+    for (const auto &btn: m_menuButtons)
+        m_window->draw(btn);
+
     m_window->display();
 }
 
-
 void Menu::handleHover(sf::Event::MouseMoveEvent &event) {
-    for (int i = 0; i < MENU_BUTTONS; i++) {
-        if (m_menuButtons[i].getGlobalBounds().contains(event.x, event.y)) {
-            m_menuButtons[i].setOutlineThickness(2);
-            m_menuButtons[i].setOutlineColor(sf::Color::Black);
-        } else
-            m_menuButtons[i].setOutlineThickness(0);
+    for (auto & btn : m_menuButtons) {
+        if (btn.getGlobalBounds().contains(event.x, event.y))
+            btn.setOutlineThickness(2);
+        else
+            btn.setOutlineThickness(0);
     }
 }
 

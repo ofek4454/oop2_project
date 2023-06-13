@@ -8,6 +8,10 @@ AvailableRooms::AvailableRooms(PlayerModel player) : p(player), m_window(*Window
     m_loadingText.setCharacterSize(40);
     m_loadingText.setPosition(
             sf::Vector2f(WINDOW_WIDTH / 2 - m_loadingText.getGlobalBounds().width / 2, WINDOW_HEIGHT / 2));
+
+    m_originalCursor.loadFromSystem(sf::Cursor::Arrow);
+    m_clickable.loadFromSystem(sf::Cursor::Hand);
+
     init();
     chooseRoom();
 }
@@ -54,7 +58,10 @@ void AvailableRooms::init() {
 void AvailableRooms::chooseRoom() {
     print();
     WindowManager::instance().eventHandler(
-            [](auto move, auto exit) { return false; },
+            [this](auto move, auto exit) {
+                hoverHandler(move);
+                return false;
+            },
             [this](auto click, auto &exit) {
                 clickHandler(click, exit);
                 return false;
@@ -106,18 +113,34 @@ void AvailableRooms::print(int offset) {
 
 void AvailableRooms::clickHandler(sf::Event::MouseButtonEvent &click, bool &exit) {
     for (int i = 0; i < m_buttons.size(); i++) {
-        if (m_buttons[i].getGlobalBounds().contains(m_window.mapPixelToCoords({click.x, click.y}))) {
+        if (m_buttons[i].getGlobalBounds().contains(click.x, click.y)) {
+            m_window.setMouseCursor(m_originalCursor);
             auto map_it = availableRooms.begin();
             std::advance(map_it, i);
             RoomState::instance().joinRoom(map_it->first, p.m_uid);
             enemy = UserService::getUser(RoomState::instance().getRoom().creatorUid());
             do{
                 Controller controller(p, enemy, false);
+                if(!EventLoop::instance().hasEvent()) break;
                 while(!RoomState::instance().isRoomReset())
                     sf::sleep(sf::seconds(1));
+
+                RoomState::instance().setBoardCell(Location(0,0), "2U");
+                RoomState::instance().upload();
             }while(EventLoop::instance().hasEvent() && (EventLoop::instance().popEvent().getEventType() == Rematch));
             exit = true;
             break;
         }
     }
+}
+
+void AvailableRooms::hoverHandler(sf::Event::MouseMoveEvent &move){
+    bool hover = false;
+    for (auto & btn : m_buttons) {
+        if (btn.getGlobalBounds().contains(move.x, move.y)) {
+            hover = true;
+            break;
+        }
+    }
+    m_window.setMouseCursor(hover ? m_clickable : m_originalCursor);
 }

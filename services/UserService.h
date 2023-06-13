@@ -10,7 +10,7 @@
 using json = nlohmann::json;
 
 namespace UserService{
-    PlayerModel createUser(std::string name);
-    PlayerModel getUser(std::string uid);
-    json deleteUser(std::string uid);
+    PlayerModel createUser(const std::string &uid);
+    PlayerModel getUser(const std::string &uid);
+    json deleteUser(const std::string &uid);
 };

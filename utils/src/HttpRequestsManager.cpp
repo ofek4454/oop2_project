@@ -14,10 +14,8 @@ json HttpRequestsManager::postRequest(const json& data, std::string url) {
     if (res == CURLE_OK){
         return json::parse(response.c_str());
     }
-    else;
-    //TODO throw exception
-
-    return NULL;
+    else
+        throw HttpException(curl_easy_strerror(res));
 }
 
 json HttpRequestsManager::getRequest(std::string url) {
@@ -27,15 +25,10 @@ json HttpRequestsManager::getRequest(std::string url) {
     curl_easy_setopt(m_get_curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(m_get_curl, CURLOPT_WRITEDATA, &response);
     CURLcode res = curl_easy_perform(m_get_curl);
-    if(res == CURLE_OK){
+    if(res == CURLE_OK)
         return json::parse(response);
-    }
-    else{
-        // TODO throw exception
-    }
-    // TODO create pthread
-    return NULL;
-
+    else
+        throw HttpException(curl_easy_strerror(res));
 }
 
 json HttpRequestsManager::deleteRequest(std::string url) {
@@ -46,13 +39,10 @@ json HttpRequestsManager::deleteRequest(std::string url) {
     curl_easy_setopt(m_delete_curl, CURLOPT_WRITEDATA, &response);
 
     CURLcode res = curl_easy_perform(m_delete_curl);
-    if(res == CURLE_OK){
+    if(res == CURLE_OK)
         return json::parse(response);
-    }
-    else{
-        // TODO throw exception
-    }
-    return NULL;
+    else
+        throw HttpException(curl_easy_strerror(res));
 }
 
 json HttpRequestsManager::putRequest(const json& data, std::string url) {
@@ -66,13 +56,10 @@ json HttpRequestsManager::putRequest(const json& data, std::string url) {
     curl_easy_setopt(m_put_curl, CURLOPT_WRITEDATA, &response);
 
     CURLcode res = curl_easy_perform(m_put_curl);
-    if(res == CURLE_OK){
+    if(res == CURLE_OK)
         return json::parse(response);
-    }
-    else{
-        // TODO throw exception
-    }
-    return NULL;
+    else
+        throw HttpException(curl_easy_strerror(res));
 }
 
 size_t HttpRequestsManager::WriteCallback(void *contents, size_t size, size_t nmemb, std::string *response) {

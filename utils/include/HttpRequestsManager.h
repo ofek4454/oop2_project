@@ -4,9 +4,9 @@
 #include "curl/curl.h"
 #include "nlohmann/json.hpp"
 #include "iostream"
+#include "HttpException.h"
 
 using json = nlohmann::json;
-
 
 class HttpRequestsManager {
 public:
