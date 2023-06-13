@@ -80,30 +80,30 @@ void Weapon::initChooseBox() {
 
     m_weapons_textures[Rock_t].setTexture(*weapons_texture);
     m_weapons_textures[Rock_t].setTextureRect(sf::IntRect(110, 174, 55, 58));
-    m_weapons_textures[Rock_t].setPosition(boxPos.x + RECT_SIZE, boxPos.y + RECT_SIZE * 2);
+    m_weapons_textures[Rock_t].setPosition(boxPos.x + RECT_SIZE, boxPos.y + RECT_SIZE);
     m_weapons_textures[Rock_t].setOrigin(m_weapons_textures[Rock_t].getGlobalBounds().width / 2,
                                          m_weapons_textures[Rock_t].getGlobalBounds().height / 2);
     m_weapons_textures[Rock_t].setScale(2, 2);
 
     m_weapons_textures[Paper_t].setTexture(*weapons_texture);
     m_weapons_textures[Paper_t].setTextureRect(sf::IntRect(110, 290, 55, 58));
-    m_weapons_textures[Paper_t].setPosition(boxPos.x + RECT_SIZE * 3, boxPos.y + RECT_SIZE * 2);
+    m_weapons_textures[Paper_t].setPosition(boxPos.x + RECT_SIZE * 3, boxPos.y + RECT_SIZE);
     m_weapons_textures[Paper_t].setOrigin(m_weapons_textures[Paper_t].getGlobalBounds().width / 2,
                                           m_weapons_textures[Paper_t].getGlobalBounds().height / 2);
     m_weapons_textures[Paper_t].setScale(2, 2);
 
     m_weapons_textures[Scissors_t].setTexture(*weapons_texture);
     m_weapons_textures[Scissors_t].setTextureRect(sf::IntRect(110, 58, 55, 58));
-    m_weapons_textures[Scissors_t].setPosition(boxPos.x + RECT_SIZE * 5, boxPos.y + RECT_SIZE * 2);
+    m_weapons_textures[Scissors_t].setPosition(boxPos.x + RECT_SIZE * 5, boxPos.y + RECT_SIZE);
     m_weapons_textures[Scissors_t].setOrigin(m_weapons_textures[Scissors_t].getGlobalBounds().width / 2,
                                              m_weapons_textures[Scissors_t].getGlobalBounds().height / 2);
     m_weapons_textures[Scissors_t].setScale(2, 2);
 
     m_ChooseWeaponText.setFont(*ResourcesManager::instance().getFont());
-    m_ChooseWeaponText.setString("Choose Your\n  Weapon  ");
+    m_ChooseWeaponText.setString("Choose Your\n   Weapon  ");
     m_ChooseWeaponText.setFillColor(sf::Color::White);
     m_ChooseWeaponText.setCharacterSize(H1);
-    m_ChooseWeaponText.setPosition(boxPos.x + RECT_SIZE * 3, boxPos.y + RECT_SIZE * 3);
+    m_ChooseWeaponText.setPosition(boxPos.x + RECT_SIZE * 3, boxPos.y + RECT_SIZE * 2);
     m_ChooseWeaponText.setOrigin(m_ChooseWeaponText.getGlobalBounds().width / 2, 0);
     m_ChooseWeaponText.setOutlineColor(DARK_GREEN_COLOR);
     m_ChooseWeaponText.setOutlineThickness(3);

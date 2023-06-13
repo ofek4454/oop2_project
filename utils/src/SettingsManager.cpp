@@ -19,7 +19,7 @@ SettingsManager& SettingsManager::instance(){
  */
 void SettingsManager::load_settings() {
     if(!std::filesystem::exists("settings.txt")){
-        m_fxsound = true;
+        m_fxSound = true;
         m_music = true;
         m_volume = 100;
         m_BGMVolume = 100;
@@ -31,11 +31,15 @@ void SettingsManager::load_settings() {
 
     if(!settings_file.is_open()){
         perror("Cannot open settings file");
-        exit(EXIT_FAILURE);
+        m_fxSound = true;
+        m_music = true;
+        m_volume = 100;
+        m_BGMVolume = 100;
+        return;
     }
 
     settings_file.seekg(0);
-    settings_file >> m_fxsound;
+    settings_file >> m_fxSound;
     settings_file >> m_music;
     settings_file >> m_volume;
     settings_file >> m_BGMVolume;
@@ -58,7 +62,7 @@ void SettingsManager::save_settings(){
         exit(EXIT_FAILURE);
     }
     settings_file.seekp(0);
-    settings_file << m_fxsound << " " << m_music << " " << m_volume << " " << m_BGMVolume;
+    settings_file << m_fxSound << " " << m_music << " " << m_volume << " " << m_BGMVolume;
     settings_file.close();
 }
 
@@ -69,10 +73,11 @@ const int SettingsManager::getVolume() const {return m_volume;}
 
 const int SettingsManager::getBGMVolume() const {return m_BGMVolume;}
 
-const bool SettingsManager::getFXSwitch() const {return m_fxsound;}
+const bool SettingsManager::getFXSwitch() const {return m_fxSound;}
 
 void SettingsManager::flipMusicSwitch() {
     m_music = !m_music;
+    save_settings();
 }
 
 void SettingsManager::setVolume(const int volume) {
@@ -84,7 +89,8 @@ void SettingsManager::setBGMusicVolume(const int volume) {
 }
 
 void SettingsManager::flipFXSwitch() {
-    m_fxsound = !m_fxsound;
+    m_fxSound = !m_fxSound;
+    save_settings();
 }
 
 
