@@ -56,7 +56,7 @@ void Warrior::setSpriteLocation(const sf::Vector2f &offset, const sf::Vector2f &
 
 void Warrior::setHighlighted(bool isHighlighted) {
     if (isHighlighted) {
-        m_sprite.setScale(0.75, 0.75);
+        m_sprite.setScale(RECT_SIZE / IMAGE_WIDTH * 1.1, RECT_SIZE / IMAGE_WIDTH * 1.1);
     } else {
         m_sprite.setScale(RECT_SIZE / IMAGE_WIDTH, RECT_SIZE / IMAGE_WIDTH);
     }

@@ -8,12 +8,24 @@
 
 using json = nlohmann::json;
 
-namespace RoomService{
+namespace RoomService {
     json createRoom(RoomModel &room, std::string creator_name);
+
     json updateRoom(RoomModel &room);
+
     RoomModel getRoom(std::string roomId);
+
     json deleteRoom(std::string roomId);
+
     json getAvailableRooms();
+
     json deleteAvailableRoom(std::string roomId);
-    json setFlagAndHole(RoomModel &room, int row1,int row2);
+
+    json setFlagAndHole(RoomModel &room, int row1, int row2);
+
+    json updateRematch(RoomModel &room);
+
+    json updatedLastMove(RoomModel &room);
+
+    json updateRematch(std::string roomId,std::string wantToRematch,int cell);
 }

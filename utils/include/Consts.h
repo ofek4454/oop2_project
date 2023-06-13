@@ -99,6 +99,7 @@ enum EventType_t{
     FightSS,
     AttackingUndefined,
     HoleFall,
+    Rematch,
     Test // TODO remove
 };
 

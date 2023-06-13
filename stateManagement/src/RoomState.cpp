@@ -26,9 +26,9 @@ void RoomState::joinRoom(std::string roomId, std::string uid) {
 
 void RoomState::deleteRoom() {
     RoomService::deleteRoom(room.roomId);
-    if(room.player2_uid == "")
+    if (room.player2_uid == "")
         HttpRequestsManager::instance().deleteRequest(BASE_URL + "/available_rooms/" + room.roomId + ".json");
-    if(m_isMeP1)
+    if (m_isMeP1)
         UserService::deleteUser(room.creator_uid);
     else
         UserService::deleteUser(room.player2_uid);
@@ -102,7 +102,7 @@ void RoomState::setLastMove(std::string warriorId, Location location, std::strin
     room.enemyLastMove = move;
 }
 
-void RoomState::setLastMove(std::string last_move , Location location,std::string id,bool weapon){
+void RoomState::setLastMove(std::string last_move, Location location, std::string id, bool weapon) {
     std::string move = last_move + " ";
     move += id;
     if (m_isMeP1)
@@ -112,4 +112,45 @@ void RoomState::setLastMove(std::string last_move , Location location,std::strin
                 std::to_string(BOARD_SIZE - location.col - 1);
 
     room.enemyLastMove = move;
+}
+
+void RoomState::wantToRematch(bool rematch) {
+    RoomService::updateRematch(room.roomId, rematch ? "1" : "0", !m_isMeP1);
+}
+
+int RoomState::isOpponentWantsToRematch() {
+    auto tmpRoom = RoomService::getRoom(room.roomId);
+    if (m_isMeP1) {
+        if (tmpRoom.board[0][1].size() != 1)
+            return 2;
+        return tmpRoom.board[0][1] == "1";
+    } else {
+        if (tmpRoom.board[0][0].size() != 1)
+            return 2;
+        return tmpRoom.board[0][0] == "1";
+    }
+}
+
+void RoomState::resetRoom() {
+    for (int row = 0; row < 2; row++)
+        for (int i = 0; i < BOARD_SIZE; i++)
+            room.board[row][i] = "2U";
+
+    for (int row = ROWS - 2; row < ROWS; row++)
+        for (int i = 0; i < BOARD_SIZE; i++)
+            room.board[row][i] = "1U";
+
+    for (int row = 2; row < ROWS - 2; row++) {
+        for (int i = 0; i < BOARD_SIZE; i++)
+            room.board[row][i] = "";
+    }
+    room.board[0][0] = "1";
+    room.turn = P1;
+    room.enemyLastMove = "";
+    upload();
+}
+
+bool RoomState::isRoomReset() {
+    auto tmpRoom = RoomService::getRoom(room.roomId);
+    return tmpRoom.board[0][0] == "1";
 }

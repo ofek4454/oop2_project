@@ -5,7 +5,7 @@
 
 class PlayerModel{
 public:
-    PlayerModel(const std::string& name,const std::string& id) : m_name(name),m_uid(id){}
+    PlayerModel(const std::string& name = "name",const std::string& id = "id") : m_name(name),m_uid(id){}
 
     static PlayerModel fromJson(std::string id, nlohmann::json data) {
         return PlayerModel(id,data);
@@ -21,7 +21,7 @@ public:
 
     }
 
-    const std::string m_uid, m_name;
+    std::string m_uid, m_name;
 
 private:
     PlayerModel(std::string id, nlohmann::json data) : m_name(data["name"]), m_uid(id){}

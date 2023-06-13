@@ -12,10 +12,9 @@ Controller::Controller(PlayerModel p1, PlayerModel p2, bool isMeP1) : m_window(
         WindowManager::instance().getWindow()), m_user(std::make_unique<UserState>(p1)),
                                                                       m_enemy(std::make_unique<EnemyState>(p2)),
                                                                       myTurn(isMeP1 ? P1 : P2),
-                                                                      m_referee(
-                                                                              isMeP1
-                                                                              ? P1
-                                                                              : P2) {
+                                                                      m_referee(isMeP1? P1: P2) {
+
+
     m_countdown.setFont(*ResourcesManager::instance().getFont());
     m_countdown.setCharacterSize(64);
     m_countdown.setFillColor(sf::Color::White);
@@ -62,7 +61,7 @@ void Controller::run() {
                     if (clock.getElapsedTime().asSeconds() > 0.2) {
                         clock.restart().asSeconds();
                         if (RoomState::instance().getTurn() == myTurn) {
-                            if(RoomState::instance().getRoom().getLastMove() == ""){
+                            if (RoomState::instance().getRoom().getLastMove() == "") {
                                 return true;
                             }
                             if (RoomState::instance().getRoom().getLastMove().starts_with("tie")) {
@@ -188,7 +187,7 @@ void Controller::handleEvents() {
         m_turn = (Turn_t) !myTurn;
         m_isFinishUserTurn = false;
     }
-    while (EventLoop::instance().hasEvent()) {
+    while (EventLoop::instance().hasEvent() && !m_gameDone) {
         auto event = EventLoop::instance().popEvent();
         switch (event.getEventType()) {
             case FightRP: {
@@ -435,10 +434,10 @@ void Controller::handleTie() {
     std::string id = lastMove.substr(6, 2);
 
     int row = myTurn == P1 ? std::atoi(&lastMove[lastMove.size() - 3])
-                           : ROWS-1- std::atoi(&lastMove[lastMove.size() - 3]);
+                           : ROWS - 1 - std::atoi(&lastMove[lastMove.size() - 3]);
 
     int col = myTurn == P1 ? std::atoi(&lastMove[lastMove.size() - 1])
-                           : BOARD_SIZE-1- std::atoi(&lastMove[lastMove.size() - 1]);
+                           : BOARD_SIZE - 1 - std::atoi(&lastMove[lastMove.size() - 1]);
 
     auto war = m_enemy->getWarrior(id);
     war->setLocation(Location(row, col));

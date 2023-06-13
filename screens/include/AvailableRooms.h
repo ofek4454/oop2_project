@@ -13,7 +13,9 @@ public:
 
 private:
     PlayerModel p;
+    PlayerModel enemy;
     sf::Text m_text;
+    sf::Text m_loadingText;
     sf::RectangleShape m_background;
     sf::RenderWindow &m_window;
     std::unordered_map<std::string,std::string> availableRooms;

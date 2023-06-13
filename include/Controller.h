@@ -28,7 +28,6 @@ private:
     sf::CircleShape m_circle;
     sf::Cursor m_cursor;
     sf::Cursor m_originalCursor;
-//    sf::RectangleShape m_shuffleButton;
     // Board
     Board m_board;
 

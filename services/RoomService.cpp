@@ -45,4 +45,12 @@ namespace RoomService {
         auto response = HttpRequestsManager::instance().putRequest(room.getBoardRow(row2), url);
         return response;
     }
+
+    json updateRematch(std::string roomId,std::string wantToRematch,int cell){
+        std::string url = BASE_URL + "/rooms/" + roomId + "/board/0/" + std::to_string(cell) + ".json";
+        auto response = HttpRequestsManager::instance().putRequest(wantToRematch,url);
+        return response;
+    }
+
+
 }

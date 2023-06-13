@@ -5,6 +5,8 @@
 #include "PlayerModel.h"
 #include "ResourcesManager.h"
 #include "WindowManager.h"
+#include "EventLoop.h"
+#include "RoomState.h"
 
 class AfterGameScreen {
 public:
@@ -14,7 +16,7 @@ private:
     void playLosingAnimation();
     void print();
     void handleHover(sf::Event::MouseMoveEvent &event);
-    void handleClick(sf::Event::MouseButtonEvent &event);
+    void handleClick(sf::Event::MouseButtonEvent &event,bool &exit);
     void changeRefereeTextureRect();
     void changeJumpingTextureRect();
     sf::RenderWindow* m_window;
@@ -25,11 +27,14 @@ private:
     sf::Cursor m_originalCursor;
     sf::Cursor m_clickable;
     bool m_isMeWinner;
+    bool m_waitingForOpponent = false;
     PlayerModel m_userModel;
     PlayerModel m_enemyModel;
     sf::Text m_rematchText;
+    sf::Text m_yesNoTexts[2];
     sf::IntRect m_jumpingRect;
     sf::IntRect m_refRect;
     Turn_t m_myServerTurn;
 
+    void checkOpponentsResponse(bool &exit);
 };

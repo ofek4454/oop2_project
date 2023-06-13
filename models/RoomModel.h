@@ -57,13 +57,6 @@ public:
     std::array<std::string, BOARD_SIZE> getBoardRow(int row) const {return board[row];}
     std::string getLastMove() {return enemyLastMove;}
 
-//    void rotateBoard(){
-//        std::reverse(board.begin(),board.end());
-//        for(auto &line : board){
-//            std::reverse(line.begin(),line.end());
-//        }
-//    }
-
 private:
     std::string roomId;
     std::string creator_uid;

@@ -111,7 +111,7 @@ void Weapon::initChooseBox() {
 
 bool Weapon::animateWeapon() {
     static bool middle = false;
-    static int offset = 15;
+    static int offset = 22;
     if(!middle)
         m_weaponIntRect.top -= 56.5;
     else
