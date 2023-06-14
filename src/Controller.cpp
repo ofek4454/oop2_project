@@ -517,7 +517,7 @@ void Controller::animateWeapons() {
         auto time = clock.getElapsedTime().asSeconds();
         if (time > 0.04) {
             clock.restart();
-            if(ChosenWarrior->getWeapon() == NULL){
+            if(ChosenWarrior->getWeapon() == NULL){ // check if weapon null
                 chose = false;
                 m_animatingWeapon = false;
             }
