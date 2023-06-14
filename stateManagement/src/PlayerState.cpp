@@ -5,6 +5,7 @@ PlayerState::PlayerState(PlayerModel &player) : m_player(player){}
 
 void PlayerState::handleHover(const int row, const int col) {
     for (auto &warrior: m_warriors){
+        if(warrior.second->getSymbol() == "F" || warrior.second->getSymbol() == "H") continue;
         warrior.second->setHighlighted(warrior.second->getLocation() == Location(row, col));
     }
 }

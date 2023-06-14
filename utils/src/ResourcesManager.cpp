@@ -9,7 +9,6 @@ ResourcesManager &ResourcesManager::instance() {
     return resource;
 }
 
-
 ResourcesManager::ResourcesManager() {
     m_backgroundMusic.openFromFile("BackGroundMusic.wav");
     m_texture[Warriors].loadFromFile("warriors2.png");
@@ -66,6 +65,8 @@ ResourcesManager::ResourcesManager() {
     for(int i = 0; i < 2;i++){
         m_soundButton[i].loadFromFile(m_soundstring[i]);
     }
+
+    m_logo.loadFromFile("Logo.png");
 }
 
 sf::Texture *ResourcesManager::getTexture(Textures_t texture) {
@@ -133,4 +134,8 @@ bool ResourcesManager::isBGMusicPlaying() {
 
 sf::Texture *ResourcesManager::getHelpScreenPages() {
     return m_helpScreenPages;
+}
+
+sf::Image *ResourcesManager::getLogo() {
+    return &m_logo;
 }

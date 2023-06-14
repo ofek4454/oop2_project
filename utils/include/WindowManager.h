@@ -2,6 +2,7 @@
 
 #include "SFML/Graphics.hpp"
 #include "Consts.h"
+#include "ResourcesManager.h"
 #include <functional>
 
 class WindowManager {
@@ -25,6 +26,10 @@ private:
 
     WindowManager() : m_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
                                "Even juk", sf::Style::Close | sf::Style::Titlebar) {
+
+        sf::Image image = (*ResourcesManager::instance().getLogo());
+        m_window.setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
+
         m_window.setFramerateLimit(60);
     }
 };

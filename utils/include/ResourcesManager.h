@@ -19,6 +19,7 @@ public:
     bool isBGMusicPlaying();
     sf::Texture *getSoundButton(const int loc);
     sf::Texture* getHelpScreenPages();
+    sf::Image* getLogo();
 
 private:
     ResourcesManager();
@@ -34,6 +35,6 @@ private:
                                                         ,"Losefight.wav","Jumpsound.wav","Generatingweapon.wav","Chooseweapon.wav"};
     std::string m_soundstring[2] = {"MusicButton.png","FXButton.png"};
     sf::Texture m_soundButton[2];
-
+    sf::Image m_logo;
 
 };

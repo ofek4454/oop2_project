@@ -50,4 +50,5 @@ configure_file ("Help-Page1.png" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
 configure_file ("Help-Page2.png" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
 configure_file ("Help-Page3.png" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
 configure_file ("Help-Page4.png" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
+configure_file ("Logo.png" ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} COPYONLY)
 
