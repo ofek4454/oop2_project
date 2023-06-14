@@ -24,6 +24,10 @@ const int MOVING_ANIMATION_ARR[IMAGE_COUNT] = {0, 0,IMAGE_WIDTH,IMAGE_WIDTH,IMAG
 const sf::FloatRect BOARD_FRAME((WINDOW_WIDTH * 0.775 - BOARD_SIZE * RECT_SIZE) / 2 + RECT_SIZE / 2, WINDOW_HEIGHT / 2 - RECT_SIZE * (ROWS / 2) + RECT_SIZE / 2,RECT_SIZE * 8,RECT_SIZE * 6);
 const sf::FloatRect BOARD_TOP_LEFT(BOARD_FRAME.left - RECT_SIZE/2 ,BOARD_FRAME.top - RECT_SIZE/2 ,RECT_SIZE,RECT_SIZE);
 
+const float CIRCLE_RADIUS = std::min(WINDOW_WIDTH*0.16 , WINDOW_HEIGHT*0.232)/2;
+
+const sf::Vector2f CLOCK_CIRCLE_CENTER = sf::Vector2f(WINDOW_WIDTH*0.875 + CIRCLE_RADIUS/30, WINDOW_HEIGHT*0.83 + 5);
+
 enum Weapons_t{
     Rock_t,
     Paper_t,
@@ -100,6 +104,7 @@ enum EventType_t{
     AttackingUndefined,
     HoleFall,
     Rematch,
+    TimeOver,
     Test // TODO remove
 };
 
@@ -113,6 +118,11 @@ enum Winner_t{
     P2Won,
     Tie,
     NoneEvent
+};
+
+enum stats_t{
+    MySoldiers,
+    EnemySoldiers,
 };
 
 const sf::Color GRAY_COLOR = sf::Color(181, 193, 105);

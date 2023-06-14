@@ -6,26 +6,13 @@
 #include "SoundFlip.h"
 #include "RoomState.h"
 #include "exception"
-#include "cmath"
 
 Controller::Controller(PlayerModel p1, PlayerModel p2, bool isMeP1) : m_window(
         WindowManager::instance().getWindow()), m_user(std::make_unique<UserState>(p1)),
                                                                       m_enemy(std::make_unique<EnemyState>(p2)),
                                                                       myTurn(isMeP1 ? P1 : P2),
-                                                                      m_referee(isMeP1? P1: P2) {
+                                                                      m_referee(isMeP1 ? P1 : P2) {
 
-
-    m_countdown.setFont(*ResourcesManager::instance().getFont());
-    m_countdown.setCharacterSize(64);
-    m_countdown.setFillColor(sf::Color::White);
-    m_countdown.setStyle(sf::Text::Bold);
-    m_circle.setFillColor(sf::Color::Transparent);
-    m_circle.setOutlineThickness(2.0f);
-    m_circle.setOutlineColor(sf::Color::White);
-    m_circle.setOrigin(radius, radius);
-    m_circle.setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775 + ((WINDOW_HEIGHT * 0.95 - WINDOW_HEIGHT * 0.775)) + 10,
-                                      WINDOW_HEIGHT * 0.685 - radius +
-                                      (WINDOW_HEIGHT * 0.95 - WINDOW_HEIGHT * 0.685 + 10)));
 
     m_user->setPlayerSymbol(isMeP1 ? "1" : "2");
     m_enemy->setPlayerSymbol(!isMeP1 ? "1" : "2");
@@ -37,6 +24,11 @@ Controller::Controller(PlayerModel p1, PlayerModel p2, bool isMeP1) : m_window(
 
 void Controller::run() {
     LoadingGame();
+    if (myTurn == P1) {
+        sf::Event event;
+        while (m_window->pollEvent(event));
+    }
+    m_gameBar.resetClock(myTurn == P1);
     print();
     WindowManager::instance().eventHandler(
             [this](auto move, auto exit) {
@@ -56,27 +48,15 @@ void Controller::run() {
             [](auto type, auto exit) { return false; },
             [](auto offset, auto exit) { return false; },
             [this](auto &exit) {
-                if (!isMyTurn() && !m_enemy->isAnimating()) {
-                    static sf::Clock clock;
-                    if (clock.getElapsedTime().asSeconds() > 0.2) {
-                        clock.restart().asSeconds();
-                        if (RoomState::instance().getTurn() == myTurn) {
-                            if (RoomState::instance().getRoom().getLastMove() == "") {
-                                return true;
-                            }
-                            if (RoomState::instance().getRoom().getLastMove().starts_with("tie")) {
-                                // attacker only
-                                handleTie();
-                            } else
-                                m_enemy->doTurn();
-                        }
-                    }
-                }
+                if (!isMyTurn() && !m_enemy->isAnimating())
+                    enemyTurn();
+
                 handleAnimation();
                 if (isMyTurn()) {
                     checkCollision();
                     handleEvents();
                 }
+                m_gameBar.updateGameBar(m_user->getAllWarriors()->size(), m_enemy->getAllWarriors()->size());
                 print();
                 if (m_gameDone) exit = true;
             }
@@ -93,23 +73,11 @@ void Controller::print(bool printLoad) {
     m_enemy->print();
     SoundFlip::instance().draw(*m_window);
     m_referee.print();
-    if (printLoad) {
-        m_window->draw(m_circle);
-        float angleIncrement = 2 * M_PI / numLines;
-        for (int i = 0; i < numLines; ++i) {
-            float angle = i * angleIncrement;
-            sf::CircleShape line(radius / 15.0f);
-            line.setFillColor(sf::Color::White);
-            line.setOrigin(line.getRadius(), line.getRadius());
-            line.setPosition(std::cos(angle) * (radius - line.getRadius()) + m_circle.getPosition().x,
-                             std::sin(angle) * (radius - line.getRadius()) + m_circle.getPosition().y);
-            m_window->draw(line);
-        }
-        m_window->draw(m_countdown);
-    }
+    m_gameBar.drawStats();
+    if (printLoad)
+        m_timeCounting.print();
     m_window->display();
 }
-
 
 void Controller::checkCollision() {
     bool collision = false;
@@ -167,6 +135,7 @@ void Controller::handleAnimation() {
                 RoomState::instance().changeTurn();
                 m_turn = (Turn_t) !myTurn;
             }
+            m_gameBar.resetClock(true);
         }
     }
 }
@@ -185,6 +154,7 @@ void Controller::handleEvents() {
         std::cout << "is finish and not events\n";
         RoomState::instance().changeTurn();
         m_turn = (Turn_t) !myTurn;
+        m_gameBar.resetClock(false);
         m_isFinishUserTurn = false;
     }
     while (EventLoop::instance().hasEvent() && !m_gameDone) {
@@ -246,6 +216,10 @@ void Controller::handleEvents() {
             case Lose: {
                 AfterGameScreen(false, m_user->getPlayerModel(), m_enemy->getPlayerModel(), myTurn);
                 m_gameDone = true;
+                break;
+            }
+            case TimeOver: {
+                updateLastMoveAndChangeTurn(true);
                 break;
             }
             default:
@@ -391,26 +365,31 @@ void Controller::initGame() {
     m_enemy->setAsFlag(flagLoc.row, flagLoc.col);
     m_enemy->setAsHole(holeLoc.row, holeLoc.col);
 
-    enemyFlag = m_enemy->getWarrior(flagLoc);
     enemyHole = m_enemy->getWarrior(holeLoc);
 
 }
 
-void Controller::updateLastMoveAndChangeTurn() {
+void Controller::updateLastMoveAndChangeTurn(bool timesUp) {
     auto warrior = m_user->getWarrior();
-    RoomState::instance().setBoardCell(warrior->getLocation(),
-                                       m_user->getPlayerSymbol() + warrior->getSymbol());
-    RoomState::instance().setLastMove(warrior->getId(), warrior->getLocation(),
-                                      warrior->getSymbol());
+    if (!timesUp) {
+        RoomState::instance().setBoardCell(warrior->getLocation(),
+                                           m_user->getPlayerSymbol() + warrior->getSymbol());
+        RoomState::instance().setLastMove(warrior->getId(), warrior->getLocation(),
+                                          warrior->getSymbol());
+    } else {
+        RoomState::instance().setLastMoveMsg("TimeUp");
+    }
     RoomState::instance().changeTurn();
     m_turn = (Turn_t) !myTurn;
+    m_gameBar.resetClock(false);
 }
 
 void Controller::updateTieCase(std::string msg) {
     // attacked only
-    RoomState::instance().setLastMove(msg, m_user->getWarrior()->getLocation(), m_user->getWarrior()->getId(), false);
+    RoomState::instance().setLastMoveTie(msg, m_user->getWarrior()->getLocation(), m_user->getWarrior()->getId());
     RoomState::instance().changeTurn();
     m_turn = (Turn_t) !myTurn;
+    m_gameBar.resetClock(false);
 
     auto warrior = m_user->getWarrior();
     warrior->setWeapon(Undefined_t);
@@ -449,18 +428,13 @@ void Controller::handleTie() {
     auto enemy = m_enemy->getWarrior();
     enemy->setWeapon(Undefined_t);
 
-
     m_turn = myTurn;
+    m_gameBar.resetClock(true);
 }
 
 void Controller::LoadingGame() {
-    static sf::Clock timer;
     sf::Clock clock;
-    int countdown = 3;
-    bool animating = false;
-    float scaleFactor = 1.0f;
-    const int numSegments = 60; // Number of line segments
-
+    m_timeCounting.setCount(3);
     int arr[3] = {0, 116, 232};
     auto p1_vec = m_user->getAllWarriors();
     for (auto &warrior: *p1_vec) {
@@ -480,25 +454,11 @@ void Controller::LoadingGame() {
             [](auto key, auto exit) { return false; },
             [](auto type, auto &exit) { return false; },
             [](auto offset, auto exit) { return false; },
-            [this, &countdown, &clock, &animating, &scaleFactor](auto &exit) {
-
+            [this, &clock](auto &exit) {
                 sf::Time elapsed = clock.getElapsedTime();
                 if (elapsed.asSeconds() >= 1.0f) {
-                    countdown--;
                     clock.restart();
-                    animating = true;
-                    scaleFactor = 1.5f;
-                    if (countdown < 1) {
-                        exit = true;
-                        auto p1_vec = m_user->getAllWarriors();
-                        for (auto &warrior: *p1_vec) {
-                            if (warrior.second->getLocation() == userHole->getLocation() ||
-                                warrior.second->getLocation() == userFlag->getLocation())
-                                continue;
-                            warrior.second->getWeapon()->removeWeaponTexture();
-                        }
-                        return;
-                    }
+                    m_timeCounting.updateCount();
                     int arr[3] = {58, 174, 290};
                     auto p1_vec = m_user->getAllWarriors();
                     for (auto &warrior: *p1_vec) {
@@ -509,24 +469,19 @@ void Controller::LoadingGame() {
                         warrior.second->getWeapon()->setWeaponIntRect(arr[randomNumber]);
                     }
                 }
-
-                if (animating) {
-                    m_countdown.setScale(scaleFactor, scaleFactor);
-                    scaleFactor -= 0.05f;
-                    if (scaleFactor <= 1.0f) {
-                        animating = false;
-                        m_countdown.setScale(1.0f, 1.0f);
+                m_timeCounting.setText(elapsed.asSeconds());
+                if (EventLoop::instance().hasEvent() &&
+                    EventLoop::instance().popEvent().getEventType() == TimeOver) {
+                    exit = true;
+                    auto p1_vec = m_user->getAllWarriors();
+                    for (auto &warrior: *p1_vec) {
+                        if (warrior.second->getLocation() == userHole->getLocation() ||
+                            warrior.second->getLocation() == userFlag->getLocation())
+                            continue;
+                        warrior.second->getWeapon()->removeWeaponTexture();
                     }
+                    return;
                 }
-
-                m_countdown.setString(std::to_string(countdown));
-                sf::FloatRect textBounds = m_countdown.getLocalBounds();
-                m_countdown.setOrigin(textBounds.left + textBounds.width / 2.0f,
-                                      textBounds.top + textBounds.height / 2.0f);
-                m_countdown.setPosition(m_circle.getPosition().x, m_circle.getPosition().y);
-                float completion = std::min(1.0f, elapsed.asSeconds());
-                numLines = static_cast<int>(numSegments * completion);
-
                 print(true);
             }
     );
@@ -569,6 +524,25 @@ void Controller::animateHole() {
         } else {
             if (enemyHole->setHoleIntRect())
                 m_playHoleAnimation = false;
+        }
+    }
+}
+
+void Controller::enemyTurn() {
+    static sf::Clock clock;
+    if (clock.getElapsedTime().asSeconds() > 0.2) {
+        clock.restart().asSeconds();
+        if (RoomState::instance().getTurn() == myTurn) {
+            if (RoomState::instance().getRoom().getLastMove().starts_with("TimeUp")) {
+                m_turn = myTurn;
+                m_gameBar.resetClock(true);
+            }
+            else if (RoomState::instance().getRoom().getLastMove().starts_with("tie")) {
+                // attacker only
+                handleTie();
+            } else {
+                m_enemy->doTurn();
+            }
         }
     }
 }

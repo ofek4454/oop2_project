@@ -102,7 +102,7 @@ void RoomState::setLastMove(std::string warriorId, Location location, std::strin
     room.enemyLastMove = move;
 }
 
-void RoomState::setLastMove(std::string last_move, Location location, std::string id, bool weapon) {
+void RoomState::setLastMoveTie(std::string last_move, Location location, std::string id) {
     std::string move = last_move + " ";
     move += id;
     if (m_isMeP1)
@@ -112,6 +112,10 @@ void RoomState::setLastMove(std::string last_move, Location location, std::strin
                 std::to_string(BOARD_SIZE - location.col - 1);
 
     room.enemyLastMove = move;
+}
+
+void RoomState::setLastMoveMsg(std::string last_move) {
+    room.enemyLastMove = last_move;
 }
 
 void RoomState::wantToRematch(bool rematch) {

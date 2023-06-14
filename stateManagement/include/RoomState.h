@@ -32,7 +32,8 @@ public:
     void setBoardCell(Location loc , std::string str);
     Turn_t getTurn();
     void setLastMove(std::string warriorId, Location location, std::string weapon);
-    void setLastMove(std::string last_move , Location location,std::string id,bool weapon);
+    void setLastMoveTie(std::string last_move , Location location,std::string id);
+    void setLastMoveMsg(std::string last_move);
     void resetRoom();
     bool isRoomReset();
 private:

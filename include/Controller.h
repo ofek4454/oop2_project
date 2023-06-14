@@ -8,6 +8,8 @@
 #include "EventLoop.h"
 #include "Referee.h"
 #include "AfterGameScreen.h"
+#include "GameBar.h"
+#include "TimeCounting.h"
 
 
 class Controller {
@@ -24,13 +26,11 @@ private:
     sf::RenderWindow *m_window;
     sf::Texture m_fightTexture;
     sf::Text m_p1Name, m_p2Name;
-    sf::Text m_countdown;
-    sf::CircleShape m_circle;
     sf::Cursor m_cursor;
     sf::Cursor m_originalCursor;
     // Board
     Board m_board;
-
+    GameBar m_gameBar;
     // Players
     std::unique_ptr<PlayerState> m_user;
     std::unique_ptr<PlayerState> m_enemy;
@@ -40,8 +40,8 @@ private:
     Warrior* userHole;
     Warrior* enemyHole;
     Warrior* userFlag;
-    Warrior* enemyFlag;
     Warrior* ChosenWarrior;
+    TimeCounting m_timeCounting;
 
     // booleans
     Turn_t m_turn = P1;
@@ -54,11 +54,6 @@ private:
     bool m_meAttacked = false;
     bool m_gameDone = false;
 
-    // numbers
-    int numLines;
-    float radius = 100.0f;
-
-
     // private functions:
     void LoadingGame();
     void initGame();
@@ -69,11 +64,13 @@ private:
     void handleHover(sf::Event::MouseMoveEvent &click);
     void handleAnimation();
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
-    void updateLastMoveAndChangeTurn();
+    void updateLastMoveAndChangeTurn(bool timesUp = false);
     void updateTieCase(std::string msg);
     void handleTie();
     void animateWeapons();
     void animateHole();
+    void enemyTurn();
+
     bool isMyTurn() const{
         return m_turn == myTurn;
     }

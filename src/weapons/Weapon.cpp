@@ -4,6 +4,8 @@
 #include "Warrior.h"
 
 Weapon::Weapon(const std::string symbol, bool visible) : m_is_visible(visible), m_symbol(symbol) {
+    m_timeCounting.setCount(5);
+    m_timerBox.setSize(sf::Vector2f(CIRCLE_RADIUS*2,CIRCLE_RADIUS*2));
 }
 
 void Weapon::draw() {

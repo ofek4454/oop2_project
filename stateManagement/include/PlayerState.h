@@ -42,7 +42,7 @@ protected:
     std::unordered_map<std::string,std::unique_ptr<Warrior>> m_warriors;
     bool m_playerChose = false;
     Direction_t m_direction;
-    bool m_isAnimating;
+    bool m_isAnimating = false;
     PlayerModel m_player;
     float m_pixelOffset = RECT_SIZE / IMAGE_COUNT;
     std::string m_playerSymbol;

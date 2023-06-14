@@ -63,6 +63,7 @@ void Board::setFrames() {
     m_boardFrame[2].setSize(sf::Vector2f(WINDOW_WIDTH * 0.20, 10));
     m_boardFrame[2].setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775, WINDOW_HEIGHT * 0.355));
     m_boardFrame[2].setFillColor(GRAY_COLOR);
+
     m_boardFrame[3].setSize(sf::Vector2f(WINDOW_WIDTH * 0.20, 10));
     m_boardFrame[3].setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775, WINDOW_HEIGHT * 0.685));
     m_boardFrame[3].setFillColor(GRAY_COLOR);

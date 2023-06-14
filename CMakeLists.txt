@@ -45,16 +45,17 @@ if(APPLE)
 
     find_package (SFML 2.5 COMPONENTS audio graphics REQUIRED)
     find_package(CURL REQUIRED)
+    find_package(OpenCV REQUIRED)
 
     set_target_properties ( PROPERTIES MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELEASE)
 
-    target_link_libraries (${CMAKE_PROJECT_NAME} sfml-graphics sfml-audio sfml-network ${CURL_LIBRARIES})
+    target_link_libraries (${CMAKE_PROJECT_NAME} sfml-graphics sfml-audio sfml-network ${CURL_LIBRARIES} ${OpenCV_LIBS})
 
 endif()
 
 if(WIN32)
 
-    add_executable (${CMAKE_PROJECT_NAME} main.cpp screens/src/AfterGameScreen.cpp screens/include/AfterGameScreen.h screens/src/HelpScreen.cpp screens/include/HelpScreen.h screens/include/ErrorScreen.h)
+    add_executable (${CMAKE_PROJECT_NAME} main.cpp screens/src/AfterGameScreen.cpp screens/include/AfterGameScreen.h screens/src/HelpScreen.cpp screens/include/HelpScreen.h screens/include/ErrorScreen.h src/GameBar.cpp include/GameBar.h utils/src/TimeCounting.cpp utils/include/TimeCounting.h)
 
     target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-fsanitize=address>)
 

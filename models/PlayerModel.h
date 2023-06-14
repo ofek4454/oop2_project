@@ -2,6 +2,7 @@
 
 #include <string>
 #include <nlohmann/json.hpp>
+#include "SFML/Graphics.hpp"
 
 class PlayerModel{
 public:
@@ -9,6 +10,9 @@ public:
 
     static PlayerModel fromJson(std::string id, nlohmann::json data) {
         return PlayerModel(id,data);
+    }
+    void setPicture(sf::Texture text){
+        m_picture.setTexture(text);
     }
 
     std::string to_string(){
@@ -22,6 +26,7 @@ public:
     }
 
     std::string m_uid, m_name;
+    sf::Sprite m_picture;
 
 private:
     PlayerModel(std::string id, nlohmann::json data) : m_name(data["name"]), m_uid(id){}

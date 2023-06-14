@@ -17,26 +17,19 @@ void WindowManager::eventHandler(std::function<bool(sf::Event::MouseMoveEvent, b
             }
             if (event.type == sf::Event::MouseButtonReleased) {
                 if (clickHandler(event.mouseButton, exit)) continue;
-            }
-            else if (event.type == sf::Event::MouseMoved) {
+            } else if (event.type == sf::Event::MouseMoved) {
                 if (moveHandler(event.mouseMove, exit)) continue;
-            }
-            else if (event.type == sf::Event::KeyPressed){
-                if(keyPressedHandler(event.key, exit)) continue;
-            }
-            else if (event.type == sf::Event::TextEntered){
-                if(typeHandler(event.text, exit))continue;
-            }
-            else if(event.type == sf::Event::MouseWheelScrolled){
-                if(scrollHandler(event.mouseWheelScroll.delta * 3, exit)) continue;
+            } else if (event.type == sf::Event::KeyPressed) {
+                if (keyPressedHandler(event.key, exit)) continue;
+            } else if (event.type == sf::Event::TextEntered) {
+                if (typeHandler(event.text, exit))continue;
+            } else if (event.type == sf::Event::MouseWheelScrolled) {
+                if (scrollHandler(event.mouseWheelScroll.delta * 3, exit)) continue;
             }
         }
-        if(exit) return;
-        try{
-            afterFunction(exit);
-        }catch(std::exception error){
-            std::cout << "##### ERROR: " << error.what() << "\n";
-        }
+        if (exit) return;
+        afterFunction(exit);
+
     }
 }
 

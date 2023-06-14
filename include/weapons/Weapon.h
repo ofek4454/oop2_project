@@ -1,6 +1,8 @@
 #pragma once
 #include "ResourcesManager.h"
 #include "iostream"
+#include "TimeCounting.h"
+
 
 class Rock;
 class Scissors;
@@ -47,8 +49,10 @@ protected:
     sf::Sprite m_weapons_textures[3];
     sf::IntRect m_weaponIntRect;
 private:
+    TimeCounting m_timeCounting;
     bool m_is_visible = true;
     sf::RectangleShape m_ChooseBoxRect;
+    sf::RectangleShape m_timerBox;
     sf::Text m_ChooseWeaponText;
     const std::string m_symbol;
 };
