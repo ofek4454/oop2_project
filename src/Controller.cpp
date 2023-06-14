@@ -56,7 +56,8 @@ void Controller::run() {
                     checkCollision();
                     handleEvents();
                 }
-                m_gameBar.updateGameBar(m_user->getAllWarriors()->size(), m_enemy->getAllWarriors()->size());
+                if(!m_collision)
+                    m_gameBar.updateGameBar(m_user->getAllWarriors()->size(), m_enemy->getAllWarriors()->size());
                 print();
                 if (m_gameDone) exit = true;
             }
@@ -81,7 +82,7 @@ void Controller::print(bool printLoad) {
 }
 
 void Controller::checkCollision() {
-    bool collision = false;
+    m_collision = false;
     std::string weapon_of_p2;
     auto p1_vec = m_user->getAllWarriors();
     auto p2_vec = m_enemy->getAllWarriors();
@@ -90,7 +91,7 @@ void Controller::checkCollision() {
             if (p1.second->getLocation() == p2.second->getLocation()) {
                 m_user->setSelectedWarriorId(p1.second->getId());
                 m_enemy->setSelectedWarriorId(p2.second->getId());
-                collision = true;
+                m_collision = true;
                 weapon_of_p2 = p2.second->getSymbol();
                 m_isFinishUserTurn = false;
                 p2.second->getWeapon()->fight(*p1.second->getWeapon());
@@ -100,7 +101,7 @@ void Controller::checkCollision() {
                 m_currentP2->setNeedToBeDraw(false);
 
             }
-    if ((!collision && m_meAttacked) || (m_meAttacked && weapon_of_p2 == "U"))
+    if ((!m_collision && m_meAttacked) || (m_meAttacked && weapon_of_p2 == "U"))
         m_meAttacked = false;
 
 }
@@ -231,6 +232,7 @@ void Controller::handleEvents() {
         ResourcesManager::instance().playSound(
                 event.getWinner() == P1Won ? WinFight : event.getWinner() == P2Won ? LoseFight : NUMBER_OF_SOUNDS - 1);
         if (event.getWinner() != Tie && event.getWinner() != NoneEvent) {
+            m_collision = false;
             m_currentP1->setNeedToBeDraw(true);
             m_currentP2->setNeedToBeDraw(true);
             m_currentP1->getWeapon()->setVisible(true);
@@ -515,6 +517,10 @@ void Controller::animateWeapons() {
         auto time = clock.getElapsedTime().asSeconds();
         if (time > 0.04) {
             clock.restart();
+            if(ChosenWarrior->getWeapon() == NULL){
+                chose = false;
+                m_animatingWeapon = false;
+            }
             if (ChosenWarrior->getWeapon()->animateWeapon()) {
                 chose = false;
                 m_animatingWeapon = false;

@@ -52,6 +52,7 @@ private:
     bool m_switchTurn = false;
     bool m_animatingWeapon = false;
     bool m_meAttacked = false;
+    bool m_collision = false;
     bool m_gameDone = false;
 
     // private functions:

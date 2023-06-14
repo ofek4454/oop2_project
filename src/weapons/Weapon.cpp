@@ -6,6 +6,9 @@
 Weapon::Weapon(const std::string symbol, bool visible) : m_is_visible(visible), m_symbol(symbol) {
     m_timeCounting.setCount(5);
     m_timerBox.setSize(sf::Vector2f(CIRCLE_RADIUS*2,CIRCLE_RADIUS*2));
+    m_timerBox.setOrigin(CIRCLE_RADIUS,CIRCLE_RADIUS);
+    m_timerBox.setFillColor(GREEN_COLOR);
+    m_timerBox.setPosition(CLOCK_CIRCLE_CENTER);
 }
 
 void Weapon::draw() {
@@ -33,6 +36,7 @@ void Weapon::chooseWeapon() {
     bg.update(*window);
     sf::Sprite background(bg);
     initChooseBox();
+    m_timeCounting.setCount(5);
 
     WindowManager::instance().eventHandler(
             [this](auto move, auto exit) {
@@ -59,9 +63,22 @@ void Weapon::chooseWeapon() {
             },
             [](auto type, auto exit) { return false; },
             [](auto offset, auto exit) { return false; },
-            [this, window, background](auto exit) {
+            [this, window, background](auto &exit) {
+                if (EventLoop::instance().hasEvent() &&
+                    EventLoop::instance().popEvent().getEventType() == TimeOver) {
+                    int random = std::rand() % 3;
+                    m_warrior->setWeapon(Weapons_t(random));
+                    window->clear();
+                    window->draw(background);
+                    window->display();
+                    exit = true;
+                    return;
+                }
                 window->draw(background);
                 window->draw(m_ChooseBoxRect);
+                window->draw(m_timerBox);
+                m_timeCounting.updateCount();
+                m_timeCounting.print();
                 for (const auto &texture: m_weapons_textures)
                     window->draw(texture);
                 window->draw(m_ChooseWeaponText);
