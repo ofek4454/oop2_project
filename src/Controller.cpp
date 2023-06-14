@@ -346,6 +346,16 @@ void Controller::initGame() {
     );
     RoomState::instance().uploadFlagAndHole();
 
+    sf::Text t("Waiting for opponent", *ResourcesManager::instance().getFont(), H2);
+    t.setPosition(BOARD_FRAME.left+(BOARD_FRAME.width-RECT_SIZE)/2, BOARD_FRAME.top + (BOARD_FRAME.height-RECT_SIZE)/2);
+    t.setOrigin(t.getGlobalBounds().width / 2, t.getGlobalBounds().height / 2);
+    t.setFillColor(sf::Color::White);
+    t.setOutlineThickness(2);
+    t.setOutlineColor(DARK_GREEN_COLOR);
+
+    m_window->draw(t);
+    m_window->display();
+
     std::pair<Location, Location> opponentFlagAndHole;
     sf::Clock clock;
     do {
@@ -546,3 +556,4 @@ void Controller::enemyTurn() {
         }
     }
 }
+

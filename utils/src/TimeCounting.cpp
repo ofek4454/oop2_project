@@ -3,9 +3,8 @@
 
 TimeCounting::TimeCounting() : m_window(WindowManager::instance().getWindow()) {
     m_countdownText.setFont(*ResourcesManager::instance().getFont());
-    m_countdownText.setCharacterSize(H1);
+    m_countdownText.setCharacterSize(H2);
     m_countdownText.setFillColor(sf::Color::White);
-//    m_countdownText.setStyle(sf::Text::Bold);
     m_countdownText.setPosition(CLOCK_CIRCLE_CENTER);
 }
 
@@ -41,7 +40,6 @@ void TimeCounting::updateCount() {
     sf::FloatRect textBounds = m_countdownText.getLocalBounds();
     m_countdownText.setOrigin(textBounds.left + textBounds.width / 2.0f,
                           textBounds.top + textBounds.height / 2.0f);
-//    m_countdownText.setOrigin( m_countdownText.getGlobalBounds().width/2 , m_countdownText.getGlobalBounds().height/2);
     float completion = std::min(1.0f, elapsed.asSeconds());
     numLines = static_cast<int>(numSegments * completion);
 }
