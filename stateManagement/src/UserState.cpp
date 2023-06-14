@@ -45,7 +45,6 @@ void UserState::doTurn(sf::Event::MouseButtonEvent *click) {
         setArrows();
         m_playerChose = false;
         if (m_direction != Non_Direction){ // finish turn
-            std::cout << "m_animating user = true\n";
             m_isAnimating = true;
         }
     }

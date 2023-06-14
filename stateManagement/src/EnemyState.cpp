@@ -79,7 +79,6 @@ bool EnemyState::move() {
     static int shadowOffsetY = 4;
     auto warrior = getWarrior();
     if (warrior == NULL) {
-        std::cout << "null here\n";
         m_isAnimating = false;
         return true;
     }

@@ -153,7 +153,6 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
 
 void Controller::handleEvents() {
     if (m_isFinishUserTurn && !EventLoop::instance().hasEvent()) {
-        std::cout << "is finish and not events\n";
         RoomState::instance().changeTurn();
         m_turn = (Turn_t) !myTurn;
         m_gameBar.resetClock(false);
@@ -204,9 +203,11 @@ void Controller::handleEvents() {
             }
             case HoleFall: {
                 m_playHoleAnimation = true;
-                if (event.getWinner() == P1Won) m_winner = P1;
-                else m_winner = P2;
+                if (event.getWinner() == P1Won) m_winner = myTurn;
+                else m_winner = !myTurn;
                 updateLastMoveAndChangeTurn();
+                if(m_meAttacked)
+                    m_switchTurn = true;
                 break;
             }
             case Won: {
@@ -529,11 +530,11 @@ void Controller::animateHole() {
     auto time = clock.getElapsedTime().asSeconds();
     if (time > 0.2) {
         clock.restart();
-        if (m_winner == P1) {
-            if (userHole->setHoleIntRect())
+        if (m_winner == myTurn) {
+            if (userHole->setHoleIntRect(true))
                 m_playHoleAnimation = false;
         } else {
-            if (enemyHole->setHoleIntRect())
+            if (enemyHole->setHoleIntRect(false))
                 m_playHoleAnimation = false;
         }
     }

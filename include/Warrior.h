@@ -22,7 +22,7 @@ public:
     void setSpriteLocation(const sf::Vector2f &offset, const sf::Vector2f &shadowoffset);
     void setHighlighted(bool isHighlighted);
     void setMovingIntRect(int counter, bool isEnemy = false);
-    bool setHoleIntRect();
+    bool setHoleIntRect(bool isMe);
     void setTextureFlag(bool isHighlighted);
     void setTextureHole(bool isHighlighted);
     bool setAsFlag();

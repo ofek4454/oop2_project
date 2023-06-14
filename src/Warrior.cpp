@@ -173,11 +173,11 @@ void Warrior::lose() {
     m_needToDelete = true;
 }
 
-bool Warrior::setHoleIntRect() {
+bool Warrior::setHoleIntRect(bool isMe) {
     static int rect = 0;
     static bool set = false;
     rect += IMAGE_WIDTH;
-    if(!m_isMine && !set){
+    if(!isMe && !set){
         static sf::Texture m_hole = *ResourcesManager::instance().getTexture(Trap);
         set = true;
         m_sprite.setTexture(m_hole);
@@ -185,8 +185,10 @@ bool Warrior::setHoleIntRect() {
     }
     m_sprite.setTextureRect(sf::IntRect(rect,0,IMAGE_WIDTH,IMAGE_HEIGHT));
     if(rect == IMAGE_WIDTH * 3){
-        if(m_isMine)
+        if(isMe){
+            std::cout << "Is Mine";
             m_sprite.setTextureRect(sf::IntRect(0,0,IMAGE_WIDTH,IMAGE_HEIGHT));
+        }
         else{
             auto texture = ResourcesManager::instance().getTexture(Warriors);
             m_sprite.setTexture(*texture);
