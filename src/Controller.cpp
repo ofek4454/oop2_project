@@ -131,12 +131,13 @@ void Controller::handleAnimation() {
             sf::Event event;
             while (m_window->pollEvent(event));
             m_turn = (Turn_t) myTurn;
+            m_gameBar.resetClock(true);
             if (m_switchTurn) {
                 m_switchTurn = false;
                 RoomState::instance().changeTurn();
                 m_turn = (Turn_t) !myTurn;
+                m_gameBar.resetClock(false);
             }
-            m_gameBar.resetClock(true);
         }
     }
 }
