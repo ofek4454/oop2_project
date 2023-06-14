@@ -54,14 +54,7 @@ void GameBar::drawStats() {
  * @param stats
  */
 void GameBar::updateGameBar(int userWarriors, int enemyWarriors) {
-    static sf::Clock clock;
-    sf::Time elapsed = clock.getElapsedTime();
-    if (elapsed.asSeconds() >= 1.0f) {
-        clock.restart();
-        m_timer.updateCount();
-    }
-    m_timer.setText(elapsed.asSeconds());
-    std::stringstream stringtonum;
+    m_timer.updateCount();
 
     m_statsText[0].setString(": " + std::to_string(userWarriors));
     m_statsText[1].setString(": " + std::to_string(enemyWarriors));
@@ -71,4 +64,8 @@ void GameBar::updateGameBar(int userWarriors, int enemyWarriors) {
 void GameBar::resetClock(bool myTurn) {
     m_timer.setCount(20);
     m_timer.setColor(myTurn ? sf::Color::White : sf::Color::Red);
+}
+
+void GameBar::setClock(int time) {
+    m_timer.setCount(time);
 }

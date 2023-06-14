@@ -18,11 +18,11 @@ Controller::Controller(PlayerModel p1, PlayerModel p2, bool isMeP1) : m_window(
     m_enemy->setPlayerSymbol(!isMeP1 ? "1" : "2");
     m_user->init();
     m_enemy->init();
-    initGame();
     run();
 }
 
 void Controller::run() {
+    initGame();
     LoadingGame();
     if (myTurn == P1) {
         sf::Event event;
@@ -73,9 +73,10 @@ void Controller::print(bool printLoad) {
     m_enemy->print();
     SoundFlip::instance().draw(*m_window);
     m_referee.print();
-    m_gameBar.drawStats();
     if (printLoad)
         m_timeCounting.print();
+    else
+        m_gameBar.drawStats();
     m_window->display();
 }
 
@@ -340,7 +341,7 @@ void Controller::initGame() {
             [](auto type, auto &exit) { return false; },
             [](auto offset, auto exit) { return false; },
             [this](auto exit) {
-                print();
+                print(true);
             }
     );
     RoomState::instance().uploadFlagAndHole();
@@ -455,10 +456,10 @@ void Controller::LoadingGame() {
             [](auto type, auto &exit) { return false; },
             [](auto offset, auto exit) { return false; },
             [this, &clock](auto &exit) {
+                m_timeCounting.updateCount();
                 sf::Time elapsed = clock.getElapsedTime();
                 if (elapsed.asSeconds() >= 1.0f) {
                     clock.restart();
-                    m_timeCounting.updateCount();
                     int arr[3] = {58, 174, 290};
                     auto p1_vec = m_user->getAllWarriors();
                     for (auto &warrior: *p1_vec) {
@@ -469,7 +470,6 @@ void Controller::LoadingGame() {
                         warrior.second->getWeapon()->setWeaponIntRect(arr[randomNumber]);
                     }
                 }
-                m_timeCounting.setText(elapsed.asSeconds());
                 if (EventLoop::instance().hasEvent() &&
                     EventLoop::instance().popEvent().getEventType() == TimeOver) {
                     exit = true;

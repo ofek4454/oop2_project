@@ -45,11 +45,10 @@ if(APPLE)
 
     find_package (SFML 2.5 COMPONENTS audio graphics REQUIRED)
     find_package(CURL REQUIRED)
-    find_package(OpenCV REQUIRED)
 
     set_target_properties ( PROPERTIES MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELEASE)
 
-    target_link_libraries (${CMAKE_PROJECT_NAME} sfml-graphics sfml-audio sfml-network ${CURL_LIBRARIES} ${OpenCV_LIBS})
+    target_link_libraries (${CMAKE_PROJECT_NAME} sfml-graphics sfml-audio sfml-network ${CURL_LIBRARIES})
 
 endif()
 

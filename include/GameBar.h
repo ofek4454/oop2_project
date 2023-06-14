@@ -17,6 +17,7 @@ public:
     void updateGameBar(int userWarriors, int enemyWarriors);
     void drawStats();
     void resetClock(bool myTurn);
+    void setClock(int time);
 private:
     // members
     sf::RenderWindow *m_window;

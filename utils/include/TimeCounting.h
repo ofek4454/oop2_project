@@ -10,13 +10,11 @@ public:
     TimeCounting();
     void setCount(int count) { m_countLength = count;}
     void updateCount();
-    void setText(float dt);
     void print();
     void setColor(sf::Color color);
 private:
-    sf::CircleShape m_circle;
     sf::Text m_countdownText;
-    int m_countLength = 0;
+    int m_countLength = -1;
     int numLines;
     const int numSegments = 60; // Number of line segments
     sf::RenderWindow *m_window;
