@@ -48,6 +48,8 @@ ResourcesManager::ResourcesManager() {
     m_texture[ThrowPlayer].loadFromFile("throwAnimationPlayer.png");
     m_texture[RefereeDeclareWinning].loadFromFile("end.png");
     m_texture[WinningJump].loadFromFile("winner.png");
+    m_texture[Logo].loadFromFile("Logo.png");
+    m_texture[Logo].setSmooth(true);
 
     m_helpScreenPages[0].loadFromFile("Help-Page1.png");
     m_helpScreenPages[1].loadFromFile("Help-Page2.png");
