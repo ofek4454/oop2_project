@@ -4,6 +4,7 @@
 #include "Warrior.h"
 
 Weapon::Weapon(const std::string symbol, bool visible) : m_is_visible(visible), m_symbol(symbol) {
+
     m_timeCounting.setCount(5);
     m_timerBox.setSize(sf::Vector2f(CIRCLE_RADIUS*2,CIRCLE_RADIUS*2));
     m_timerBox.setOrigin(CIRCLE_RADIUS,CIRCLE_RADIUS);
@@ -42,9 +43,9 @@ void Weapon::chooseWeapon() {
             [this](auto move, auto exit) {
                 for (auto &texture: m_weapons_textures)
                     if (texture.getGlobalBounds().contains(move.x, move.y))
-                        texture.setScale(2.5, 2.5);
+                        texture.setScale(1.1, 1.1);
                     else
-                        texture.setScale(2, 2);
+                        texture.setScale(1, 1);
                 return false;
             },
             [this, window, background](auto click, auto &exit) {
@@ -98,25 +99,22 @@ void Weapon::initChooseBox() {
     auto weapons_texture = ResourcesManager::instance().getTexture(Rps);
 
     m_weapons_textures[Rock_t].setTexture(*weapons_texture);
-    m_weapons_textures[Rock_t].setTextureRect(sf::IntRect(110, 174, 55, 58));
+    m_weapons_textures[Rock_t].setTextureRect(sf::IntRect(WEP_WIDTH * 2, WEP_HEIGHT * 3, WEP_WIDTH, WEP_HEIGHT));
     m_weapons_textures[Rock_t].setPosition(boxPos.x + RECT_SIZE, boxPos.y + RECT_SIZE);
     m_weapons_textures[Rock_t].setOrigin(m_weapons_textures[Rock_t].getGlobalBounds().width / 2,
                                          m_weapons_textures[Rock_t].getGlobalBounds().height / 2);
-    m_weapons_textures[Rock_t].setScale(2, 2);
 
     m_weapons_textures[Paper_t].setTexture(*weapons_texture);
-    m_weapons_textures[Paper_t].setTextureRect(sf::IntRect(110, 290, 55, 58));
+    m_weapons_textures[Paper_t].setTextureRect(sf::IntRect(WEP_WIDTH * 2, WEP_HEIGHT * 5, WEP_WIDTH, WEP_HEIGHT));
     m_weapons_textures[Paper_t].setPosition(boxPos.x + RECT_SIZE * 3, boxPos.y + RECT_SIZE);
     m_weapons_textures[Paper_t].setOrigin(m_weapons_textures[Paper_t].getGlobalBounds().width / 2,
                                           m_weapons_textures[Paper_t].getGlobalBounds().height / 2);
-    m_weapons_textures[Paper_t].setScale(2, 2);
 
     m_weapons_textures[Scissors_t].setTexture(*weapons_texture);
-    m_weapons_textures[Scissors_t].setTextureRect(sf::IntRect(110, 58, 55, 58));
+    m_weapons_textures[Scissors_t].setTextureRect(sf::IntRect(WEP_WIDTH * 2, WEP_HEIGHT, WEP_WIDTH, WEP_HEIGHT));
     m_weapons_textures[Scissors_t].setPosition(boxPos.x + RECT_SIZE * 5, boxPos.y + RECT_SIZE);
     m_weapons_textures[Scissors_t].setOrigin(m_weapons_textures[Scissors_t].getGlobalBounds().width / 2,
                                              m_weapons_textures[Scissors_t].getGlobalBounds().height / 2);
-    m_weapons_textures[Scissors_t].setScale(2, 2);
 
     m_ChooseWeaponText.setFont(*ResourcesManager::instance().getFont());
     m_ChooseWeaponText.setString("Choose Your\n   Weapon  ");
@@ -132,9 +130,9 @@ bool Weapon::animateWeapon() {
     static bool middle = false;
     static int offset = 22;
     if(!middle)
-        m_weaponIntRect.top -= 56.5;
+        m_weaponIntRect.top -= WEP_HEIGHT;
     else
-        m_weaponIntRect.top += 56.5;
+        m_weaponIntRect.top += WEP_HEIGHT;
 
     if (m_weaponIntRect.top < 0 && !middle) {
         middle = true;
@@ -143,9 +141,9 @@ bool Weapon::animateWeapon() {
         m_weapon_sprite.move(sf::Vector2f(0,-offset));
         return false;
     }
-    if(m_weaponIntRect.top >= 169.5 && middle){
+    if(m_weaponIntRect.top >= WEP_HEIGHT * 3 && middle){
         middle = false;
-        m_weaponIntRect.top = 169.5;
+        m_weaponIntRect.top = WEP_HEIGHT * 3;
         m_weapon_sprite.setTextureRect(m_weaponIntRect);
         m_weapon_sprite.move(sf::Vector2f(0,offset));
         return true;

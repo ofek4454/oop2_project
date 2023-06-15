@@ -35,7 +35,8 @@ public:
     void setVisible(bool visible) {m_is_visible = visible;}
     bool isVisible() const {return m_is_visible;}
     void setWeaponIntRect(int rect) {
-        m_weapon_sprite.setTextureRect(sf::IntRect(0,rect,55,58));
+        m_weaponIntRect.top = rect;
+        m_weapon_sprite.setTextureRect(m_weaponIntRect);
     }
     void removeWeaponTexture(){m_is_visible = false;}
     bool animateWeapon();

@@ -6,8 +6,9 @@
 Undefined::Undefined() : Weapon("U")  {
     auto weapon = ResourcesManager::instance().getTexture(Rps);
     m_weapon_sprite.setTexture(*weapon);
-    m_weapon_sprite.setScale(2.2,2.2);
-    m_weapon_sprite.setTextureRect(sf::IntRect(0, 0, 0, 0));
+    m_weapon_sprite.setTextureRect(sf::IntRect(0, 0, WEP_WIDTH, WEP_HEIGHT));
+    m_weapon_sprite.setOrigin(m_weapon_sprite.getGlobalBounds().width / 2,m_weapon_sprite.getGlobalBounds().height / 2);
+    m_weaponIntRect = m_weapon_sprite.getTextureRect();
 }
 
 void Undefined::fight(Weapon &other) {

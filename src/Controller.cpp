@@ -448,9 +448,10 @@ void Controller::handleTie() {
 }
 
 void Controller::LoadingGame() {
+
     sf::Clock clock;
     m_timeCounting.setCount(3);
-    int arr[3] = {0, 116, 232};
+    int arr[3] = {WEP_HEIGHT, WEP_HEIGHT * 3, WEP_HEIGHT * 5};
     auto p1_vec = m_user->getAllWarriors();
     for (auto &warrior: *p1_vec) {
         if (warrior.second->getLocation() == userHole->getLocation() ||
@@ -458,6 +459,7 @@ void Controller::LoadingGame() {
             continue;
         int randomNumber = std::rand() % 3;
         warrior.second->getWeapon()->setWeaponIntRect(arr[randomNumber]);
+        warrior.second->getWeapon()->setVisible(true);
     }
 
     WindowManager::instance().eventHandler(
@@ -469,12 +471,11 @@ void Controller::LoadingGame() {
             [](auto key, auto exit) { return false; },
             [](auto type, auto &exit) { return false; },
             [](auto offset, auto exit) { return false; },
-            [this, &clock](auto &exit) {
+            [this, &clock,&arr](auto &exit) {
                 m_timeCounting.updateCount();
                 sf::Time elapsed = clock.getElapsedTime();
                 if (elapsed.asSeconds() >= 1.0f) {
                     clock.restart();
-                    int arr[3] = {58, 174, 290};
                     auto p1_vec = m_user->getAllWarriors();
                     for (auto &warrior: *p1_vec) {
                         if (warrior.second->getLocation() == userHole->getLocation() ||

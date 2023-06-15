@@ -9,9 +9,8 @@
 Rock::Rock(bool visible) : Weapon("R",visible) {
     auto weapon = ResourcesManager::instance().getTexture(RockFlip);
     m_weapon_sprite.setTexture(*weapon);
-    m_weapon_sprite.setTextureRect(sf::IntRect(0, 169.5f, 55, 58));
-    m_weapon_sprite.setScale(2.2,2.2);
-    setSpriteLoc(sf::Vector2f(m_weapon_sprite.getPosition().x - m_weapon_sprite.getGlobalBounds().width * 0.125, m_weapon_sprite.getPosition().y - m_weapon_sprite.getGlobalBounds().height * 0.125));
+    m_weapon_sprite.setTextureRect(sf::IntRect(0, WEP_HEIGHT * 3, WEP_WIDTH, WEP_HEIGHT));
+    m_weapon_sprite.setOrigin(m_weapon_sprite.getGlobalBounds().width / 2,m_weapon_sprite.getGlobalBounds().height / 2);
     m_weaponIntRect = m_weapon_sprite.getTextureRect();
 }
 
