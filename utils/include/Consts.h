@@ -6,7 +6,7 @@
 const float WINDOW_WIDTH = sf::VideoMode::getDesktopMode().width * 0.75f;
 const float WINDOW_HEIGHT = sf::VideoMode::getDesktopMode().height * 0.75f;
 
-const int NUM_OF_TEXTURES = 25;
+const int NUM_OF_TEXTURES = 26;
 const int NUM_OF_HELP_SCREEN_PAGES = 4;
 
 // Board Size
@@ -66,6 +66,7 @@ enum Textures_t{
     WinningJump,
     RefereeDeclareWinning,
     Logo,
+    UndefinedWar,
 };
 
 

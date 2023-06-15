@@ -104,6 +104,8 @@ void Controller::checkCollision() {
     for (auto &p1: *p1_vec)
         for (auto &p2: *p2_vec)
             if (p1.second->getLocation() == p2.second->getLocation()) {
+                if(p1.second->getSymbol() == "U")
+                    animateFight(ResourcesManager::instance().getTexture(UndefinedWar), 453, 63, 3, NoSound);
                 m_user->setSelectedWarriorId(p1.second->getId());
                 m_enemy->setSelectedWarriorId(p2.second->getId());
                 m_collision = true;
@@ -264,6 +266,7 @@ void Controller::handleEvents() {
 
 void Controller::animateFight(sf::Texture *fightTexture, const int width, const int height, const int frames,
                               Sounds_t soundToPlay) {
+    print();
     ResourcesManager::instance().playSound(JumpFight);
     float frameWidth = width / frames;
     float frame = 0;
