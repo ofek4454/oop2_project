@@ -17,7 +17,7 @@ public:
     // C-Tor
     Controller(PlayerModel p1, PlayerModel p2, bool isMeP1) ;
     // D-Tor
-    ~Controller() = default;
+    ~Controller();
     // function
     void run();
 
@@ -54,6 +54,7 @@ private:
     bool m_meAttacked = false;
     bool m_collision = false;
     bool m_gameDone = false;
+    bool m_distruct = false;
 
     // private functions:
     void LoadingGame();
@@ -70,7 +71,7 @@ private:
     void handleTie();
     void animateWeapons();
     void animateHole();
-    void enemyTurn();
+    void enemyTurn(bool &exit);
 
     bool isMyTurn() const{
         return m_turn == myTurn;

@@ -23,6 +23,8 @@ Controller::Controller(PlayerModel p1, PlayerModel p2, bool isMeP1) : m_window(
 
 void Controller::run() {
     initGame();
+    if(m_distruct || !m_window->isOpen())
+        return;
     LoadingGame();
     if (myTurn == P1) {
         sf::Event event;
@@ -48,15 +50,17 @@ void Controller::run() {
             [](auto type, auto exit) { return false; },
             [](auto offset, auto exit) { return false; },
             [this](auto &exit) {
-                if (!isMyTurn() && !m_enemy->isAnimating())
-                    enemyTurn();
+                if (!isMyTurn() && !m_enemy->isAnimating()){
+                    enemyTurn(exit);
+                    if(exit) return;
+                }
 
                 handleAnimation();
                 if (isMyTurn()) {
                     checkCollision();
                     handleEvents();
                 }
-                if(!m_collision)
+                if (!m_collision)
                     m_gameBar.updateGameBar(m_user->getAllWarriors()->size(), m_enemy->getAllWarriors()->size());
                 print();
                 if (m_gameDone) exit = true;
@@ -207,7 +211,7 @@ void Controller::handleEvents() {
                 if (event.getWinner() == P1Won) m_winner = myTurn;
                 else m_winner = !myTurn;
                 updateLastMoveAndChangeTurn();
-                if(m_meAttacked)
+                if (m_meAttacked)
                     m_switchTurn = true;
                 break;
             }
@@ -351,7 +355,8 @@ void Controller::initGame() {
     RoomState::instance().uploadFlagAndHole();
 
     sf::Text t("Waiting for opponent", *ResourcesManager::instance().getFont(), H2);
-    t.setPosition(BOARD_FRAME.left+(BOARD_FRAME.width-RECT_SIZE)/2, BOARD_FRAME.top + (BOARD_FRAME.height-RECT_SIZE)/2);
+    t.setPosition(BOARD_FRAME.left + (BOARD_FRAME.width - RECT_SIZE) / 2,
+                  BOARD_FRAME.top + (BOARD_FRAME.height - RECT_SIZE) / 2);
     t.setOrigin(t.getGlobalBounds().width / 2, t.getGlobalBounds().height / 2);
     t.setFillColor(sf::Color::White);
     t.setOutlineThickness(2);
@@ -362,10 +367,16 @@ void Controller::initGame() {
 
     std::pair<Location, Location> opponentFlagAndHole;
     sf::Clock clock;
+    if(!m_window->isOpen())
+        return;
     do {
         if (clock.getElapsedTime().asSeconds() < 1) continue;
         clock.restart();
         opponentFlagAndHole = RoomState::instance().getOpponentFlagAndHole();
+        if(opponentFlagAndHole.first == Location(-2,-2)){
+            m_distruct = true;
+            break;
+        }
     } while (opponentFlagAndHole.first == Location(-1, -1) && opponentFlagAndHole.second == Location(-1, -1));
 
     m_turn = P1;
@@ -448,7 +459,6 @@ void Controller::handleTie() {
 }
 
 void Controller::LoadingGame() {
-
     sf::Clock clock;
     m_timeCounting.setCount(3);
     int arr[3] = {WEP_HEIGHT, WEP_HEIGHT * 3, WEP_HEIGHT * 5};
@@ -471,7 +481,7 @@ void Controller::LoadingGame() {
             [](auto key, auto exit) { return false; },
             [](auto type, auto &exit) { return false; },
             [](auto offset, auto exit) { return false; },
-            [this, &clock,&arr](auto &exit) {
+            [this, &clock, &arr](auto &exit) {
                 m_timeCounting.updateCount();
                 sf::Time elapsed = clock.getElapsedTime();
                 if (elapsed.asSeconds() >= 1.0f) {
@@ -518,7 +528,7 @@ void Controller::animateWeapons() {
         auto time = clock.getElapsedTime().asSeconds();
         if (time > 0.04) {
             clock.restart();
-            if(ChosenWarrior->getWeapon() == NULL){ // check if weapon null
+            if (ChosenWarrior->getWeapon() == NULL) { // check if weapon null
                 chose = false;
                 m_animatingWeapon = false;
             }
@@ -547,7 +557,7 @@ void Controller::animateHole() {
     }
 }
 
-void Controller::enemyTurn() {
+void Controller::enemyTurn(bool &exit) {
     static sf::Clock clock;
     if (clock.getElapsedTime().asSeconds() > 0.2) {
         clock.restart().asSeconds();
@@ -555,14 +565,28 @@ void Controller::enemyTurn() {
             if (RoomState::instance().getRoom().getLastMove().starts_with("TimeUp")) {
                 m_turn = myTurn;
                 m_gameBar.resetClock(true);
-            }
-            else if (RoomState::instance().getRoom().getLastMove().starts_with("tie")) {
+            } else if (RoomState::instance().getRoom().getLastMove().starts_with("tie")) {
                 // attacker only
                 handleTie();
-            } else {
+            } else if (RoomState::instance().getRoom().getLastMove().starts_with("Logout")){
+                m_window->clear();
+                m_window->draw(*ResourcesManager::instance().getBackground());
+                m_p2Name.setString("User Has Been Logged Out");
+                m_window->draw(m_p2Name);
+                m_window->display();
+                sf::sleep(sf::seconds(1.5));
+                exit = true;
+            }
+            else {
                 m_enemy->doTurn();
             }
         }
     }
+}
+
+Controller::~Controller() {
+    RoomState::instance().setLastMoveMsg("Logout");
+    RoomState::instance().changeTurn();
+    RoomState::instance().upload();
 }
 

@@ -60,6 +60,9 @@ void RoomState::changeTurn() {
 
 std::pair<Location, Location> RoomState::getOpponentFlagAndHole() {
     auto tmpRoom = RoomService::getRoom(room.roomId);
+    if(tmpRoom.enemyLastMove.starts_with("Logout")){
+        return std::make_pair(Location(-2,-2),Location(-2,-2));
+    }
     std::string flagStr = m_isMeP1 ? "2F" : "1F";
     std::string holeStr = m_isMeP1 ? "2H" : "1H";
     Location flag, hole;
