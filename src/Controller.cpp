@@ -397,6 +397,12 @@ void Controller::initGame() {
         clock.restart();
         opponentFlagAndHole = RoomState::instance().getOpponentFlagAndHole();
         if(opponentFlagAndHole.first == Location(-2,-2)){
+            m_window->clear();
+            m_window->draw(*ResourcesManager::instance().getBackground());
+            m_p2Name.setString("User Has Been Logged Out");
+            m_window->draw(m_p2Name);
+            m_window->display();
+            sf::sleep(sf::seconds(1.5));
             m_distruct = true;
             break;
         }
