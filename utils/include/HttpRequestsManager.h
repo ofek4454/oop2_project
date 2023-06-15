@@ -1,8 +1,22 @@
 #pragma once
 
 #include "Consts.h"
+#if WIN32
+#pragma warning(push)
+#pragma warning(disable: 6101 6054 6240 6239)
+#endif
 #include "curl/curl.h"
+#if WIN32
+#pragma warning(pop)
+#endif
+#if WIN32
+#pragma warning(push)
+#pragma warning(disable: 28020)
+#endif
 #include "nlohmann/json.hpp"
+#if WIN32
+#pragma warning(pop)
+#endif
 #include "iostream"
 #include "HttpException.h"
 

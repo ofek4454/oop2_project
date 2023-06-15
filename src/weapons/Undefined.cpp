@@ -6,7 +6,7 @@
 Undefined::Undefined() : Weapon("U")  {
     auto weapon = ResourcesManager::instance().getTexture(Rps);
     m_weapon_sprite.setTexture(*weapon);
-    m_weapon_sprite.setScale(2.2,2.2);
+    m_weapon_sprite.setScale(2.2f,2.2f);
     m_weapon_sprite.setTextureRect(sf::IntRect(0, 0, 0, 0));
 }
 

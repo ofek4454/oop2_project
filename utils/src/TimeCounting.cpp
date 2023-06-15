@@ -1,6 +1,8 @@
 
 #include "TimeCounting.h"
 
+#include <cmath>
+
 TimeCounting::TimeCounting() : m_window(WindowManager::instance().getWindow()) {
     m_countdownText.setFont(*ResourcesManager::instance().getFont());
     m_countdownText.setCharacterSize(H2);

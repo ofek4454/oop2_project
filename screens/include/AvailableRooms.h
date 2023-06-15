@@ -1,3 +1,5 @@
+#pragma once
+
 #include "SFML/Graphics.hpp"
 #include "PlayerModel.h"
 #include "RoomState.h"
@@ -5,7 +7,7 @@
 #include "EnemyState.h"
 #include "UserState.h"
 #include "Controller.h"
-#include "unordered_map"
+#include <unordered_map>
 
 class AvailableRooms{
 public:

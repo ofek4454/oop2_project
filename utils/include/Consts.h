@@ -1,6 +1,13 @@
 #pragma once
 #include "SFML/Graphics.hpp"
+#if WIN32
+#pragma warning(push)
+#pragma warning(disable: 28020)
+#endif
 #include "nlohmann/json.hpp"
+#if WIN32
+#pragma warning(pop)
+#endif
 #include "HttpRequestsManager.h"
 
 const float WINDOW_WIDTH = sf::VideoMode::getDesktopMode().width * 0.75f;

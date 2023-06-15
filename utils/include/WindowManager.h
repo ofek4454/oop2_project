@@ -28,7 +28,7 @@ private:
                                "Even juk", sf::Style::Close | sf::Style::Titlebar) {
 
         sf::Image image = (*ResourcesManager::instance().getLogo());
-        m_window.setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
+        //m_window.setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
 
         m_window.setFramerateLimit(60);
     }

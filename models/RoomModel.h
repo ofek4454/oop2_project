@@ -5,7 +5,15 @@
 #include "vector"
 #include "Consts.h"
 #include "chrono"
-#include <nlohmann/json.hpp>
+#if WIN32
+#pragma warning(push)
+#pragma warning(disable: 28020)
+#endif
+#include "nlohmann/json.hpp"
+#if WIN32
+#pragma warning(pop)
+#endif
+
 #include "ostream"
 #include "iostream"
 
