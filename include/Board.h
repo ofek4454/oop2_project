@@ -19,4 +19,5 @@ private:
     std::array<std::array<sf::RectangleShape,BOARD_SIZE>,BOARD_SIZE> m_matrix;
     std::array<sf::Sprite,4> m_arrows;
     sf::RectangleShape m_boardFrame[5];
+    sf::RectangleShape m_logo;
 };

@@ -27,6 +27,10 @@ Board::Board() {
 
     setFrames();
 
+    m_logo.setTexture(ResourcesManager::instance().getTexture(Logo));
+    m_logo.setSize(sf::Vector2f(2*CIRCLE_RADIUS,2*CIRCLE_RADIUS));
+    m_logo.setPosition(CLOCK_CIRCLE_CENTER.x, WINDOW_HEIGHT*0.355 - 1.1*CIRCLE_RADIUS);
+    m_logo.setOrigin(CIRCLE_RADIUS,CIRCLE_RADIUS);
 }
 
 void Board::print() {
@@ -41,6 +45,7 @@ void Board::print() {
     for (auto &frame: m_boardFrame) {
         window->draw(frame);
     }
+    window->draw(m_logo);
 }
 
 void Board::setFrames() {
