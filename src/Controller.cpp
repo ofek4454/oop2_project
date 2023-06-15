@@ -14,6 +14,14 @@ Controller::Controller(PlayerModel p1, PlayerModel p2, bool isMeP1) : m_window(
                                                                       m_referee(isMeP1 ? P1 : P2) {
 
 
+    m_originalCursor.loadFromSystem(sf::Cursor::Arrow);
+    m_cursor.loadFromSystem(sf::Cursor::Hand);
+    m_backButton.setFont(*ResourcesManager::instance().getFont());
+    m_backButton.setCharacterSize(H2);
+    m_backButton.setOutlineThickness(2);
+    m_backButton.setOutlineColor(sf::Color::Black);
+    m_backButton.setPosition(BOARD_TOP_LEFT.width - WINDOW_WIDTH * 0.03,BOARD_TOP_LEFT.height - WINDOW_HEIGHT * 0.08);
+    m_backButton.setString("<-");
     m_user->setPlayerSymbol(isMeP1 ? "1" : "2");
     m_enemy->setPlayerSymbol(!isMeP1 ? "1" : "2");
     m_user->init();
@@ -39,8 +47,10 @@ void Controller::run() {
                 else return true;
                 return false;
             },
-            [this](auto click, auto exit) {
+            [this](auto click, auto &exit) {
                 SoundFlip::instance().checkIfContains(click);
+                if(m_backButton.getGlobalBounds().contains(click.x,click.y))
+                    exit = true;
                 if (isMyTurn() && !m_user->isAnimating()) {
                     m_user->doTurn(&click);
                 } else return true;
@@ -72,6 +82,7 @@ void Controller::print(bool printLoad) {
     m_window->clear();
     m_window->draw(*ResourcesManager::instance().getBackground());
     m_board.print();
+    m_window->draw(m_backButton);
     m_window->draw(m_p1Name);
     m_window->draw(m_p2Name);
     m_user->print();
@@ -148,6 +159,10 @@ void Controller::handleAnimation() {
 }
 
 void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
+    if(m_backButton.getGlobalBounds().contains(event.x,event.y))
+        m_window->setMouseCursor(m_cursor);
+    else
+        m_window->setMouseCursor(m_originalCursor);
     if (BOARD_FRAME.contains(event.x, event.y)) {
         sf::FloatRect rect_pos = BOARD_TOP_LEFT;
         int row = (event.y - rect_pos.top) / RECT_SIZE;
@@ -316,6 +331,10 @@ void Controller::initGame() {
     initNames();
     WindowManager::instance().eventHandler(
             [this, &flagChoosed](auto move, auto exit) {
+                if(m_backButton.getGlobalBounds().contains(move.x,move.y))
+                    m_window->setMouseCursor(m_cursor);
+                else
+                    m_window->setMouseCursor(m_originalCursor);
                 if (!BOARD_FRAME.contains(move.x, move.y)) return true;
                 sf::FloatRect rect_pos = BOARD_TOP_LEFT;
                 int row = (move.y - rect_pos.top) / rect_pos.height;
@@ -326,6 +345,10 @@ void Controller::initGame() {
             },
             [this, &flagChoosed](auto click, auto &exit) {
                 SoundFlip::instance().checkIfContains(click);
+                if(m_backButton.getGlobalBounds().contains(click.x,click.y)){
+                    m_distruct = true;
+                    exit = true;
+                }
                 if (!BOARD_FRAME.contains(click.x, click.y)) return true;
                 sf::FloatRect rect_pos = BOARD_TOP_LEFT;
                 int row = (click.y - rect_pos.top) / rect_pos.height;
@@ -367,7 +390,7 @@ void Controller::initGame() {
 
     std::pair<Location, Location> opponentFlagAndHole;
     sf::Clock clock;
-    if(!m_window->isOpen())
+    if(!m_window->isOpen() || m_distruct)
         return;
     do {
         if (clock.getElapsedTime().asSeconds() < 1) continue;

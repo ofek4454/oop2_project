@@ -16,7 +16,6 @@ Warrior::Warrior(const std::string id, const sf::Vector2f pos, const bool isMine
     m_sprite.setTextureRect(
             isMine ? sf::IntRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT) : sf::IntRect(0, IMAGE_HEIGHT * 3, IMAGE_WIDTH,
                                                                                 IMAGE_HEIGHT));
-    //TODO set relative size
     m_sprite.setScale(RECT_SIZE / IMAGE_WIDTH, RECT_SIZE / IMAGE_WIDTH);
     m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2, m_sprite.getLocalBounds().height / 2);
     m_sprite.setPosition(sf::Vector2f(pos.x, pos.y));
@@ -105,12 +104,9 @@ void Warrior::setTextureHole(bool isHighlighted) {
     if (!m_canMove) return;
     if (isHighlighted) {
         m_sprite.setTexture(m_hole);
-//        m_weapon.get()->setSpriteLoc(sf::Vector2f(-100, -100));
     } else {
         m_sprite.setTexture(m_initialTexture);
         m_sprite.setTextureRect(m_initialIntRect);
-//        m_weapon->setSpriteLoc(
-//                sf::Vector2f(m_sprite.getPosition().x - RECT_SIZE / 2, m_sprite.getPosition().y - RECT_SIZE / 2));
     }
 }
 

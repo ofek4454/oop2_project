@@ -26,6 +26,7 @@ private:
     sf::RenderWindow *m_window;
     sf::Texture m_fightTexture;
     sf::Text m_p1Name, m_p2Name;
+    sf::Text m_backButton;
     sf::Cursor m_cursor;
     sf::Cursor m_originalCursor;
     // Board
