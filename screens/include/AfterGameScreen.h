@@ -7,6 +7,7 @@
 #include "WindowManager.h"
 #include "EventLoop.h"
 #include "RoomState.h"
+#include "TextClass.h"
 
 class AfterGameScreen {
 public:

@@ -6,6 +6,7 @@
 #include "RoomState.h"
 #include "Controller.h"
 #include "WaitingRoom.h"
+#include "TextClass.h"
 
 enum Mode_t{
     Create,

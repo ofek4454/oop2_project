@@ -14,15 +14,8 @@ EnterNameScreen::EnterNameScreen(Mode_t mode) : m_mode(mode) , m_window(WindowMa
 void EnterNameScreen::init() {
     m_background.setTexture(ResourcesManager::instance().getTexture(Background));
     m_background.setSize(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
-    m_title.setFont(*ResourcesManager::instance().getFont());
-    m_title.setString("Enter you name:");
-    m_title.setCharacterSize(H3);
-    m_title.setPosition(WINDOW_WIDTH*0.5, WINDOW_HEIGHT*0.4);
-    m_title.setOrigin(m_title.getGlobalBounds().width/2,m_title.getGlobalBounds().height/2);
-    m_nameText.setFont(*ResourcesManager::instance().getFont());
-    m_nameText.setString("");
-    m_nameText.setCharacterSize(H2);
-    m_nameText.setPosition(WINDOW_WIDTH*0.5, m_title.getPosition().y + m_title.getGlobalBounds().height*2);
+    m_title = TextClass("Enter you name:",H3,sf::Vector2f (WINDOW_WIDTH*0.5, WINDOW_HEIGHT*0.4)).getText();
+    m_nameText = TextClass("",H2,sf::Vector2f (WINDOW_WIDTH*0.5, m_title.getPosition().y + m_title.getGlobalBounds().height*2)).getText();
 }
 
 void EnterNameScreen::handleEvents() {

@@ -29,39 +29,20 @@ AfterGameScreen::AfterGameScreen(bool isMeWon, PlayerModel userModel, PlayerMode
     else
         text += enemyModel.m_name + "!";
 
-    m_text.setFont(*ResourcesManager::instance().getFont());
-    m_text.setString(text);
-    m_text.setCharacterSize(H1);
-    m_text.setPosition(sf::Vector2f(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 0.2));
-    m_text.setOrigin(m_text.getGlobalBounds().width/2,m_text.getGlobalBounds().height/2);
-    m_text.setOutlineThickness(2);
-    m_text.setOutlineColor(sf::Color::Black);
-    m_rematchText.setFont(*ResourcesManager::instance().getFont());
-    m_rematchText.setString("Rematch?");
-    m_rematchText.setCharacterSize(H2);
-    m_rematchText.setPosition(WINDOW_WIDTH/2, WINDOW_HEIGHT * 0.7);
-    m_rematchText.setOrigin(m_rematchText.getGlobalBounds().width / 2, m_rematchText.getGlobalBounds().height / 2);
-    m_rematchText.setOutlineThickness(2);
-    m_rematchText.setOutlineColor(sf::Color::Black);
+    m_text = TextClass(text, H1, sf::Vector2f(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 0.2)).getText();
+    m_rematchText = TextClass("Rematch ?", H2, sf::Vector2f(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 0.7)).getText();
     m_originalCursor.loadFromSystem(sf::Cursor::Arrow);
     m_clickable.loadFromSystem(sf::Cursor::Hand);
     m_jumpingRect = m_playerJump.getTextureRect();
     m_refRect = m_refereeFlag.getTextureRect();
     m_playerJump.setScale(1.5f, 1.5f);
     m_refereeFlag.setScale(1.5f, 1.5f);
-    m_yesNoTexts[0].setString("Yes");
-    m_yesNoTexts[1].setString("No");
-    for (auto &txt: m_yesNoTexts) {
-        txt.setFont(*ResourcesManager::instance().getFont());
-        txt.setCharacterSize(H3);
-        txt.setPosition(m_rematchText.getPosition().x,
-                        m_rematchText.getPosition().y + m_rematchText.getGlobalBounds().height*2);
-        txt.setOrigin(txt.getGlobalBounds().width / 2, txt.getGlobalBounds().height / 2);
-        txt.setOutlineThickness(2);
-        txt.setOutlineColor(sf::Color::Black);
-    }
-    m_yesNoTexts[0].move(-m_rematchText.getGlobalBounds().width,0);
-    m_yesNoTexts[1].move(m_rematchText.getGlobalBounds().width,0);
+    m_yesNoTexts[0] = TextClass("Yes", H3, sf::Vector2f(m_rematchText.getPosition().x -m_rematchText.getGlobalBounds().width,
+                                                        m_rematchText.getPosition().y +
+                                                        m_rematchText.getGlobalBounds().height * 2)).getText();
+    m_yesNoTexts[1] = TextClass("No", H3, sf::Vector2f(m_rematchText.getPosition().x + m_rematchText.getGlobalBounds().width,
+                                                       m_rematchText.getPosition().y +
+                                                       m_rematchText.getGlobalBounds().height * 2)).getText();
 
     playLosingAnimation();
 }
@@ -104,8 +85,7 @@ void AfterGameScreen::playLosingAnimation() {
                         jumpingClock.restart().asSeconds();
                         changeJumpingTextureRect();
                     }
-                }
-                else{
+                } else {
                     checkOpponentsResponse(exit);
                 }
                 print();
@@ -119,7 +99,7 @@ void AfterGameScreen::print() {
     m_window->clear();
     m_window->draw(m_background);
     SoundFlip::instance().draw(*m_window);
-    if(!m_waitingForOpponent){
+    if (!m_waitingForOpponent) {
         m_window->draw(m_refereeFlag);
         m_window->draw(m_playerJump);
         m_window->draw(m_rematchText);
@@ -132,7 +112,7 @@ void AfterGameScreen::print() {
 
 void AfterGameScreen::handleHover(sf::Event::MouseMoveEvent &event) {
     bool hover = false;
-    for(auto btn : m_yesNoTexts){
+    for (auto btn: m_yesNoTexts) {
         if (btn.getGlobalBounds().contains(event.x, event.y)) {
             btn.setScale(1.1, 1.1);
             m_window->setMouseCursor(m_clickable);
@@ -149,8 +129,8 @@ void AfterGameScreen::handleClick(sf::Event::MouseButtonEvent &event, bool &exit
         RoomState::instance().wantToRematch(true);
         m_waitingForOpponent = true;
         m_text.setString("Waiting For Opponent..");
-        m_text.setPosition(WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
-        m_text.setOrigin(m_text.getGlobalBounds().width / 2,m_text.getGlobalBounds().height / 2);
+        m_text.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+        m_text.setOrigin(m_text.getGlobalBounds().width / 2, m_text.getGlobalBounds().height / 2);
     }
     if (m_yesNoTexts[1].getGlobalBounds().contains(event.x, event.y)) {
         RoomState::instance().wantToRematch(false);
@@ -199,13 +179,13 @@ void AfterGameScreen::changeJumpingTextureRect() {
 void AfterGameScreen::checkOpponentsResponse(bool &exit) {
     static sf::Clock timerForCheck;
     auto time = timerForCheck.getElapsedTime().asSeconds();
-    if(time < 1) return;
+    if (time < 1) return;
 
     timerForCheck.restart();
     auto tmp = RoomState::instance().isOpponentWantsToRematch();
-    if(tmp == 2)
+    if (tmp == 2)
         return;
-    if(tmp == 1)
+    if (tmp == 1)
         EventLoop::instance().addEvent(Event(Rematch));
     exit = true;
 }

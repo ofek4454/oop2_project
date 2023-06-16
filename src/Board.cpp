@@ -9,7 +9,8 @@ Board::Board() {
         for (int j = 0; j < BOARD_SIZE; j++) {
             auto rect = sf::RectangleShape();
             rect.setSize(sf::Vector2f(RECT_SIZE, RECT_SIZE));
-            rect.setFillColor((i + j) % 2 == 0 ? GREEN_COLOR : GRAY_COLOR);
+//            rect.setFillColor((i + j) % 2 == 0 ? GREEN_COLOR : GRAY_COLOR);
+            rect.setTexture((i + j) % 2 == 0 ? ResourcesManager::instance().getTexture(Grass) : ResourcesManager::instance().getTexture(LandTexture));
             rect.setPosition(sf::Vector2f(x, y));
             rect.setOrigin(RECT_SIZE / 2, RECT_SIZE / 2);
             m_matrix[i][j] = rect;
@@ -54,8 +55,8 @@ void Board::setFrames() {
     m_boardFrame[0].setPosition(sf::Vector2f(m_matrix[0][0].getPosition().x - RECT_SIZE / 2,
                                              m_matrix[0][0].getPosition().y - RECT_SIZE / 2));
     m_boardFrame[0].setFillColor(sf::Color::Transparent);
-    m_boardFrame[0].setOutlineColor(sf::Color(255, 255, 255, 150));
-    m_boardFrame[0].setOutlineThickness(2);
+    m_boardFrame[0].setOutlineColor(GRAY_COLOR);
+    m_boardFrame[0].setOutlineThickness(7);
 
     // window frame
     m_boardFrame[1].setSize(sf::Vector2f(WINDOW_WIDTH * 0.95, WINDOW_HEIGHT * 0.95));

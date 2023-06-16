@@ -3,12 +3,7 @@
 
 AvailableRooms::AvailableRooms(PlayerModel player) : p(player), m_window(*WindowManager::instance().getWindow()),
                                                      m_background(*ResourcesManager::instance().getBackground()) {
-    m_loadingText.setFont(*ResourcesManager::instance().getFont());
-    m_loadingText.setString("Waiting For The Second Player...");
-    m_loadingText.setCharacterSize(40);
-    m_loadingText.setPosition(
-            sf::Vector2f(WINDOW_WIDTH / 2 - m_loadingText.getGlobalBounds().width / 2, WINDOW_HEIGHT / 2));
-
+    m_loadingText = TextClass("Waiting For The Second Player...",40,sf::Vector2f(WINDOW_WIDTH / 2 - m_loadingText.getGlobalBounds().width / 2, WINDOW_HEIGHT / 2)).getText();
     m_originalCursor.loadFromSystem(sf::Cursor::Arrow);
     m_clickable.loadFromSystem(sf::Cursor::Hand);
 
@@ -24,12 +19,7 @@ void AvailableRooms::init() {
         availableRooms[roomId] = roomName;
     }
 
-    m_text.setFont(*ResourcesManager::instance().getFont());
-    m_text.setString("Choose room to join");
-    m_text.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 0.1);
-    m_text.setCharacterSize(H2);
-    m_text.setOrigin(m_text.getGlobalBounds().width / 2, m_text.getGlobalBounds().height / 2);
-    m_text.setFillColor(sf::Color::White);
+    m_text = TextClass("Choose room to join",H2,sf::Vector2f (WINDOW_WIDTH / 2, WINDOW_HEIGHT * 0.1)).getText();
     m_background = *ResourcesManager::instance().getBackground();
 
     float start_y = m_text.getGlobalBounds().top + m_text.getGlobalBounds().height * 2 + WINDOW_HEIGHT * 0.1;

@@ -16,12 +16,8 @@ Controller::Controller(PlayerModel p1, PlayerModel p2, bool isMeP1) : m_window(
 
     m_originalCursor.loadFromSystem(sf::Cursor::Arrow);
     m_cursor.loadFromSystem(sf::Cursor::Hand);
-    m_backButton.setFont(*ResourcesManager::instance().getFont());
-    m_backButton.setCharacterSize(H2);
-    m_backButton.setOutlineThickness(2);
-    m_backButton.setOutlineColor(sf::Color::Black);
-    m_backButton.setPosition(BOARD_TOP_LEFT.width - WINDOW_WIDTH * 0.03,BOARD_TOP_LEFT.height - WINDOW_HEIGHT * 0.08);
-    m_backButton.setString("<-");
+    m_backButton = TextClass("<-", H2, sf::Vector2f(BOARD_TOP_LEFT.width - WINDOW_WIDTH * 0.03,
+                                                    BOARD_TOP_LEFT.height - WINDOW_HEIGHT * 0.08)).getText();
     m_user->setPlayerSymbol(isMeP1 ? "1" : "2");
     m_enemy->setPlayerSymbol(!isMeP1 ? "1" : "2");
     m_user->init();
@@ -31,7 +27,7 @@ Controller::Controller(PlayerModel p1, PlayerModel p2, bool isMeP1) : m_window(
 
 void Controller::run() {
     initGame();
-    if(m_distruct || !m_window->isOpen())
+    if (m_distruct || !m_window->isOpen())
         return;
     LoadingGame();
     if (myTurn == P1) {
@@ -49,7 +45,7 @@ void Controller::run() {
             },
             [this](auto click, auto &exit) {
                 SoundFlip::instance().checkIfContains(click);
-                if(m_backButton.getGlobalBounds().contains(click.x,click.y))
+                if (m_backButton.getGlobalBounds().contains(click.x, click.y))
                     exit = true;
                 if (isMyTurn() && !m_user->isAnimating()) {
                     m_user->doTurn(&click);
@@ -60,9 +56,9 @@ void Controller::run() {
             [](auto type, auto exit) { return false; },
             [](auto offset, auto exit) { return false; },
             [this](auto &exit) {
-                if (!isMyTurn() && !m_enemy->isAnimating()){
+                if (!isMyTurn() && !m_enemy->isAnimating()) {
                     enemyTurn(exit);
-                    if(exit) return;
+                    if (exit) return;
                 }
 
                 handleAnimation();
@@ -104,7 +100,8 @@ void Controller::checkCollision() {
     for (auto &p1: *p1_vec)
         for (auto &p2: *p2_vec)
             if (p1.second->getLocation() == p2.second->getLocation()) {
-                if(p1.second->getSymbol() == "U")
+                if ((p1.second->getSymbol() == "U" && p2.second->getSymbol() != "H") ||
+                    (p1.second->getSymbol() == "U" && p2.second->getSymbol() != "F"))
                     animateFight(ResourcesManager::instance().getTexture(UndefinedWar), 453, 63, 3, NoSound);
                 m_user->setSelectedWarriorId(p1.second->getId());
                 m_enemy->setSelectedWarriorId(p2.second->getId());
@@ -161,7 +158,7 @@ void Controller::handleAnimation() {
 }
 
 void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
-    if(m_backButton.getGlobalBounds().contains(event.x,event.y))
+    if (m_backButton.getGlobalBounds().contains(event.x, event.y))
         m_window->setMouseCursor(m_cursor);
     else
         m_window->setMouseCursor(m_originalCursor);
@@ -317,7 +314,7 @@ void Controller::initNames() {
     m_p1Name.setCharacterSize(H3);
     m_p2Name.setCharacterSize(H3);
     m_p1Name.setFillColor(sf::Color::Blue);
-    m_p2Name.setFillColor(sf::Color::Red);
+    m_p2Name.setFillColor(sf::Color(195, 0, 0));
     m_p1Name.setString(m_user->getPlayerModel().m_name);
     m_p2Name.setString(m_enemy->getPlayerModel().m_name);
     m_p1Name.setOrigin(m_p1Name.getGlobalBounds().width / 2, m_p1Name.getGlobalBounds().height / 2);
@@ -334,7 +331,7 @@ void Controller::initGame() {
     initNames();
     WindowManager::instance().eventHandler(
             [this, &flagChoosed](auto move, auto exit) {
-                if(m_backButton.getGlobalBounds().contains(move.x,move.y))
+                if (m_backButton.getGlobalBounds().contains(move.x, move.y))
                     m_window->setMouseCursor(m_cursor);
                 else
                     m_window->setMouseCursor(m_originalCursor);
@@ -348,7 +345,7 @@ void Controller::initGame() {
             },
             [this, &flagChoosed](auto click, auto &exit) {
                 SoundFlip::instance().checkIfContains(click);
-                if(m_backButton.getGlobalBounds().contains(click.x,click.y)){
+                if (m_backButton.getGlobalBounds().contains(click.x, click.y)) {
                     m_distruct = true;
                     exit = true;
                 }
@@ -393,13 +390,13 @@ void Controller::initGame() {
 
     std::pair<Location, Location> opponentFlagAndHole;
     sf::Clock clock;
-    if(!m_window->isOpen() || m_distruct)
+    if (!m_window->isOpen() || m_distruct)
         return;
     do {
         if (clock.getElapsedTime().asSeconds() < 1) continue;
         clock.restart();
         opponentFlagAndHole = RoomState::instance().getOpponentFlagAndHole();
-        if(opponentFlagAndHole.first == Location(-2,-2)){
+        if (opponentFlagAndHole.first == Location(-2, -2)) {
             m_window->clear();
             m_window->draw(*ResourcesManager::instance().getBackground());
             m_p2Name.setString("User Has Been Logged Out");
@@ -577,7 +574,7 @@ void Controller::animateWeapons() {
 void Controller::animateHole() {
     static sf::Clock clock;
     auto time = clock.getElapsedTime().asSeconds();
-    if (time > 0.2) {
+    if (time > 0.5) {
         clock.restart();
         if (m_winner == myTurn) {
             if (userHole->setHoleIntRect(true))
@@ -600,7 +597,7 @@ void Controller::enemyTurn(bool &exit) {
             } else if (RoomState::instance().getRoom().getLastMove().starts_with("tie")) {
                 // attacker only
                 handleTie();
-            } else if (RoomState::instance().getRoom().getLastMove().starts_with("Logout")){
+            } else if (RoomState::instance().getRoom().getLastMove().starts_with("Logout")) {
                 m_window->clear();
                 m_window->draw(*ResourcesManager::instance().getBackground());
                 m_p2Name.setString("User Has Been Logged Out");
@@ -608,8 +605,7 @@ void Controller::enemyTurn(bool &exit) {
                 m_window->display();
                 sf::sleep(sf::seconds(1.5));
                 exit = true;
-            }
-            else {
+            } else {
                 m_enemy->doTurn();
             }
         }

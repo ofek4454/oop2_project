@@ -6,7 +6,7 @@
 const float WINDOW_WIDTH = sf::VideoMode::getDesktopMode().width * 0.75f;
 const float WINDOW_HEIGHT = sf::VideoMode::getDesktopMode().height * 0.75f;
 
-const int NUM_OF_TEXTURES = 26;
+const int NUM_OF_TEXTURES = 28;
 const int NUM_OF_HELP_SCREEN_PAGES = 4;
 
 // Board Size
@@ -67,6 +67,8 @@ enum Textures_t{
     RefereeDeclareWinning,
     Logo,
     UndefinedWar,
+    Grass,
+    LandTexture,
 };
 
 
@@ -125,8 +127,8 @@ enum Winner_t{
     NoneEvent
 };
 
-const sf::Color GRAY_COLOR = sf::Color(181, 193, 105);
-const sf::Color GREEN_COLOR = sf::Color(181, 221, 94);
+const sf::Color GRAY_COLOR = sf::Color(182,  220, 225);
+const sf::Color GREEN_COLOR = sf::Color(214, 244, 247);
 const sf::Color DARK_GREEN_COLOR = sf::Color(103, 133, 39,120);
 
 const float H1 = WINDOW_HEIGHT * 0.065f;

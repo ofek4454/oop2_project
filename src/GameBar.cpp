@@ -22,18 +22,8 @@ GameBar::GameBar() {
                               BOARD_FRAME.top - RECT_SIZE / 2 - (H3 * 0.7) - RECT_SIZE / 2);
 
 
-    for (int i = 0; i < 2; i++) {
-        m_statsText[i].setFillColor(sf::Color::White);
-        m_statsText[i].setOutlineThickness(1);
-        m_statsText[i].setOutlineColor(sf::Color::Black);
-        m_statsText[i].setFont(*ResourcesManager::instance().getFont());
-        m_statsText[i].setString(": 16");
-        m_statsText[i].setCharacterSize(H3);
-    }
-    m_statsText[P1].setPosition(
-            sf::Vector2f(m_sprites[P1].getPosition().x + WINDOW_WIDTH * 0.05, m_sprites[P1].getPosition().y));
-    m_statsText[P2].setPosition(
-            sf::Vector2f(m_sprites[P2].getPosition().x + WINDOW_WIDTH * 0.05, m_sprites[P2].getPosition().y));
+    m_statsText[0] = TextClass(": 16",H3,sf::Vector2f(m_sprites[P1].getPosition().x + WINDOW_WIDTH * 0.05, m_sprites[P1].getPosition().y)).getText();
+    m_statsText[1] = TextClass(": 16",H3, sf::Vector2f(m_sprites[P2].getPosition().x + WINDOW_WIDTH * 0.05, m_sprites[P2].getPosition().y)).getText();
 
 }
 

@@ -4,6 +4,7 @@
 #include "ResourcesManager.h"
 #include "WindowManager.h"
 #include "EventLoop.h"
+#include "TextClass.h"
 
 class TimeCounting {
 public:

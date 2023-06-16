@@ -3,21 +3,13 @@
 
 WaitingRoom::WaitingRoom(PlayerModel player) : p(player), m_window(*WindowManager::instance().getWindow()),
                                                m_background(*ResourcesManager::instance().getBackground()) {
-    m_loadingText.setFont(*ResourcesManager::instance().getFont());
-    m_loadingText.setString("Waiting For The Second Player...");
-    m_loadingText.setCharacterSize(40);
-    m_loadingText.setPosition(
-            sf::Vector2f(WINDOW_WIDTH / 2 - m_loadingText.getGlobalBounds().width / 2, WINDOW_HEIGHT / 2));
+    m_loadingText = TextClass("Waiting For The Second Player...",40,sf::Vector2f(WINDOW_WIDTH / 2 - m_loadingText.getGlobalBounds().width / 2, WINDOW_HEIGHT / 2)).getText();
     init();
     waitForOpponent();
 }
 
 void WaitingRoom::init() {
-    m_text.setFont(*ResourcesManager::instance().getFont());
-    m_text.setString("Waiting for opponent...");
-    m_text.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-    m_text.setCharacterSize(H1);
-    m_text.setOrigin(m_text.getGlobalBounds().width / 2, m_text.getGlobalBounds().height / 2);
+    m_text = TextClass("Waiting For The Opponent...",H1,sf::Vector2f(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)).getText();
 }
 
 void WaitingRoom::waitForOpponent() {

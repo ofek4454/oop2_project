@@ -1,6 +1,7 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "SettingsManager.h"
+#include "TextClass.h"
 
 /**
  * Settings class that handles the setting window display
@@ -14,6 +15,8 @@ public:
 private:
     // members
     sf::RenderWindow& m_window;
+    sf::Cursor m_cursor;
+    sf::Cursor m_originalCursor;
     sf::Text m_volume_text, m_music_text;
     sf::CircleShape m_volume_drag;
     sf::RectangleShape m_volume_line;

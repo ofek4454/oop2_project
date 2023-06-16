@@ -2,10 +2,7 @@
 #include "TimeCounting.h"
 
 TimeCounting::TimeCounting() : m_window(WindowManager::instance().getWindow()) {
-    m_countdownText.setFont(*ResourcesManager::instance().getFont());
-    m_countdownText.setCharacterSize(H2);
-    m_countdownText.setFillColor(sf::Color::White);
-    m_countdownText.setPosition(CLOCK_CIRCLE_CENTER);
+    m_countdownText = TextClass("",H2,CLOCK_CIRCLE_CENTER).getText();
 }
 
 void TimeCounting::updateCount() {
@@ -56,6 +53,8 @@ void TimeCounting::print() {
             line.setOrigin(line.getRadius(), line.getRadius());
             line.setPosition(std::cos(angle) * (CIRCLE_RADIUS - line.getRadius()) + CLOCK_CIRCLE_CENTER.x,
                              std::sin(angle) * (CIRCLE_RADIUS - line.getRadius()) + CLOCK_CIRCLE_CENTER.y);
+            line.setOutlineThickness(1);
+            line.setOutlineColor(sf::Color::Black);
             m_window->draw(line);
         }
     }

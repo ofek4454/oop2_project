@@ -6,13 +6,11 @@
  * @param window the window to show the screen in.
  */
 SettingsScreen::SettingsScreen(sf::RenderWindow &window) : m_window(window) {
+    m_originalCursor.loadFromSystem(sf::Cursor::Arrow);
+    m_cursor.loadFromSystem(sf::Cursor::Hand);
 
     auto volume = SettingsManager::instance().getVolume();
-    std::string str = "volume: ";
-    m_volume_text.setString(str + std::to_string(volume));
-    m_volume_text.setPosition(WINDOW_WIDTH/2 , WINDOW_HEIGHT*0.4);
-    m_volume_text.setFillColor(sf::Color::White);
-    m_volume_text.setFont(*ResourcesManager::instance().getFont());
+    m_volume_text = TextClass("Volume: ",30,sf::Vector2f(WINDOW_WIDTH/2 , WINDOW_HEIGHT*0.4)).getText();
 
     m_volume_line.setSize(sf::Vector2f((WINDOW_WIDTH - (m_volume_text.getPosition().x + m_volume_text.getGlobalBounds().width))*0.5,5));
     m_volume_line.setFillColor(sf::Color::White);
@@ -27,12 +25,8 @@ SettingsScreen::SettingsScreen(sf::RenderWindow &window) : m_window(window) {
     m_volume_drag.setOrigin(m_volume_drag.getRadius()/2,m_volume_drag.getRadius()/2);
     m_volume_drag.setFillColor(sf::Color::White);
 
-    str = "music: ";
+    m_music_text = TextClass("Music :",30,sf::Vector2f(m_volume_text.getPosition().x , m_volume_text.getPosition().y + (m_volume_text.getGlobalBounds().height*4))).getText();
     volume = SettingsManager::instance().getBGMVolume();
-    m_music_text.setString(str + std::to_string(volume));
-    m_music_text.setPosition(m_volume_text.getPosition().x , m_volume_text.getPosition().y + (m_volume_text.getGlobalBounds().height*4));
-    m_music_text.setFillColor(sf::Color::White);
-    m_music_text.setFont(*ResourcesManager::instance().getFont());
 
     m_music_line.setSize(m_volume_line.getSize());
     m_music_line.setFillColor(sf::Color::White);
@@ -43,12 +37,7 @@ SettingsScreen::SettingsScreen(sf::RenderWindow &window) : m_window(window) {
     m_music_drag.setOrigin(m_music_drag.getRadius()/2,m_music_drag.getRadius()/2);
     m_music_drag.setFillColor(sf::Color::White);
 
-    m_backBtn.setString("<-");
-    m_backBtn.setFont(*ResourcesManager::instance().getFont());
-    m_backBtn.setCharacterSize(100);
-    m_backBtn.setPosition(WINDOW_WIDTH*0.05,WINDOW_WIDTH*0.05);
-    m_backBtn.setFillColor(sf::Color::White);
-
+    m_backBtn = TextClass("<-",H2,sf::Vector2f(WINDOW_WIDTH * 0.05,WINDOW_WIDTH * 0.05)).getText();
 
     run();
 }
@@ -128,9 +117,14 @@ void SettingsScreen::eventHandler(bool &exit) {
                 if(m_music_drag.getGlobalBounds().contains(event.mouseButton.x,event.mouseButton.y))
                     m_music_clicked = true;
                 break;
-            case sf::Event::MouseMoved:
+            case sf::Event::MouseMoved:{
                 if(m_volume_clicked || m_music_clicked)
                     handleMouseMove(event.mouseMove);
+                if(m_backBtn.getGlobalBounds().contains(event.mouseMove.x,event.mouseMove.y))
+                    m_window.setMouseCursor(m_cursor);
+                else
+                    m_window.setMouseCursor(m_originalCursor);
+            }
                 break;
             case sf::Event::Closed:
                 m_window.close();

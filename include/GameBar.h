@@ -5,6 +5,7 @@
 #include "ResourcesManager.h"
 #include "WindowManager.h"
 #include "TimeCounting.h"
+#include "TextClass.h"
 
 /**
  * Game bar class responsible for showing and updating stats ahout the game

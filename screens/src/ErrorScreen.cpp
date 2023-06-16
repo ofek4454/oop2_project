@@ -13,7 +13,7 @@ ErrorScreen::ErrorScreen(std::string error_msg) {
     text.setPosition(WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
     text.setOrigin(text.getGlobalBounds().width/2,text.getGlobalBounds().height/2);
     text.setFillColor(sf::Color::White);
-    text.setOutlineColor(sf::Color::Red);
+    text.setOutlineColor(sf::Color::Black);
     text.setOutlineThickness(1);
 
     window->draw(*ResourcesManager::instance().getBackground());

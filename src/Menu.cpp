@@ -7,15 +7,7 @@ Menu::Menu() : m_window(WindowManager::instance().getWindow()) {
     m_background.setSize(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
     m_background.setTexture(ResourcesManager::instance().getTexture(Background));
     for (int i = 0; i < MENU_BUTTONS; i++) {
-        m_menuButtons[i].setFont(*ResourcesManager::instance().getFont());
-        m_menuButtons[i].setCharacterSize(H2);
-        m_menuButtons[i].setFillColor(sf::Color::White);
-        m_menuButtons[i].setOutlineColor(sf::Color::Black);
-        m_menuButtons[i].setOutlineThickness(0);
-        m_menuButtons[i].setString(m_textNames[i]);
-        m_menuButtons[i].setOrigin(m_menuButtons[i].getGlobalBounds().width / 2,
-                                   m_menuButtons[i].getGlobalBounds().height / 2);
-        m_menuButtons[i].setPosition(sf::Vector2f(starting_x, starting_y));
+        m_menuButtons[i] = TextClass(m_textNames[i],H2,sf::Vector2f(starting_x, starting_y)).getText();
         starting_y += H2 * 2;
     }
     handleEvents();
