@@ -60,7 +60,7 @@ ResourcesManager::ResourcesManager() {
     m_helpScreenPages[3].loadFromFile("Help-Page4.png");
 
     m_background.setSize(sf::Vector2f (WINDOW_WIDTH, WINDOW_HEIGHT));
-    m_background.setFillColor(GREEN_COLOR);
+    m_background.setFillColor(BLUE_COLOR);
     m_font.loadFromFile("AlfaSlabOne-Regular.ttf");
 
     for (int i = 0; i < NUMBER_OF_SOUNDS - 1; i++) {

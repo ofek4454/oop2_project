@@ -16,8 +16,8 @@ Controller::Controller(PlayerModel p1, PlayerModel p2, bool isMeP1) : m_window(
 
     m_originalCursor.loadFromSystem(sf::Cursor::Arrow);
     m_cursor.loadFromSystem(sf::Cursor::Hand);
-    m_backButton = TextClass("<-", H2, sf::Vector2f(BOARD_TOP_LEFT.width - WINDOW_WIDTH * 0.03,
-                                                    BOARD_TOP_LEFT.height - WINDOW_HEIGHT * 0.08)).getText();
+    m_backButton = TextClass("<-", H2, sf::Vector2f(WINDOW_WIDTH * 0.05,
+                                                    WINDOW_HEIGHT * 0.04)).getText();
     m_user->setPlayerSymbol(isMeP1 ? "1" : "2");
     m_enemy->setPlayerSymbol(!isMeP1 ? "1" : "2");
     m_user->init();
@@ -319,11 +319,11 @@ void Controller::initNames() {
     m_p2Name.setString(m_enemy->getPlayerModel().m_name);
     m_p1Name.setOrigin(m_p1Name.getGlobalBounds().width / 2, m_p1Name.getGlobalBounds().height / 2);
     m_p2Name.setOrigin(m_p2Name.getGlobalBounds().width / 2, m_p2Name.getGlobalBounds().height / 2);
-    m_p1Name.setPosition(BOARD_FRAME.left - RECT_SIZE / 2 + BOARD_FRAME.width / 2,
-                         BOARD_FRAME.top - RECT_SIZE / 2 + BOARD_FRAME.height +
+    m_p1Name.setPosition(BOARD_TOP_LEFT.left + BOARD_FRAME.width / 2,
+                         BOARD_TOP_LEFT.top + BOARD_FRAME.height +
                          m_p1Name.getGlobalBounds().height);
-    m_p2Name.setPosition(BOARD_FRAME.left - RECT_SIZE / 2 + BOARD_FRAME.width / 2,
-                         BOARD_FRAME.top - RECT_SIZE / 2 - m_p2Name.getGlobalBounds().height - RECT_SIZE / 2);
+    m_p2Name.setPosition(BOARD_TOP_LEFT.left + BOARD_FRAME.width / 2,
+                         BOARD_TOP_LEFT.top - m_p2Name.getGlobalBounds().height*1.5);
 }
 
 void Controller::initGame() {
@@ -383,7 +383,7 @@ void Controller::initGame() {
     t.setOrigin(t.getGlobalBounds().width / 2, t.getGlobalBounds().height / 2);
     t.setFillColor(sf::Color::White);
     t.setOutlineThickness(2);
-    t.setOutlineColor(DARK_GREEN_COLOR);
+    t.setOutlineColor(GRAY_COLOR);
 
     m_window->draw(t);
     m_window->display();

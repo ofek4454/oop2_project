@@ -11,7 +11,7 @@ public:
     virtual bool move();
     virtual void hoverFlag(const int row, const int col) {};
 
-    virtual void hoverHole(const int row, const int col) {};
+    virtual void hoverHole(const int row, const  int col) {};
 
     virtual void doTurn(sf::Event::MouseButtonEvent *click);
 

@@ -10,7 +10,7 @@ TextClass::TextClass(const std::string& str,const int size,const sf::Vector2f &p
     m_text.setCharacterSize(size);
     m_text.setFillColor(color);
     m_text.setPosition(pos);
-    m_text.setOrigin(m_text.getGlobalBounds().width/2,m_text.getGlobalBounds().height/2);
+    m_text.setOrigin(m_text.getGlobalBounds().width/2, m_text.getGlobalBounds().height/2);
     m_text.setOutlineThickness(1);
     m_text.setOutlineColor(sf::Color::Black);
 }

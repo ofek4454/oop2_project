@@ -127,9 +127,9 @@ enum Winner_t{
     NoneEvent
 };
 
+const sf::Color BLUE_COLOR = sf::Color(64,138,209);
+const sf::Color LIGHT_BLUE_COLOR = sf::Color(181,215,244);
 const sf::Color GRAY_COLOR = sf::Color(182,  220, 225);
-const sf::Color GREEN_COLOR = sf::Color(214, 244, 247);
-const sf::Color DARK_GREEN_COLOR = sf::Color(103, 133, 39,120);
 
 const float H1 = WINDOW_HEIGHT * 0.065f;
 const float H2 = WINDOW_HEIGHT * 0.055f;

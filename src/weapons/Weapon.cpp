@@ -8,7 +8,7 @@ Weapon::Weapon(const std::string symbol, bool visible) : m_is_visible(visible), 
     m_timeCounting.setCount(5);
     m_timerBox.setSize(sf::Vector2f(CIRCLE_RADIUS*2,CIRCLE_RADIUS*2));
     m_timerBox.setOrigin(CIRCLE_RADIUS,CIRCLE_RADIUS);
-    m_timerBox.setFillColor(GREEN_COLOR);
+    m_timerBox.setFillColor(BLUE_COLOR);
     m_timerBox.setPosition(CLOCK_CIRCLE_CENTER);
 }
 
@@ -122,7 +122,7 @@ void Weapon::initChooseBox() {
     m_ChooseWeaponText.setCharacterSize(H1);
     m_ChooseWeaponText.setPosition(boxPos.x + RECT_SIZE * 3, boxPos.y + RECT_SIZE * 2);
     m_ChooseWeaponText.setOrigin(m_ChooseWeaponText.getGlobalBounds().width / 2, 0);
-    m_ChooseWeaponText.setOutlineColor(DARK_GREEN_COLOR);
+    m_ChooseWeaponText.setOutlineColor(GRAY_COLOR);
     m_ChooseWeaponText.setOutlineThickness(3);
 }
 
