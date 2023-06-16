@@ -10,7 +10,7 @@ SoundFlip::SoundFlip() {
         m_soundButtons[i].setPosition((WINDOW_WIDTH - WINDOW_WIDTH / 7) + prevloc,WINDOW_HEIGHT/20);
         m_soundButtons[i].setTexture(ResourcesManager::instance().getSoundButton(i));
         m_soundButtons[i].setTextureRect(sf::IntRect(0,0,512,512));
-        m_soundButtons[i].setScale(0.65,0.65);
+        m_soundButtons[i].setScale(0.8,0.8);
         prevloc = m_soundButtons[i].getLocalBounds().width + m_soundButtons[i].getLocalBounds().width/5;
     }
     m_fxClicked = SettingsManager::instance().getFXSwitch();

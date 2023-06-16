@@ -65,8 +65,10 @@ bool SettingsScreen::handleClick(const sf::Event::MouseButtonEvent &clickevent) 
     else if(m_music_clicked)
         m_music_clicked = false;
 
-    else if(m_backBtn.getGlobalBounds().contains(clickevent.x,clickevent.y))
+    else if(m_backBtn.getGlobalBounds().contains(clickevent.x,clickevent.y)){
+        m_window.setMouseCursor(m_originalCursor);
         return false;
+    }
 
     SoundFlip::instance().checkIfContains(clickevent);
 

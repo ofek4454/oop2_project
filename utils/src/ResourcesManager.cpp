@@ -69,6 +69,7 @@ ResourcesManager::ResourcesManager() {
     }
     for(int i = 0; i < 2;i++){
         m_soundButton[i].loadFromFile(m_soundstring[i]);
+        m_soundButton[i].setSmooth(true);
     }
 
     m_logo.loadFromFile("Logo.png");
