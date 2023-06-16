@@ -1,3 +1,5 @@
+#pragma once
+
 #include "SettingsManager.h"
 #include "ResourcesManager.h"
 
