@@ -1,6 +1,5 @@
 #pragma once
 #include "PlayerState.h"
-#include "pthread.h"
 
 class EnemyState : public PlayerState {
 public:
