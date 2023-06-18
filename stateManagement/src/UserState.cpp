@@ -1,6 +1,6 @@
 #include "UserState.h"
 
-UserState::UserState(PlayerModel &player) : PlayerState(player){
+UserState::UserState(PlayerModel &player) : PlayerState(player) {
     for (auto &spr: m_arrows) {
         spr.setTexture(*ResourcesManager::instance().getTexture(Arrow));
         spr.setScale(RECT_SIZE / 1024, RECT_SIZE / 1024);
@@ -9,8 +9,8 @@ UserState::UserState(PlayerModel &player) : PlayerState(player){
 }
 
 void UserState::init() {
-    float x = BOARD_TOP_LEFT.left + RECT_SIZE/2;
-    float y = BOARD_TOP_LEFT.top + RECT_SIZE*5 - 30 + RECT_SIZE/2;
+    float x = BOARD_TOP_LEFT.left + RECT_SIZE / 2;
+    float y = BOARD_TOP_LEFT.top + RECT_SIZE * 5 - 30 + RECT_SIZE / 2;
 
     int row = 5, col = 0;
     for (int i = 0; i < BOARD_SIZE * 2; i++, col++) {
@@ -19,12 +19,13 @@ void UserState::init() {
             col = 0;
         }
         std::string warriorId = m_playerSymbol == "1" ? std::to_string(row) + std::to_string(col)
-                                                      : std::to_string(ROWS -1 - row) + std::to_string(BOARD_SIZE-1-col);
+                                                      : std::to_string(ROWS - 1 - row) +
+                                                        std::to_string(BOARD_SIZE - 1 - col);
         m_warriors[warriorId] = std::make_unique<Warrior>(warriorId, sf::Vector2f(x, y), true, Location(row, col));
         x += RECT_SIZE;
         if (i == BOARD_SIZE - 1) {
             y -= RECT_SIZE;
-            x = BOARD_TOP_LEFT.left + RECT_SIZE/2;
+            x = BOARD_TOP_LEFT.left + RECT_SIZE / 2;
         }
     }
 }
@@ -39,25 +40,46 @@ void UserState::hoverHole(const int row, const int col) {
         warrior.second->setTextureHole(warrior.second->getLocation() == Location(row, col));
 }
 
-void UserState::doTurn(sf::Event::MouseButtonEvent *click) {
+void UserState::doTurn(sf::Event::MouseButtonEvent *click, sf::Event::KeyEvent *key, Location indicator) {
     if (m_playerChose) {
-        m_direction = getDirection(sf::Vector2f(click->x, click->y));
+        if (click)
+            m_direction = getDirection(sf::Vector2f(click->x, click->y));
+        else if (key) {
+            if (key->code == sf::Keyboard::Up)
+                m_direction = Up;
+            if (key->code == sf::Keyboard::Down)
+                m_direction = Down;
+            if (key->code == sf::Keyboard::Left)
+                m_direction = Left;
+            if (key->code == sf::Keyboard::Right)
+                m_direction = Right;
+        }
         setArrows();
         m_playerChose = false;
-        if (m_direction != Non_Direction){ // finish turn
+        if (m_direction != Non_Direction) { // finish turn
             m_isAnimating = true;
         }
-    }
-    if (BOARD_FRAME.contains(click->x, click->y)) { // choose warrior
-        int row = (click->y - BOARD_TOP_LEFT.top) / RECT_SIZE;
-        int col = (click->x - BOARD_TOP_LEFT.left) / RECT_SIZE;
-        auto availableLocations = checkAvailableLocations(Location(row, col));
-        if (availableLocations != NULL) {
-            setArrows(availableLocations, Location(row, col), true);
-            m_selectedWarriorId = getWarrior(Location(row, col))->getId();
-            m_playerChose = true;
+    } else {
+        if (click && BOARD_FRAME.contains(click->x, click->y)) { // choose warrior
+            int row = (click->y - BOARD_TOP_LEFT.top) / RECT_SIZE;
+            int col = (click->x - BOARD_TOP_LEFT.left) / RECT_SIZE;
+            auto availableLocations = checkAvailableLocations(Location(row, col));
+            if (availableLocations != NULL) {
+                setArrows(availableLocations, Location(row, col), true);
+                m_selectedWarriorId = getWarrior(Location(row, col))->getId();
+                m_playerChose = true;
+            }
+        } else if (key && key->code == sf::Keyboard::Enter) {
+            auto availableLocations = checkAvailableLocations(indicator);
+            if (availableLocations != NULL) {
+                setArrows(availableLocations, indicator, true);
+                m_selectedWarriorId = getWarrior(indicator)->getId();
+                m_playerChose = true;
+            }
         }
     }
+
+
 }
 
 
@@ -69,7 +91,8 @@ void UserState::setArrows(bool *directions, Location location, bool set) {
     }
     if (directions[Up]) {
         m_arrows[Up].setPosition(
-                sf::Vector2f(BOARD_TOP_LEFT.left + location.col * RECT_SIZE, BOARD_TOP_LEFT.top + location.row * RECT_SIZE));
+                sf::Vector2f(BOARD_TOP_LEFT.left + location.col * RECT_SIZE,
+                             BOARD_TOP_LEFT.top + location.row * RECT_SIZE));
         m_arrows[Up].setRotation(-90);
         m_arrows[Up].setColor(sf::Color(255, 255, 255, 70));
     }
@@ -117,7 +140,7 @@ void UserState::print() {
 }
 
 bool UserState::move() {
-    if(m_direction == Non_Direction) {
+    if (m_direction == Non_Direction) {
         m_isAnimating = false;
         return true;
     }
@@ -127,26 +150,27 @@ bool UserState::move() {
     static int shadowOffsetY = 4;
 
     auto warrior = getWarrior();
-    if(warrior == NULL){
+    if (warrior == NULL) {
         return true;
     }
 
     if (m_direction == Up)
-        warrior->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset),sf::Vector2f(shadowOffsetX, shadowOffsetY));
+        warrior->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset), sf::Vector2f(shadowOffsetX, shadowOffsetY));
     else if (m_direction == Down)
-        warrior->setSpriteLocation(sf::Vector2f(0, m_pixelOffset),sf::Vector2f(sf::Vector2f(shadowOffsetX * 0.5, -shadowOffsetY * 0.8)));
+        warrior->setSpriteLocation(sf::Vector2f(0, m_pixelOffset),
+                                   sf::Vector2f(sf::Vector2f(shadowOffsetX * 0.5, -shadowOffsetY * 0.8)));
     else if (m_direction == Left)
-        warrior->setSpriteLocation(sf::Vector2f(-m_pixelOffset, 0),sf::Vector2f(sf::Vector2f(-shadowOffsetX, 0)));
+        warrior->setSpriteLocation(sf::Vector2f(-m_pixelOffset, 0), sf::Vector2f(sf::Vector2f(-shadowOffsetX, 0)));
     else if (m_direction == Right)
-        warrior->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0),sf::Vector2f(sf::Vector2f(shadowOffsetX, 0)));
+        warrior->setSpriteLocation(sf::Vector2f(m_pixelOffset, 0), sf::Vector2f(sf::Vector2f(shadowOffsetX, 0)));
 
     warrior->setMovingIntRect(imageCounter);
     imageCounter++;
-    if(imageCounter == IMAGE_COUNT){
+    if (imageCounter == IMAGE_COUNT) {
         auto oldLocation = warrior->getLocation();
         warrior->setLocation(m_direction);
         RoomState::instance().setBoardCell(oldLocation, "");
-        RoomState::instance().setBoardCell(warrior->getLocation(), m_playerSymbol+warrior->getSymbol());
+        RoomState::instance().setBoardCell(warrior->getLocation(), m_playerSymbol + warrior->getSymbol());
         RoomState::instance().setLastMove(warrior->getId(), warrior->getLocation(), warrior->getSymbol());
 
         shadowOffsetX = -1;
@@ -156,10 +180,10 @@ bool UserState::move() {
         m_isAnimating = false;
         return true;
     }
-    if(imageCounter == 3){
+    if (imageCounter == 3) {
         ResourcesManager::instance().playSound(blueJump);
     }
-    if(imageCounter == 12){
+    if (imageCounter == 12) {
         shadowOffsetX = 3.7;
         shadowOffsetY = -12;
     }
@@ -177,7 +201,7 @@ bool *UserState::checkAvailableLocations(Location location) {
     locations[2] = true;
     locations[3] = true;
 
-    for(auto &warrior : m_warriors){
+    for (auto &warrior: m_warriors) {
         auto warrior_loc = warrior.second->getLocation();
         if (warrior_loc == location)
             continue;

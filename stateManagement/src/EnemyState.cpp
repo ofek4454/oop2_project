@@ -28,7 +28,7 @@ void EnemyState::init() {
 }
 
 
-void EnemyState::doTurn(sf::Event::MouseButtonEvent *click) {
+void EnemyState::doTurn(sf::Event::MouseButtonEvent *click,sf::Event::KeyEvent *key,Location indicator) {
     std::string last_move = RoomState::instance().getRoom().getLastMove();
     if (last_move.empty()) {
         return;

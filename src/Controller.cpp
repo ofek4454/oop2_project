@@ -35,6 +35,7 @@ void Controller::run() {
         while (m_window->pollEvent(event));
     }
     m_gameBar.resetClock(myTurn == P1);
+    m_userWarriors = m_user->getAllWarriors();
     print();
     WindowManager::instance().eventHandler(
             [this](auto move, auto exit) {
@@ -52,10 +53,16 @@ void Controller::run() {
                 } else return true;
                 return false;
             },
-            [](auto key, auto exit) { return false; },
+            [this](auto key, auto exit) {
+                handleKeyboard(key);
+                return false;
+            },
             [](auto type, auto exit) { return false; },
             [](auto offset, auto exit) { return false; },
             [this](auto &exit) {
+                if (isMyTurn() && !m_user->isAnimating())
+                    incPlayer();
+
                 if (!isMyTurn() && !m_enemy->isAnimating()) {
                     enemyTurn(exit);
                     if (exit) return;
@@ -158,16 +165,23 @@ void Controller::handleAnimation() {
 }
 
 void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
+    bool hoverd = false;
     if (m_backButton.getGlobalBounds().contains(event.x, event.y))
         m_window->setMouseCursor(m_cursor);
     else
         m_window->setMouseCursor(m_originalCursor);
     if (BOARD_FRAME.contains(event.x, event.y)) {
+        hoverd = true;
+        m_switchPlayerByKey = false;
         sf::FloatRect rect_pos = BOARD_TOP_LEFT;
         int row = (event.y - rect_pos.top) / RECT_SIZE;
         int col = (event.x - rect_pos.left) / RECT_SIZE;
-        m_user->handleHover(row, col);
+        m_indicator = Location(row, col);
     }
+
+    if (!hoverd && !m_switchPlayerByKey)
+        m_indicator = Location(-1, -1);
+
 }
 
 void Controller::handleEvents() {
@@ -323,7 +337,7 @@ void Controller::initNames() {
                          BOARD_TOP_LEFT.top + BOARD_FRAME.height +
                          m_p1Name.getGlobalBounds().height);
     m_p2Name.setPosition(BOARD_TOP_LEFT.left + BOARD_FRAME.width / 2,
-                         BOARD_TOP_LEFT.top - m_p2Name.getGlobalBounds().height*1.5);
+                         BOARD_TOP_LEFT.top - m_p2Name.getGlobalBounds().height * 1.5);
 }
 
 void Controller::initGame() {
@@ -618,3 +632,56 @@ Controller::~Controller() {
     RoomState::instance().upload();
 }
 
+void Controller::handleKeyboard(sf::Event::KeyEvent &type) {
+    if (type.code == sf::Keyboard::Enter)
+        m_user->doTurn(NULL, &type, m_indicator);
+    if (type.code == sf::Keyboard::Right) {
+        if (m_user->m_playerChose) {
+            m_user->doTurn(NULL, &type, m_indicator);
+        } else {
+            if (m_indicator.col <= BOARD_SIZE) {
+                m_switchPlayerByKey = true;
+                m_indicator.col++;
+            } else
+                m_indicator.col = -1;
+        }
+    }
+    if (type.code == sf::Keyboard::Left) {
+        if (m_user->m_playerChose) {
+            m_user->doTurn(NULL, &type, m_indicator);
+        } else {
+            if (m_indicator.col >= -1) {
+                m_switchPlayerByKey = true;
+                m_indicator.col--;
+            } else
+                m_indicator.col = BOARD_SIZE;
+        }
+    }
+    if (type.code == sf::Keyboard::Up) {
+        if (m_user->m_playerChose) {
+            m_user->doTurn(NULL, &type, m_indicator);
+        } else {
+            if (m_indicator.row >= -1) {
+                m_switchPlayerByKey = true;
+                m_indicator.row--;
+            } else
+                m_indicator.row = ROWS;
+        }
+
+    }
+    if (type.code == sf::Keyboard::Down) {
+        if (m_user->m_playerChose) {
+            m_user->doTurn(NULL, &type, m_indicator);
+        } else {
+            if (m_indicator.row <= ROWS) {
+                m_switchPlayerByKey = true;
+                m_indicator.row++;
+            } else
+                m_indicator.row = -1;
+        }
+    }
+}
+
+void Controller::incPlayer() {
+    m_user->handleHover(m_indicator.row, m_indicator.col);
+}

@@ -16,7 +16,7 @@ public:
     virtual void init() = 0;
     virtual void hoverFlag(const int row, const int col) = 0;
     virtual void hoverHole(const int row, const int col) = 0;
-    virtual void doTurn(sf::Event::MouseButtonEvent *click = NULL) = 0;
+    virtual void doTurn(sf::Event::MouseButtonEvent *click = NULL,sf::Event::KeyEvent *key = NULL,Location indicator = Location(-1, -1)) = 0;
     virtual void print() = 0;
 
     bool setAsFlag(const int row, const int col);
@@ -36,11 +36,9 @@ public:
     std::string getPlayerSymbol() {return m_playerSymbol;}
     void setPlayerSymbol(std::string s){m_playerSymbol=s;}
     void checkDeletion();
-
-
+    bool m_playerChose = false;
 protected:
     std::unordered_map<std::string,std::unique_ptr<Warrior>> m_warriors;
-    bool m_playerChose = false;
     Direction_t m_direction;
     bool m_isAnimating = false;
     PlayerModel m_player;

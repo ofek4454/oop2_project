@@ -13,7 +13,7 @@ public:
 
     virtual void hoverHole(const int row, const  int col) {};
 
-    virtual void doTurn(sf::Event::MouseButtonEvent *click);
+    virtual void doTurn(sf::Event::MouseButtonEvent *click = NULL,sf::Event::KeyEvent *key = NULL,Location indicator = Location(-1, -1));
 
     virtual void print() {
         for (auto &warrior: m_warriors)
