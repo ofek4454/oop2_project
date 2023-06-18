@@ -17,6 +17,9 @@ public:
             deleteRoom();
     }
 
+    RoomState(const RoomState &other) = delete;
+    RoomState operator=(const RoomState &other) = delete;
+
     RoomModel &getRoom(){ return room;}
     bool isOpponentJoined();
     int isOpponentWantsToRematch();
