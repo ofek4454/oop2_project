@@ -7,7 +7,8 @@ Menu::Menu() : m_window(WindowManager::instance().getWindow()) {
     m_background.setSize(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
     m_background.setTexture(ResourcesManager::instance().getTexture(Background));
     for (int i = 0; i < MENU_BUTTONS; i++) {
-        m_menuButtons[i] = TextClass(m_textNames[i],H2,sf::Vector2f(starting_x, starting_y)).getText();
+        m_menuButtons[i] = TextClass(m_textNames[i], H2, sf::Vector2f(starting_x, starting_y)).getText();
+        m_menuButtons[i].setOutlineThickness(0);
         starting_y += H2 * 2;
     }
     handleEvents();
@@ -23,13 +24,17 @@ void Menu::handleEvents() {
             },
             [this](auto click, auto exit) {
                 SoundFlip::instance().checkIfContains(click);
-                handleClick(click);
+                handleClick();
                 return false;
             },
-            [](auto key, auto exit) {return false;},
-            [](auto type, auto exit) {return false;},
-            [](auto offset,auto exit){return false;},
+            [this](auto key, auto exit) {
+                handleKeyboard(key);
+                return false;
+            },
+            [](auto type, auto exit) { return false; },
+            [](auto offset, auto exit) { return false; },
             [this](auto exit) {
+                lightButton();
                 print();
             }
     );
@@ -48,41 +53,74 @@ void Menu::print() {
 }
 
 void Menu::handleHover(sf::Event::MouseMoveEvent &event) {
-    for (auto & btn : m_menuButtons) {
-        if (btn.getGlobalBounds().contains(event.x, event.y))
-            btn.setOutlineThickness(2);
-        else
-            btn.setOutlineThickness(0);
+    bool hoverd = false;
+    for (int i = 0; i < MENU_BUTTONS; i++) {
+        if (m_menuButtons[i].getGlobalBounds().contains(event.x, event.y)) {
+            m_hoverChangedBy = false;
+            hoverd = true;
+            m_indicator = i;
+        }
+    }
+    if (!hoverd && !m_hoverChangedBy)
+        m_indicator = -1;
+}
+
+void Menu::handleClick() {
+    if (m_indicator >= 0 && m_indicator < MENU_BUTTONS) {
+        switch (m_indicator) {
+            case 0: {
+                EnterNameScreen(Mode_t(0));
+                break;
+            }
+            case 1: {
+                EnterNameScreen(Mode_t(1));
+                break;
+            }
+            case 2: {
+                SettingsScreen settingsScreen = SettingsScreen(*m_window);
+                break;
+            }
+            case 3: {
+                HelpScreen();
+                break;
+            }
+            case 4: {
+                m_window->close();
+                break;
+            }
+            default:
+                break;
+        }
     }
 }
 
-void Menu::handleClick(sf::Event::MouseButtonEvent &click) {
-    for (int i = 0; i < MENU_BUTTONS; i++) {
-        if (m_menuButtons[i].getGlobalBounds().contains(m_window->mapPixelToCoords({click.x, click.y}))) {
-            switch (i) {
-                case 0: {
-                    EnterNameScreen(Mode_t(0));
-                    break;
-                }
-                case 1: {
-                    EnterNameScreen(Mode_t(1));
-                    break;
-                }
-                case 2: {
-                    SettingsScreen settingsScreen = SettingsScreen(*m_window);
-                    break;
-                }
-                case 3: {
-                    HelpScreen();
-                    break;
-                }
-                case 4: {
-                    m_window->close();
-                    break;
-                }
-                default:
-                    break;
-            }
+void Menu::handleKeyboard(sf::Event::KeyEvent &type) {
+    if(type.code == sf::Keyboard::Enter)
+        handleClick();
+    if (type.code == sf::Keyboard::Down) {
+        if (m_indicator <= MENU_BUTTONS) {
+            m_hoverChangedBy = true;
+            m_indicator++;
         }
+        else
+            m_indicator = -1;
+    }
+    if (type.code == sf::Keyboard::Up) {
+        if (m_indicator >= -1) {
+            m_hoverChangedBy = true;
+            m_indicator--;
+        }
+        else
+            m_indicator = MENU_BUTTONS;
+    }
+}
+
+void Menu::lightButton() {
+    for (int i = 0; i < MENU_BUTTONS; i++) {
+        if (m_indicator == i)
+            m_menuButtons[i].setOutlineThickness(2);
+        else
+            m_menuButtons[i].setOutlineThickness(0);
+
     }
 }

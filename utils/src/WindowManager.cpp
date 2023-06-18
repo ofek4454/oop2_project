@@ -2,7 +2,7 @@
 
 
 void WindowManager::eventHandler(std::function<bool(sf::Event::MouseMoveEvent, bool &exit)> moveHandler,
-                                 std::function<bool(sf::Event::MouseButtonEvent, bool &exit)> clickHandler,
+                                 std::function<bool(sf::Event::MouseButtonEvent ,bool &exit)> clickHandler,
                                  std::function<bool(sf::Event::KeyEvent, bool &exit)> keyPressedHandler,
                                  std::function<bool(sf::Event::TextEvent, bool &exit)> typeHandler,
                                  std::function<bool(int offset, bool &exit)> scrollHandler,
