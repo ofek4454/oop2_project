@@ -2,8 +2,8 @@
 
 Menu::Menu() : m_window(WindowManager::instance().getWindow()) {
     ResourcesManager::instance().playBackgroundMusic();
-    int starting_y = WINDOW_HEIGHT * 0.3;
-    int starting_x = WINDOW_WIDTH / 2;
+    float starting_y = WINDOW_HEIGHT * 0.35f;
+    float starting_x = WINDOW_WIDTH / 2.f;
     m_background.setSize(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
     m_background.setTexture(ResourcesManager::instance().getTexture(Background));
     for (int i = 0; i < MENU_BUTTONS; i++) {
