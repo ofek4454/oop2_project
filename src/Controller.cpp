@@ -182,7 +182,7 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
         m_window->setMouseCursor(m_cursor);
     else
         m_window->setMouseCursor(m_originalCursor);
-    if (BOARD_FRAME.contains(event.x, event.y)) {
+    if (BOARD_TOP_LEFT.contains(event.x, event.y)) {
         hoverd = true;
         m_switchPlayerByKey = false;
         sf::FloatRect rect_pos = BOARD_TOP_LEFT;
@@ -362,10 +362,10 @@ void Controller::initGame() {
                     m_window->setMouseCursor(m_cursor);
                 else
                     m_window->setMouseCursor(m_originalCursor);
-                if (!BOARD_FRAME.contains(move.x, move.y)) return true;
+                if (!BOARD_TOP_LEFT.contains(move.x, move.y)) return true;
                 sf::FloatRect rect_pos = BOARD_TOP_LEFT;
-                int row = (move.y - rect_pos.top) / rect_pos.height;
-                int col = (move.x - rect_pos.left) / rect_pos.width;
+                int row = (move.y - rect_pos.top) / RECT_SIZE;
+                int col = (move.x - rect_pos.left) / RECT_SIZE;
                 if (!flagChoosed) m_user->hoverFlag(row, col);
                 else m_user->hoverHole(row, col);
                 return false;
@@ -376,10 +376,10 @@ void Controller::initGame() {
                     m_distruct = true;
                     exit = true;
                 }
-                if (!BOARD_FRAME.contains(click.x, click.y)) return true;
+                if (!BOARD_TOP_LEFT.contains(click.x, click.y)) return true;
                 sf::FloatRect rect_pos = BOARD_TOP_LEFT;
-                int row = (click.y - rect_pos.top) / rect_pos.height;
-                int col = (click.x - rect_pos.left) / rect_pos.width;
+                int row = (click.y - rect_pos.top) / RECT_SIZE;
+                int col = (click.x - rect_pos.left) / RECT_SIZE;
                 if (row < BOARD_SIZE - 4) return true;
                 if (!flagChoosed) {
                     if (m_user->setAsFlag(row, col)) {
@@ -624,8 +624,6 @@ void Controller::enemyTurn(bool &exit) {
             } else if (RoomState::instance().getRoom().getLastMove().starts_with("tie")) {
                 // attacker only
                 handleTie();
-            } else if (RoomState::instance().isLoggedOut()) {
-                throw std::invalid_argument("User has been logged out");
             } else {
                 m_enemy->doTurn();
             }

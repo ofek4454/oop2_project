@@ -14,7 +14,7 @@ namespace RoomService {
     }
 
     json updateRoom(RoomModel &room) {
-        auto response = HttpRequestsManager::instance().putRequest(room.toJson(), BASE_URL + "/rooms/" + room.getRoomId() + ".json");
+        auto response = HttpRequestsManager::instance().patchRequest(room.toJson(), BASE_URL + "/rooms/" + room.getRoomId() + ".json");
         return response;
     }
 

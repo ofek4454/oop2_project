@@ -1,4 +1,5 @@
 #include "RoomState.h"
+#include "GameException.h"
 
 void RoomState::createRoom(PlayerModel &creator) {
     m_isMeP1 = true;
@@ -82,6 +83,8 @@ std::pair<Location, Location> RoomState::getOpponentFlagAndHole() {
 
 Turn_t RoomState::getTurn() {
     room = RoomService::getRoom(room.roomId);
+    if(room.loggedOut)
+        throw GameException("User has been logged out");
     return room.turn;
 }
 

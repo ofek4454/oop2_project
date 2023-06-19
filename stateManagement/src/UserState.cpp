@@ -62,7 +62,7 @@ void UserState::doTurn(sf::Event::MouseButtonEvent *click, sf::Event::KeyEvent *
             m_isAnimating = true;
         }
     } else {
-        if (click && BOARD_FRAME.contains(click->x, click->y)) { // choose warrior
+        if (click && BOARD_TOP_LEFT.contains(click->x, click->y)) { // choose warrior
             int row = (click->y - BOARD_TOP_LEFT.top) / RECT_SIZE;
             int col = (click->x - BOARD_TOP_LEFT.left) / RECT_SIZE;
             checkAvailableLocations(Location(row, col));

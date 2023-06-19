@@ -22,6 +22,7 @@ public:
     json postRequest(const json& data, std::string url);
     json getRequest(std::string url);
     json putRequest(const json& data, std::string url);
+    json patchRequest(const json& data, std::string url);
     json deleteRequest(std::string url);
 
 private:
@@ -30,12 +31,13 @@ private:
         m_get_curl = curl_easy_init();
         m_put_curl = curl_easy_init();
         m_post_curl = curl_easy_init();
+        m_patch_curl = curl_easy_init();
     }
     CURL *m_post_curl;
     CURL *m_get_curl;
     CURL *m_put_curl;
     CURL *m_delete_curl;
-    bool m_isDataRecieved;
+    CURL *m_patch_curl;
 };
 
 

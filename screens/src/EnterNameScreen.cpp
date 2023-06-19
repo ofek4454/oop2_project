@@ -5,6 +5,7 @@
 #include "../include/EnterNameScreen.h"
 #include "../include/AvailableRooms.h"
 #include "ErrorScreen.h"
+#include "GameException.h"
 
 EnterNameScreen::EnterNameScreen(Mode_t mode) : m_mode(mode) , m_window(WindowManager::instance().getWindow()) , m_name(""){
     init();
@@ -41,6 +42,10 @@ void EnterNameScreen::handleEvents() {
                             exit = true;
                         }
                     }catch(HttpException &e) {
+                        std::cerr << e.what() << std::endl;
+                        ErrorScreen(e.what());
+                        exit = true;
+                    } catch(GameException &e) {
                         std::cerr << e.what() << std::endl;
                         ErrorScreen(e.what());
                         exit = true;

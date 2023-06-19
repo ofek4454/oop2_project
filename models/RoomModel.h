@@ -23,11 +23,9 @@ public:
         nlohmann::json data;
         data["creator_uid"] = creator_uid;
         data["player2_uid"] = player2_uid;
-        data["watchers_uids"] = watchers_uids;
         data["board"] = board;
         data["turn"] = int(turn);
         data["enemy_last_move"] = enemyLastMove;
-        data["logged_out"] = loggedOut;
 
         return data;
     }
@@ -42,7 +40,6 @@ private:
     std::string roomId;
     std::string creator_uid;
     std::string player2_uid;
-    std::vector<std::string> watchers_uids;
     std::array<std::array<std::string, BOARD_SIZE>,ROWS> board;
     Turn_t turn;
     std::string enemyLastMove = "";
@@ -52,11 +49,9 @@ private:
         roomId = id;
         creator_uid = data["creator_uid"];
         player2_uid = data["player2_uid"];
-        if(data.contains("watchers_uids"))
-            watchers_uids = data["watchers_uids"];
         board = data["board"];
         turn = Turn_t(data["turn"]);
         enemyLastMove = data["enemy_last_move"];
-        loggedOut = data["logged_out"];
+        loggedOut = data.contains("logged_out") ? true : false;
     }
 };
