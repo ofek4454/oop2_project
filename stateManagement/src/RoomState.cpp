@@ -161,3 +161,12 @@ bool RoomState::isRoomReset() {
     room = RoomService::getRoom(room.roomId);
     return room.board[0][0] == "1";
 }
+
+bool RoomState::isLoggedOut() {
+    return room.loggedOut;
+}
+
+void RoomState::logout(){
+    room.loggedOut = true;
+    RoomService::logout(room.roomId);
+}

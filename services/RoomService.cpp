@@ -52,5 +52,11 @@ namespace RoomService {
         return response;
     }
 
+    json logout(std::string roomId) {
+        std::string url = BASE_URL + "/rooms/" + roomId + "/logged_out.json";
+        auto response = HttpRequestsManager::instance().putRequest(true,url);
+        return response;
+    }
+
 
 }

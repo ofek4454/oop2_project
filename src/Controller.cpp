@@ -624,14 +624,8 @@ void Controller::enemyTurn(bool &exit) {
             } else if (RoomState::instance().getRoom().getLastMove().starts_with("tie")) {
                 // attacker only
                 handleTie();
-            } else if (RoomState::instance().getRoom().getLastMove().starts_with("Logout")) {
-                m_window->clear();
-                m_window->draw(*ResourcesManager::instance().getBackground());
-                m_p2Name.setString("User Has Been Logged Out");
-                m_window->draw(m_p2Name);
-                m_window->display();
-                sf::sleep(sf::seconds(1.5));
-                exit = true;
+            } else if (RoomState::instance().isLoggedOut()) {
+                throw std::invalid_argument("User has been logged out");
             } else {
                 m_enemy->doTurn();
             }
@@ -640,9 +634,7 @@ void Controller::enemyTurn(bool &exit) {
 }
 
 Controller::~Controller() {
-    RoomState::instance().setLastMoveMsg("Logout");
-    RoomState::instance().changeTurn();
-    RoomState::instance().upload();
+    RoomState::instance().logout();
 }
 
 void Controller::handleKeyboard(sf::Event::KeyEvent &type) {

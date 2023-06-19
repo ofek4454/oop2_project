@@ -28,4 +28,6 @@ namespace RoomService {
     json updatedLastMove(RoomModel &room);
 
     json updateRematch(const std::string &roomId, const std::string &wantToRematch, int cell);
+
+    json logout(std::string roomId);
 }

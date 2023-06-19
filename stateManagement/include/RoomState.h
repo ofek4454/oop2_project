@@ -39,6 +39,8 @@ public:
     void setLastMoveMsg(std::string last_move);
     void resetRoom();
     bool isRoomReset();
+    bool isLoggedOut();
+    void logout();
 private:
     RoomState(){}
     RoomModel room;

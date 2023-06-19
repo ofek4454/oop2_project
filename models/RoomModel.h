@@ -27,28 +27,9 @@ public:
         data["board"] = board;
         data["turn"] = int(turn);
         data["enemy_last_move"] = enemyLastMove;
+        data["logged_out"] = loggedOut;
 
         return data;
-    }
-
-    std::string to_string(){
-        std::string str = "id: ";
-        str += roomId;
-        str += "\ncreator_uid: ";
-        str += creator_uid;
-        str += "\nplayer2_uid: ";
-        str += player2_uid;
-        str += "\nboard:\n";
-        for(auto line : board){
-            for (auto tmp: line){
-                str += tmp;
-                str += " ";
-            }
-            str+= "\n";
-        }
-        str += enemyLastMove;
-        str += "\n";
-        return str;
     }
 
     std::string getRoomId() const {return roomId;}
@@ -65,6 +46,7 @@ private:
     std::array<std::array<std::string, BOARD_SIZE>,ROWS> board;
     Turn_t turn;
     std::string enemyLastMove = "";
+    bool loggedOut = false;
 
     RoomModel(std::string id, nlohmann::json &data){
         roomId = id;
@@ -75,5 +57,6 @@ private:
         board = data["board"];
         turn = Turn_t(data["turn"]);
         enemyLastMove = data["enemy_last_move"];
+        loggedOut = data["logged_out"];
     }
 };
