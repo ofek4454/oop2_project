@@ -54,7 +54,8 @@ void Controller::run() {
                 return false;
             },
             [this](auto key, auto exit) {
-                handleKeyboard(key);
+                if(isMyTurn() && !m_user->isAnimating())
+                    handleKeyboard(key);
                 return false;
             },
             [](auto type, auto exit) { return false; },
@@ -146,6 +147,7 @@ void Controller::handleAnimation() {
         clock.restart().asSeconds();
         if (isMyTurn() && m_user->move()) {
             m_meAttacked = true;
+            m_indicator = Location(-1,-1);
             m_isFinishUserTurn = true;
         } else if (!isMyTurn() && m_enemy->move()) {
             m_meAttacked = false;
@@ -159,6 +161,7 @@ void Controller::handleAnimation() {
                 RoomState::instance().changeTurn();
                 m_turn = (Turn_t) !myTurn;
                 m_gameBar.resetClock(false);
+                m_indicator = Location(4,0);
             }
         }
     }
@@ -684,4 +687,5 @@ void Controller::handleKeyboard(sf::Event::KeyEvent &type) {
 
 void Controller::incPlayer() {
     m_user->handleHover(m_indicator.row, m_indicator.col);
+    m_board.lightFrame(m_indicator);
 }

@@ -16,7 +16,7 @@ private:
     void handleEvents();
     void print();
     void handleHover(sf::Event::MouseMoveEvent &event);
-    void handleClick();
+    void handleClick(sf::Event::MouseButtonEvent *click = NULL);
     sf::Text m_menuButtons[MENU_BUTTONS];
     int m_indicator = 0;
     bool m_hoverChangedBy = false; // false = Moue true =  keyboard

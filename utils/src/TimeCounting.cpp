@@ -20,7 +20,8 @@ void TimeCounting::updateCount() {
     }
 
     if (m_countLength <= 0) {
-        EventLoop::instance().addEvent(Event(TimeOver));
+        if(m_countdownText.getFillColor() == sf::Color::White)
+            EventLoop::instance().addEvent(Event(TimeOver));
         return;
     }
 

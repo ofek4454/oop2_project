@@ -78,3 +78,22 @@ void Board::setFrames() {
     m_boardFrame[4].setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775, WINDOW_HEIGHT * 0.025));
     m_boardFrame[4].setFillColor(LIGHT_BLUE_COLOR);
 }
+
+void Board::lightFrame(Location indicator) {
+    if(indicator.row >= 0 && indicator.row < ROWS && indicator.col >= 0 && indicator.col < BOARD_SIZE){
+        for(int i = 0;i < ROWS;i++){
+            for(int j = 0;j < BOARD_SIZE;j++){
+                if(i == indicator.row && j == indicator.col){
+                    m_matrix[indicator.row][indicator.col].setOutlineThickness(10);
+                    m_matrix[indicator.row][indicator.col].setOutlineColor(sf::Color::White);
+                }
+                else{
+                    m_matrix[indicator.row][indicator.col].setOutlineThickness(0);
+                    m_matrix[indicator.row][indicator.col].setOutlineColor(sf::Color::White);
+                }
+            }
+        }
+
+    }
+
+}

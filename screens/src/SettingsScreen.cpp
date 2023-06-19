@@ -110,6 +110,10 @@ void SettingsScreen::handleMouseMove(const sf::Event::MouseMoveEvent &moveevent)
 void SettingsScreen::eventHandler(bool &exit) {
     if (auto event = sf::Event{}; m_window.pollEvent(event)) {
         switch (event.type) {
+            case sf::Event::KeyPressed:
+                if(event.key.code == sf::Keyboard::Escape)
+                    exit = true;
+                break;
             case sf::Event::MouseButtonReleased:
                 exit = !handleClick(event.mouseButton);
                 break;

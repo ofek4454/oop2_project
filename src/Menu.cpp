@@ -24,7 +24,7 @@ void Menu::handleEvents() {
             },
             [this](auto click, auto exit) {
                 SoundFlip::instance().checkIfContains(click);
-                handleClick();
+                handleClick(&click);
                 return false;
             },
             [this](auto key, auto exit) {
@@ -56,16 +56,22 @@ void Menu::handleHover(sf::Event::MouseMoveEvent &event) {
     bool hoverd = false;
     for (int i = 0; i < MENU_BUTTONS; i++) {
         if (m_menuButtons[i].getGlobalBounds().contains(event.x, event.y)) {
-            m_hoverChangedBy = false;
             hoverd = true;
             m_indicator = i;
         }
     }
-    if (!hoverd && !m_hoverChangedBy)
+    if (!hoverd)
         m_indicator = -1;
 }
 
-void Menu::handleClick() {
+void Menu::handleClick(sf::Event::MouseButtonEvent *event) {
+    if(event) {
+        m_indicator = -1;
+        for(int i = 0; i < MENU_BUTTONS; i++)
+            if(m_menuButtons[i].getGlobalBounds().contains(event->x, event->y)){
+                m_indicator = i;
+            }
+    }
     if (m_indicator >= 0 && m_indicator < MENU_BUTTONS) {
         switch (m_indicator) {
             case 0: {
@@ -98,20 +104,12 @@ void Menu::handleKeyboard(sf::Event::KeyEvent &type) {
     if(type.code == sf::Keyboard::Enter)
         handleClick();
     if (type.code == sf::Keyboard::Down) {
-        if (m_indicator <= MENU_BUTTONS) {
-            m_hoverChangedBy = true;
+        if (m_indicator < MENU_BUTTONS-1)
             m_indicator++;
-        }
-        else
-            m_indicator = -1;
     }
     if (type.code == sf::Keyboard::Up) {
-        if (m_indicator >= -1) {
-            m_hoverChangedBy = true;
+        if (m_indicator > 0)
             m_indicator--;
-        }
-        else
-            m_indicator = MENU_BUTTONS;
     }
 }
 

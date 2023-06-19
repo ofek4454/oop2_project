@@ -14,6 +14,7 @@ public:
     Board();
     void print();
     sf::RectangleShape *getFrame(int frame) {return &m_boardFrame[frame];}
+    void lightFrame(Location indicator);
 private:
     void setFrames();
     std::array<std::array<sf::RectangleShape,BOARD_SIZE>,BOARD_SIZE> m_matrix;
