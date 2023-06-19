@@ -10,7 +10,6 @@ Board::Board() {
             auto rect = sf::RectangleShape();
             rect.setSize(sf::Vector2f(RECT_SIZE, RECT_SIZE));
             rect.setFillColor((i + j) % 2 == 0 ? BLUE_COLOR : LIGHT_BLUE_COLOR);
-//            rect.setTexture((i + j) % 2 == 0 ? ResourcesManager::instance().getTexture(Grass) : ResourcesManager::instance().getTexture(LandTexture));
             rect.setPosition(sf::Vector2f(x, y));
             rect.setOrigin(RECT_SIZE / 2, RECT_SIZE / 2);
             m_matrix[i][j] = rect;
@@ -29,9 +28,9 @@ Board::Board() {
     setFrames();
 
     m_logo.setTexture(ResourcesManager::instance().getTexture(Logo));
-    m_logo.setSize(sf::Vector2f(2*CIRCLE_RADIUS,2*CIRCLE_RADIUS));
-    m_logo.setPosition(CLOCK_CIRCLE_CENTER.x, WINDOW_HEIGHT*0.355 - 1.1*CIRCLE_RADIUS);
-    m_logo.setOrigin(CIRCLE_RADIUS,CIRCLE_RADIUS);
+    m_logo.setSize(sf::Vector2f(2 * CIRCLE_RADIUS, 2 * CIRCLE_RADIUS));
+    m_logo.setPosition(CLOCK_CIRCLE_CENTER.x, WINDOW_HEIGHT * 0.355 - 1.1 * CIRCLE_RADIUS);
+    m_logo.setOrigin(CIRCLE_RADIUS, CIRCLE_RADIUS);
 }
 
 void Board::print() {
@@ -77,23 +76,4 @@ void Board::setFrames() {
     m_boardFrame[4].setSize(sf::Vector2f(10, WINDOW_HEIGHT * 0.95));
     m_boardFrame[4].setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775, WINDOW_HEIGHT * 0.025));
     m_boardFrame[4].setFillColor(LIGHT_BLUE_COLOR);
-}
-
-void Board::lightFrame(Location indicator) {
-    if(indicator.row >= 0 && indicator.row < ROWS && indicator.col >= 0 && indicator.col < BOARD_SIZE){
-        for(int i = 0;i < ROWS;i++){
-            for(int j = 0;j < BOARD_SIZE;j++){
-                if(i == indicator.row && j == indicator.col){
-                    m_matrix[indicator.row][indicator.col].setOutlineThickness(10);
-                    m_matrix[indicator.row][indicator.col].setOutlineColor(sf::Color::White);
-                }
-                else{
-                    m_matrix[indicator.row][indicator.col].setOutlineThickness(0);
-                    m_matrix[indicator.row][indicator.col].setOutlineColor(sf::Color::White);
-                }
-            }
-        }
-
-    }
-
 }

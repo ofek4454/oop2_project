@@ -29,13 +29,13 @@ private:
     sf::Text m_backButton;
     sf::Cursor m_cursor;
     sf::Cursor m_originalCursor;
+    sf::CircleShape m_circleIndicator;
     // Board
     Board m_board;
     GameBar m_gameBar;
     // Players
-    std::unique_ptr<PlayerState> m_user;
-    std::unique_ptr<PlayerState> m_enemy;
-    std::unordered_map<std::string,std::unique_ptr<Warrior>>* m_userWarriors;
+    std::unique_ptr<UserState> m_user;
+    std::unique_ptr<EnemyState> m_enemy;
     Warrior* m_currentP1 = nullptr;
     Warrior* m_currentP2 = nullptr;
     Referee m_referee;
@@ -49,7 +49,7 @@ private:
     Turn_t m_turn = P1;
     const Turn_t myTurn;
     bool m_switchPlayerByKey = false; // false = mouse true = keyboard
-    Location m_indicator = Location(4,0);
+    Location m_indicator = Location(-1,-1);
     bool m_isFinishUserTurn = false;
     bool m_playHoleAnimation = false;
     bool m_winner;

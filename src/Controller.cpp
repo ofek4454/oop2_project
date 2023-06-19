@@ -13,7 +13,11 @@ Controller::Controller(PlayerModel p1, PlayerModel p2, bool isMeP1) : m_window(
                                                                       myTurn(isMeP1 ? P1 : P2),
                                                                       m_referee(isMeP1 ? P1 : P2) {
 
-
+    m_circleIndicator.setRadius(RECT_SIZE*0.4);
+//    m_circleIndicator.setFillColor(sf::Color(BLUE_COLOR.r,BLUE_COLOR.g,BLUE_COLOR.b*0.7,150));
+    m_circleIndicator.setFillColor(GRAY_COLOR);
+    m_circleIndicator.setOrigin(RECT_SIZE *0.4,RECT_SIZE *0.4);
+    m_circleIndicator.setPosition(-2*RECT_SIZE,-2*RECT_SIZE);
     m_originalCursor.loadFromSystem(sf::Cursor::Arrow);
     m_cursor.loadFromSystem(sf::Cursor::Hand);
     m_backButton = TextClass("<-", H2, sf::Vector2f(WINDOW_WIDTH * 0.05,
@@ -35,12 +39,14 @@ void Controller::run() {
         while (m_window->pollEvent(event));
     }
     m_gameBar.resetClock(myTurn == P1);
-    m_userWarriors = m_user->getAllWarriors();
+
     print();
     WindowManager::instance().eventHandler(
             [this](auto move, auto exit) {
-                if (isMyTurn() && !m_user->isAnimating())
+                if (isMyTurn() && !m_user->isAnimating()) {
                     handleHover(move);
+                    incPlayer();
+                }
                 else return true;
                 return false;
             },
@@ -50,19 +56,21 @@ void Controller::run() {
                     exit = true;
                 if (isMyTurn() && !m_user->isAnimating()) {
                     m_user->doTurn(&click);
+                    if (m_user->isAnimating())
+                        m_indicator = Location(-1, -1);
                 } else return true;
                 return false;
             },
             [this](auto key, auto exit) {
-                if(isMyTurn() && !m_user->isAnimating())
+                if (isMyTurn() && !m_user->isAnimating()) {
                     handleKeyboard(key);
+                    incPlayer();
+                }
                 return false;
             },
             [](auto type, auto exit) { return false; },
             [](auto offset, auto exit) { return false; },
             [this](auto &exit) {
-                if (isMyTurn() && !m_user->isAnimating())
-                    incPlayer();
 
                 if (!isMyTurn() && !m_enemy->isAnimating()) {
                     enemyTurn(exit);
@@ -86,6 +94,7 @@ void Controller::print(bool printLoad) {
     m_window->clear();
     m_window->draw(*ResourcesManager::instance().getBackground());
     m_board.print();
+    m_window->draw(m_circleIndicator);
     m_window->draw(m_backButton);
     m_window->draw(m_p1Name);
     m_window->draw(m_p2Name);
@@ -147,7 +156,7 @@ void Controller::handleAnimation() {
         clock.restart().asSeconds();
         if (isMyTurn() && m_user->move()) {
             m_meAttacked = true;
-            m_indicator = Location(-1,-1);
+            m_indicator = Location(-1, -1);
             m_isFinishUserTurn = true;
         } else if (!isMyTurn() && m_enemy->move()) {
             m_meAttacked = false;
@@ -161,7 +170,7 @@ void Controller::handleAnimation() {
                 RoomState::instance().changeTurn();
                 m_turn = (Turn_t) !myTurn;
                 m_gameBar.resetClock(false);
-                m_indicator = Location(4,0);
+                m_indicator = Location(4, 0);
             }
         }
     }
@@ -258,6 +267,7 @@ void Controller::handleEvents() {
                 break;
             }
             case TimeOver: {
+                m_user->setArrows();
                 updateLastMoveAndChangeTurn(true);
                 break;
             }
@@ -636,39 +646,38 @@ Controller::~Controller() {
 }
 
 void Controller::handleKeyboard(sf::Event::KeyEvent &type) {
-    if (type.code == sf::Keyboard::Enter)
+    if (type.code == sf::Keyboard::Enter) {
         m_user->doTurn(NULL, &type, m_indicator);
+        m_indicator = Location(-1, -1);
+    }
     if (type.code == sf::Keyboard::Right) {
         if (m_user->m_playerChose) {
             m_user->doTurn(NULL, &type, m_indicator);
         } else {
-            if (m_indicator.col <= BOARD_SIZE) {
+            if (m_indicator.col < BOARD_SIZE - 1) {
                 m_switchPlayerByKey = true;
                 m_indicator.col++;
-            } else
-                m_indicator.col = -1;
+            }
         }
     }
     if (type.code == sf::Keyboard::Left) {
         if (m_user->m_playerChose) {
             m_user->doTurn(NULL, &type, m_indicator);
         } else {
-            if (m_indicator.col >= -1) {
+            if (m_indicator.col > 0) {
                 m_switchPlayerByKey = true;
                 m_indicator.col--;
-            } else
-                m_indicator.col = BOARD_SIZE;
+            }
         }
     }
     if (type.code == sf::Keyboard::Up) {
         if (m_user->m_playerChose) {
             m_user->doTurn(NULL, &type, m_indicator);
         } else {
-            if (m_indicator.row >= -1) {
+            if (m_indicator.row > 0) {
                 m_switchPlayerByKey = true;
                 m_indicator.row--;
-            } else
-                m_indicator.row = ROWS;
+            }
         }
 
     }
@@ -676,16 +685,18 @@ void Controller::handleKeyboard(sf::Event::KeyEvent &type) {
         if (m_user->m_playerChose) {
             m_user->doTurn(NULL, &type, m_indicator);
         } else {
-            if (m_indicator.row <= ROWS) {
+            if (m_indicator.row < ROWS - 1) {
                 m_switchPlayerByKey = true;
                 m_indicator.row++;
-            } else
-                m_indicator.row = -1;
+            }
         }
     }
 }
 
 void Controller::incPlayer() {
     m_user->handleHover(m_indicator.row, m_indicator.col);
-//    m_board.lightFrame(m_indicator);
+    if(m_indicator != Location(-1,-1))
+        m_circleIndicator.setPosition(m_board.getRectPosition(m_indicator));
+    else
+        m_circleIndicator.setPosition(-2*RECT_SIZE,-2*RECT_SIZE);
 }
