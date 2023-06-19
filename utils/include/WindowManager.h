@@ -12,6 +12,9 @@ public:
         return window;
     }
 
+    WindowManager(const WindowManager &other) = delete;
+    WindowManager operator=(const WindowManager &other) = delete;
+
     sf::RenderWindow *getWindow() { return &m_window; }
 
     void eventHandler(std::function<bool(sf::Event::MouseMoveEvent, bool &exit)> moveHandler,

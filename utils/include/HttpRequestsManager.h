@@ -15,6 +15,9 @@ public:
         return http_manager;
     }
     ~HttpRequestsManager();
+    HttpRequestsManager(const HttpRequestsManager &other) = delete;
+    HttpRequestsManager operator=(const HttpRequestsManager &other) = delete;
+
     static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *response);
     json postRequest(const json& data, std::string url);
     json getRequest(std::string url);

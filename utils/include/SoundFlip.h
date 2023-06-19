@@ -16,6 +16,10 @@ class SoundFlip {
 public:
     // Functions
     static SoundFlip& instance();
+
+    SoundFlip(const SoundFlip &other) = delete;
+    SoundFlip operator=(const SoundFlip &other) = delete;
+
     void draw(sf::RenderWindow &window);
     void checkIfContains(const sf::Event::MouseButtonEvent& event);
 private:

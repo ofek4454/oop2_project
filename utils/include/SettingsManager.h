@@ -12,6 +12,9 @@ class SettingsManager {
 public:
     static SettingsManager& instance();
 
+    SettingsManager(const SettingsManager &other) = delete;
+    SettingsManager operator=(const SettingsManager &other) = delete;
+
     // Functions
     const int getVolume() const;
     const int getBGMVolume() const;

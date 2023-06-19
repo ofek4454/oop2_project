@@ -9,6 +9,9 @@ class ResourcesManager {
 public:
     static ResourcesManager &instance();
 
+    ResourcesManager(const ResourcesManager &other) = delete;
+    ResourcesManager operator=(const ResourcesManager &other) = delete;
+
     sf::Texture *getTexture(Textures_t);
     sf::RectangleShape *getBackground();
     sf::Font *getFont();
