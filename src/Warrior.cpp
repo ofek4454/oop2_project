@@ -8,7 +8,7 @@
 #include "RoomState.h"
 
 Warrior::Warrior(const std::string id, const sf::Vector2f pos, const bool isMine, Location location)
-        : m_id(id), m_weapon(std::make_unique<Undefined>()), m_location(location) {
+        : m_id(id), m_weapon(std::make_unique<Undefined>()), m_location(location),m_isMine(isMine){
 
     auto texture = ResourcesManager::instance().getTexture(Warriors);
     m_sprite.setTexture(*texture);
@@ -180,7 +180,6 @@ bool Warrior::setHoleIntRect(bool isMe) {
     m_sprite.setTextureRect(sf::IntRect(rect, 0, IMAGE_WIDTH, IMAGE_HEIGHT));
     if (rect == IMAGE_WIDTH * 3) {
         if (isMe) {
-            std::cout << "Is Mine";
             m_sprite.setTextureRect(sf::IntRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT));
         } else {
             auto texture = ResourcesManager::instance().getTexture(Warriors);
