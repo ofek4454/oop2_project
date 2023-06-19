@@ -687,5 +687,5 @@ void Controller::handleKeyboard(sf::Event::KeyEvent &type) {
 
 void Controller::incPlayer() {
     m_user->handleHover(m_indicator.row, m_indicator.col);
-    m_board.lightFrame(m_indicator);
+//    m_board.lightFrame(m_indicator);
 }

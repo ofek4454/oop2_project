@@ -45,14 +45,16 @@ void UserState::doTurn(sf::Event::MouseButtonEvent *click, sf::Event::KeyEvent *
         if (click)
             m_direction = getDirection(sf::Vector2f(click->x, click->y));
         else if (key) {
-            if (key->code == sf::Keyboard::Up)
+            if (key->code == sf::Keyboard::Up && m_availableDirection[Up])
                 m_direction = Up;
-            if (key->code == sf::Keyboard::Down)
+            else if (key->code == sf::Keyboard::Down && m_availableDirection[Down])
                 m_direction = Down;
-            if (key->code == sf::Keyboard::Left)
+            else if (key->code == sf::Keyboard::Left && m_availableDirection[Left])
                 m_direction = Left;
-            if (key->code == sf::Keyboard::Right)
+            else if (key->code == sf::Keyboard::Right && m_availableDirection[Right])
                 m_direction = Right;
+            else
+                m_direction = Non_Direction;
         }
         setArrows();
         m_playerChose = false;
@@ -63,16 +65,18 @@ void UserState::doTurn(sf::Event::MouseButtonEvent *click, sf::Event::KeyEvent *
         if (click && BOARD_FRAME.contains(click->x, click->y)) { // choose warrior
             int row = (click->y - BOARD_TOP_LEFT.top) / RECT_SIZE;
             int col = (click->x - BOARD_TOP_LEFT.left) / RECT_SIZE;
-            auto availableLocations = checkAvailableLocations(Location(row, col));
-            if (availableLocations != NULL) {
-                setArrows(availableLocations, Location(row, col), true);
+            checkAvailableLocations(Location(row, col));
+            if (m_availableDirection[Up] || m_availableDirection[Down] ||
+                m_availableDirection[Left] || m_availableDirection[Right]) {
+                setArrows(Location(row, col), true);
                 m_selectedWarriorId = getWarrior(Location(row, col))->getId();
                 m_playerChose = true;
             }
         } else if (key && key->code == sf::Keyboard::Enter) {
-            auto availableLocations = checkAvailableLocations(indicator);
-            if (availableLocations != NULL) {
-                setArrows(availableLocations, indicator, true);
+            checkAvailableLocations(indicator);
+            if (m_availableDirection[Up] || m_availableDirection[Down] ||
+            m_availableDirection[Left] || m_availableDirection[Right]) {
+                setArrows(indicator, true);
                 m_selectedWarriorId = getWarrior(indicator)->getId();
                 m_playerChose = true;
             }
@@ -83,34 +87,34 @@ void UserState::doTurn(sf::Event::MouseButtonEvent *click, sf::Event::KeyEvent *
 }
 
 
-void UserState::setArrows(bool *directions, Location location, bool set) {
+void UserState::setArrows(Location location, bool set) {
     if (!set) {
         for (auto &spr: m_arrows)
             spr.setPosition(sf::Vector2f(-1000, -1000));
         return;
     }
-    if (directions[Up]) {
+    if (m_availableDirection[Up]) {
         m_arrows[Up].setPosition(
                 sf::Vector2f(BOARD_TOP_LEFT.left + location.col * RECT_SIZE,
                              BOARD_TOP_LEFT.top + location.row * RECT_SIZE));
         m_arrows[Up].setRotation(-90);
         m_arrows[Up].setColor(sf::Color(255, 255, 255, 70));
     }
-    if (directions[Down]) {
+    if (m_availableDirection[Down]) {
         m_arrows[Down].setPosition(
                 sf::Vector2f(BOARD_TOP_LEFT.left + ((location.col + 1) * RECT_SIZE),
                              BOARD_TOP_LEFT.top + (location.row + 1) * RECT_SIZE));
         m_arrows[Down].setRotation(90);
         m_arrows[Down].setColor(sf::Color(255, 255, 255, 70));
     }
-    if (directions[Right]) {
+    if (m_availableDirection[Right]) {
         m_arrows[Right].setPosition(
                 sf::Vector2f(sf::Vector2f(BOARD_TOP_LEFT.left + (location.col + 1) * RECT_SIZE,
                                           BOARD_TOP_LEFT.top + location.row * RECT_SIZE)));
         m_arrows[Right].setRotation(0);
         m_arrows[Right].setColor(sf::Color(255, 255, 255, 70));
     }
-    if (directions[Left]) {
+    if (m_availableDirection[Left]) {
         m_arrows[Left].setPosition(
                 sf::Vector2f(BOARD_TOP_LEFT.left + location.col * RECT_SIZE,
                              BOARD_TOP_LEFT.top + (location.row + 1) * RECT_SIZE));
@@ -190,32 +194,27 @@ bool UserState::move() {
     return false;
 }
 
-bool *UserState::checkAvailableLocations(Location location) {
+void UserState::checkAvailableLocations(Location location) {
     auto warrior = getWarrior(location);
     if (warrior == NULL || !warrior->canMove())
-        return nullptr;
+        return;
 
-    bool *locations = new bool[4];
-    locations[0] = true;
-    locations[1] = true;
-    locations[2] = true;
-    locations[3] = true;
+    for(int i = 0; i < 4;i++)
+        m_availableDirection[i] = true;
 
     for (auto &warrior: m_warriors) {
         auto warrior_loc = warrior.second->getLocation();
         if (warrior_loc == location)
             continue;
         if (location.row <= 0 || (location.row - 1 == warrior_loc.row && location.col == warrior_loc.col))
-            locations[Up] = false;
+            m_availableDirection[Up] = false;
         if (location.col - 1 < 0 || (location.row == warrior_loc.row && location.col - 1 == warrior_loc.col))
-            locations[Left] = false;
+            m_availableDirection[Left] = false;
         if (location.col + 1 > BOARD_SIZE - 1 ||
             (location.row == warrior_loc.row && location.col + 1 == warrior_loc.col))
-            locations[Right] = false;
-        if (location.row + 1 > BOARD_SIZE - 1 ||
+            m_availableDirection[Right] = false;
+        if (location.row + 1 > ROWS - 1 ||
             (location.row + 1 == warrior_loc.row && location.col == warrior_loc.col))
-            locations[Down] = false;
+            m_availableDirection[Down] = false;
     }
-
-    return locations;
 }
