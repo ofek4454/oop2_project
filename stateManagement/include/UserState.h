@@ -18,6 +18,7 @@ public:
     Direction_t getDirection(const sf::Vector2f pos) const;
 
 private:
+    bool warriorIsNull = false;
     bool m_availableDirection[4];
     std::array<sf::Sprite,4> m_arrows;
     std::array<Location,4> m_arrowsLocation;

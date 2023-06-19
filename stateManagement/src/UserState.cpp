@@ -66,7 +66,7 @@ void UserState::doTurn(sf::Event::MouseButtonEvent *click, sf::Event::KeyEvent *
             int row = (click->y - BOARD_TOP_LEFT.top) / RECT_SIZE;
             int col = (click->x - BOARD_TOP_LEFT.left) / RECT_SIZE;
             checkAvailableLocations(Location(row, col));
-            if (m_availableDirection[Up] || m_availableDirection[Down] ||
+            if (!warriorIsNull && m_availableDirection[Up] || m_availableDirection[Down] ||
                 m_availableDirection[Left] || m_availableDirection[Right]) {
                 setArrows(Location(row, col), true);
                 m_selectedWarriorId = getWarrior(Location(row, col))->getId();
@@ -74,7 +74,7 @@ void UserState::doTurn(sf::Event::MouseButtonEvent *click, sf::Event::KeyEvent *
             }
         } else if (key && key->code == sf::Keyboard::Enter) {
             checkAvailableLocations(indicator);
-            if (m_availableDirection[Up] || m_availableDirection[Down] ||
+            if (!warriorIsNull && m_availableDirection[Up] || m_availableDirection[Down] ||
             m_availableDirection[Left] || m_availableDirection[Right]) {
                 setArrows(indicator, true);
                 m_selectedWarriorId = getWarrior(indicator)->getId();
@@ -196,9 +196,11 @@ bool UserState::move() {
 
 void UserState::checkAvailableLocations(Location location) {
     auto warrior = getWarrior(location);
-    if (warrior == NULL || !warrior->canMove())
+    if (warrior == NULL || !warrior->canMove()){
+        warriorIsNull = true;
         return;
-
+    }
+    warriorIsNull = false;
     for(int i = 0; i < 4;i++)
         m_availableDirection[i] = true;
 

@@ -26,6 +26,7 @@ public:
     Warrior* getWarrior() {return getWarrior(m_selectedWarriorId);};
     Warrior* getWarrior(const std::string warrior_id);
     Warrior* getWarrior(const Location location);
+    Warrior* getFirstWarrior() {return m_warriors.begin()->second.get();}
     Warrior* pickRandomWarrior();
 
     std::unordered_map<std::string,std::unique_ptr<Warrior>>* getAllWarriors() { return &m_warriors;}

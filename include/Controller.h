@@ -27,6 +27,7 @@ private:
     sf::Texture m_fightTexture;
     sf::Text m_p1Name, m_p2Name;
     sf::Text m_backButton;
+    sf::Text m_LoadingText;
     sf::Cursor m_cursor;
     sf::Cursor m_originalCursor;
     sf::CircleShape m_circleIndicator;
@@ -49,7 +50,7 @@ private:
     Turn_t m_turn = P1;
     const Turn_t myTurn;
     bool m_switchPlayerByKey = false; // false = mouse true = keyboard
-    Location m_indicator = Location(-1,-1);
+    Location m_indicator;
     bool m_isFinishUserTurn = false;
     bool m_playHoleAnimation = false;
     bool m_winner;
