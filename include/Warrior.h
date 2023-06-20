@@ -7,36 +7,64 @@
 #include "Location.h"
 
 class Flag;
+
 class Hole;
+
 class Weapon;
 
 class Warrior {
 public:
     Warrior(const std::string id, const sf::Vector2f pos, bool isMine, Location location);
+
     ~Warrior() = default;
-    Weapon *getWeapon() { return m_weapon.get(); }
+
+    Weapon *getWeapon() {
+        if (m_weapon != NULL)
+            return m_weapon.get();
+        else
+            return NULL;
+    }
+
     void draw();
+
     Location getLocation() const { return m_location; }
+
     void setLocation(Direction_t direction);
-    void setLocation(Location location) {m_location = location;}
+
+    void setLocation(Location location) { m_location = location; }
+
     void setSpriteLocation(const sf::Vector2f &offset, const sf::Vector2f &shadowoffset);
+
     void setHighlighted(bool isHighlighted);
+
     void setMovingIntRect(int counter, bool isEnemy = false);
+
     bool setHoleIntRect(bool isMe);
+
     void setTextureFlag(bool isHighlighted);
+
     void setTextureHole(bool isHighlighted);
+
     bool setAsFlag();
-    std::string getId()const{return m_id;}
+
+    std::string getId() const { return m_id; }
 
     void setTexture(bool reset = false);
 
     bool setAsHole();
+
     bool canMove() const { return m_canMove; }
+
     void setWeapon(Weapons_t weapon, bool visible = true);
+
     bool isNeedToBeDeleted() { return m_needToDelete; }
+
     void setNeedToBeDraw(bool drawable) { m_needToBeDraw = drawable; }
+
     bool isDrawable() { return m_needToBeDraw; }
+
     std::string getSymbol() const { return m_weapon->getSymbol(); }
+
     void lose();
 
 private:
