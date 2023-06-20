@@ -101,8 +101,8 @@ void Controller::print(bool printLoad) {
         m_gameBar.drawStats();
     m_window->draw(m_chatIcon);
     if (m_isChatPressed) {
-        for (auto &menuEmoj: m_emojis)
-            m_window->draw(menuEmoj);
+        for (auto &menuEmoji: m_emojis)
+            m_window->draw(menuEmoji);
     }
     if (m_emojiPicked != NonEmoji)
         m_window->draw(m_pickedEmojiSprite);
@@ -171,6 +171,9 @@ void Controller::handleAnimation() {
             m_gameBar.resetClock(true);
             if (m_switchTurn) {
                 m_switchTurn = false;
+                auto warrior = m_user->getWarrior();
+                RoomState::instance().setLastMove(warrior->getId(), warrior->getLocation(),
+                                                  warrior->getSymbol());
                 RoomState::instance().changeTurn();
                 m_turn = (Turn_t) !myTurn;
                 m_gameBar.resetClock(false);
@@ -514,7 +517,10 @@ void Controller::handleTie() {
 
     auto war = m_enemy->getWarrior(id);
     war->setLocation(Location(row, col));
-    m_enemy->setSelectedWarriorId(war->getId());
+    m_enemy->setSelectedWarriorId(id);
+    auto userWar = m_user->getWarrior(id);
+    userWar->setLocation(Location(row, col));
+    m_user->setSelectedWarriorId(id);
     auto warrior = m_user->getWarrior();
     warrior->setWeapon(Undefined_t);
 
