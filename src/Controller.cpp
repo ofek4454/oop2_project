@@ -144,7 +144,7 @@ void Controller::checkCollision() {
 void Controller::handleAnimation() {
     static sf::Clock animateWeaponClock;
     auto time1 = animateWeaponClock.getElapsedTime().asSeconds();
-    if ((time1 > 4 && !isMyTurn()) || (m_animatingWeapon && ChosenWarrior->getWeapon())) {
+    if (ChosenWarrior->getWeapon() && ((time1 > 4 && !isMyTurn()) || m_animatingWeapon)) {
         animateWeaponClock.restart();
         animateWeapons();
     }
