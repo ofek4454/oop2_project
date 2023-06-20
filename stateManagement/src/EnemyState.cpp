@@ -54,6 +54,8 @@ void EnemyState::doTurn(sf::Event::MouseButtonEvent *click,sf::Event::KeyEvent *
         m_direction = Non_Direction;
     }
 
+    m_emoji = RoomState::instance().getLastEmoji();
+
     if (last_move[last_move.size() - 1] != warrior->getSymbol()[0]) {
 
         switch (last_move[last_move.size() - 1]) {

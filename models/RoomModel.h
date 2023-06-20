@@ -9,6 +9,13 @@
 #include "ostream"
 #include "iostream"
 
+enum Emojis{
+    Toungh,
+    Love,
+    Thinking,
+    NonEmoji,
+
+};
 using namespace nlohmann::literals;
 
 class RoomModel{
@@ -26,6 +33,7 @@ public:
         data["board"] = board;
         data["turn"] = int(turn);
         data["enemy_last_move"] = enemyLastMove;
+        data["emoji"] = emoji;
 
         return data;
     }
@@ -35,6 +43,7 @@ public:
     std::string player2Uid() const {return player2_uid;}
     std::array<std::string, BOARD_SIZE> getBoardRow(int row) const {return board[row];}
     std::string getLastMove() {return enemyLastMove;}
+    Emojis getEmoji() const {return emoji;}
 
 private:
     std::string roomId;
@@ -43,6 +52,7 @@ private:
     std::array<std::array<std::string, BOARD_SIZE>,ROWS> board;
     Turn_t turn;
     std::string enemyLastMove = "";
+    Emojis emoji;
     bool loggedOut = false;
 
     RoomModel(std::string id, nlohmann::json &data){
@@ -53,5 +63,6 @@ private:
         turn = Turn_t(data["turn"]);
         enemyLastMove = data["enemy_last_move"];
         loggedOut = data.contains("logged_out") ? true : false;
+        emoji = Emojis(data["emoji"]);
     }
 };

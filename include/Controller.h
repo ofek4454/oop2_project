@@ -28,6 +28,11 @@ private:
     sf::Text m_p1Name, m_p2Name;
     sf::Text m_backButton;
     sf::Text m_LoadingText;
+    sf::Sprite m_chatBubble;
+    sf::Sprite m_emojis[3];
+    sf::Sprite m_chatIcon;
+    sf::Sprite m_enemyEmoji;
+    sf::Sprite m_pickedEmojiSprite;
     sf::Cursor m_cursor;
     sf::Cursor m_originalCursor;
     sf::CircleShape m_circleIndicator;
@@ -60,6 +65,8 @@ private:
     bool m_collision = false;
     bool m_gameDone = false;
     bool m_distruct = false;
+    bool m_isChatPressed = false;
+    Emojis m_emojiPicked = NonEmoji;
 
     // private functions:
     void LoadingGame();
@@ -79,10 +86,12 @@ private:
     void animateWeapons();
     void animateHole();
     void enemyTurn(bool &exit);
-
+    void setSpritesAndTxts();
+    void handleClick(sf::Event::MouseButtonEvent &click);
     bool isMyTurn() const{
         return m_turn == myTurn;
     }
+    sf::Clock m_chatClock;
 };
 
 

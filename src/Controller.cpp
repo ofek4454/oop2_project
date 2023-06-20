@@ -1,7 +1,3 @@
-//
-// Created by Bar Kobi on 20/05/2023.
-//
-
 #include "Controller.h"
 #include "SoundFlip.h"
 #include "RoomState.h"
@@ -13,23 +9,12 @@ Controller::Controller(PlayerModel p1, PlayerModel p2, bool isMeP1) : m_window(
                                                                       myTurn(isMeP1 ? P1 : P2),
                                                                       m_referee(isMeP1 ? P1 : P2) {
 
-    m_circleIndicator.setRadius(RECT_SIZE * 0.4);
-    m_circleIndicator.setFillColor(sf::Color(10, 10, 10, 100));
-    m_circleIndicator.setOrigin(RECT_SIZE * 0.4, RECT_SIZE * 0.4);
-    m_circleIndicator.setPosition(-RECT_SIZE * RECT_SIZE, -RECT_SIZE * RECT_SIZE);
-    m_originalCursor.loadFromSystem(sf::Cursor::Arrow);
-    m_cursor.loadFromSystem(sf::Cursor::Hand);
-    m_backButton = TextClass("<-", H2, sf::Vector2f(WINDOW_WIDTH * 0.05,
-                                                    WINDOW_HEIGHT * 0.04)).getText();
-    m_LoadingText = TextClass("Choose Your Own Flag and Hole",H2,sf::Vector2f(BOARD_FRAME.left + (BOARD_FRAME.width - RECT_SIZE) / 2,
-                                                                              BOARD_FRAME.top + (BOARD_FRAME.height - RECT_SIZE) / 2)).getText();
-    m_LoadingText.setOutlineThickness(2);
-//    m_LoadingText.setOutlineColor(GRAY_COLOR);
+
     m_user->setPlayerSymbol(isMeP1 ? "1" : "2");
     m_enemy->setPlayerSymbol(!isMeP1 ? "1" : "2");
     m_user->init();
     m_enemy->init();
-    m_indicator = Location(4,0);
+    m_indicator = Location(4, 0);
     run();
 }
 
@@ -54,7 +39,7 @@ void Controller::run() {
                 return false;
             },
             [this](auto click, auto &exit) {
-                SoundFlip::instance().checkIfContains(click);
+                handleClick(click);
                 if (m_backButton.getGlobalBounds().contains(click.x, click.y))
                     exit = true;
                 if (isMyTurn() && !m_user->isAnimating()) {
@@ -75,12 +60,15 @@ void Controller::run() {
             [](auto type, auto exit) { return false; },
             [](auto offset, auto exit) { return false; },
             [this](auto &exit) {
+                if (m_enemy->getEmoji() != NonEmoji && m_chatClock.getElapsedTime().asSeconds() > 4) {
+                    m_enemy->setEmoji(NonEmoji);
+                    m_emojiPicked = NonEmoji;
+                }
 
                 if (!isMyTurn() && !m_enemy->isAnimating()) {
                     enemyTurn(exit);
                     if (exit) return;
                 }
-
                 handleAnimation();
                 if (isMyTurn()) {
                     checkCollision();
@@ -106,12 +94,22 @@ void Controller::print(bool printLoad) {
     m_enemy->print();
     SoundFlip::instance().draw(*m_window);
     m_referee.print();
-    if (printLoad){
+    if (printLoad) {
         m_window->draw(m_LoadingText);
         m_timeCounting.print();
-    }
-    else
+    } else
         m_gameBar.drawStats();
+    m_window->draw(m_chatIcon);
+    if (m_isChatPressed) {
+        for (auto &menuEmoj: m_emojis)
+            m_window->draw(menuEmoj);
+    }
+    if (m_emojiPicked != NonEmoji)
+        m_window->draw(m_pickedEmojiSprite);
+    if (m_enemy->getEmoji() != NonEmoji) {
+        m_window->draw(m_chatBubble);
+        m_window->draw(m_enemyEmoji);
+    }
     m_window->display();
 }
 
@@ -177,8 +175,9 @@ void Controller::handleAnimation() {
                 m_turn = (Turn_t) !myTurn;
                 m_gameBar.resetClock(false);
             }
-            m_indicator = Location(m_user->getFirstWarrior()->getLocation().row, m_user->getFirstWarrior()->getLocation().col);
-
+            m_indicator = Location(m_user->getFirstWarrior()->getLocation().row,
+                                   m_user->getFirstWarrior()->getLocation().col);
+            m_emojiPicked = NonEmoji;
         }
     }
 }
@@ -198,6 +197,14 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
         m_indicator = Location(row, col);
     }
 
+    for (int i = 0; i < 3; i++) {
+        if (m_emojis[i].getGlobalBounds().contains(event.x, event.y))
+            m_emojis[i].setScale((RECT_SIZE / 600) * 0.6, (RECT_SIZE / 600) * 0.6);
+        else
+            m_emojis[i].setScale((RECT_SIZE / 600) * 0.5, (RECT_SIZE / 600) * 0.5);
+
+    }
+
     if (!hoverd && !m_switchPlayerByKey)
         m_indicator = Location(-1, -1);
 
@@ -205,6 +212,7 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
 
 void Controller::handleEvents() {
     if (m_isFinishUserTurn && !EventLoop::instance().hasEvent()) {
+        RoomState::instance().setLastEmoji(m_emojiPicked);
         RoomState::instance().changeTurn();
         m_turn = (Turn_t) !myTurn;
         m_gameBar.resetClock(false);
@@ -355,14 +363,15 @@ void Controller::initNames() {
     m_p2Name.setOrigin(m_p2Name.getGlobalBounds().width / 2, m_p2Name.getGlobalBounds().height / 2);
     m_p1Name.setPosition(BOARD_TOP_LEFT.left + BOARD_FRAME.width / 2,
                          BOARD_TOP_LEFT.top + BOARD_FRAME.height +
-                         m_p1Name.getGlobalBounds().height);
+                                 H3);
     m_p2Name.setPosition(BOARD_TOP_LEFT.left + BOARD_FRAME.width / 2,
-                         BOARD_TOP_LEFT.top - m_p2Name.getGlobalBounds().height * 1.5);
+                         BOARD_TOP_LEFT.top - H3 * 1.5);
 }
 
 void Controller::initGame() {
     bool flagChoosed = false;
     initNames();
+    setSpritesAndTxts();
     WindowManager::instance().eventHandler(
             [this, &flagChoosed](auto move, auto exit) {
                 if (m_backButton.getGlobalBounds().contains(move.x, move.y))
@@ -411,8 +420,9 @@ void Controller::initGame() {
     );
     RoomState::instance().uploadFlagAndHole();
 
-    m_LoadingText = TextClass("Waiting For Opponent..",H2,sf::Vector2f(BOARD_FRAME.left + (BOARD_FRAME.width - RECT_SIZE) / 2,
-                                                                              BOARD_FRAME.top + (BOARD_FRAME.height - RECT_SIZE) / 2)).getText();
+    m_LoadingText = TextClass("Waiting For Opponent..", H2,
+                              sf::Vector2f(BOARD_FRAME.left + (BOARD_FRAME.width - RECT_SIZE) / 2,
+                                           BOARD_FRAME.top + (BOARD_FRAME.height - RECT_SIZE) / 2)).getText();
     print(true);
 
     std::pair<Location, Location> opponentFlagAndHole;
@@ -458,6 +468,7 @@ void Controller::updateLastMoveAndChangeTurn(bool timesUp) {
                                            m_user->getPlayerSymbol() + warrior->getSymbol());
         RoomState::instance().setLastMove(warrior->getId(), warrior->getLocation(),
                                           warrior->getSymbol());
+        RoomState::instance().setLastEmoji(m_emojiPicked);
     } else {
         RoomState::instance().setLastMoveMsg("TimeUp");
     }
@@ -626,6 +637,10 @@ void Controller::enemyTurn(bool &exit) {
                 handleTie();
             } else {
                 m_enemy->doTurn();
+                if (m_enemy->getEmoji() != NonEmoji) {
+                    m_chatClock.restart();
+                    m_enemyEmoji.setTexture(*m_emojis[m_enemy->getEmoji()].getTexture());
+                }
             }
         }
     }
@@ -638,7 +653,7 @@ Controller::~Controller() {
 void Controller::handleKeyboard(sf::Event::KeyEvent &type) {
     if (type.code == sf::Keyboard::Enter) {
         m_user->doTurn(NULL, &type, m_indicator);
-        if(m_user->isAnimating())
+        if (m_user->isAnimating())
             m_indicator = Location(-1, -1);
     }
     if (type.code == sf::Keyboard::Right) {
@@ -695,4 +710,68 @@ void Controller::incPlayer() {
     else
         m_circleIndicator.setPosition(m_board.getRectPosition(m_indicator));
 
+}
+
+void Controller::setSpritesAndTxts() {
+    m_chatIcon.setTexture(*ResourcesManager::instance().getTexture(ChatMenu));
+    m_chatIcon.setScale((RECT_SIZE / m_chatIcon.getGlobalBounds().width) * 0.9,
+                        (RECT_SIZE / m_chatIcon.getGlobalBounds().height) * 0.9);
+    m_chatIcon.setPosition(WINDOW_WIDTH * 0.027, WINDOW_HEIGHT * 0.85);
+    m_emojis[Love].setTexture(*ResourcesManager::instance().getTexture(LoveEmoji));
+    m_emojis[Toungh].setTexture(*ResourcesManager::instance().getTexture(TounghEmoji));
+    m_emojis[Thinking].setTexture(*ResourcesManager::instance().getTexture(ThinkingEmoji));
+    float y = m_chatIcon.getPosition().y - m_chatIcon.getGlobalBounds().height * 0.8;
+    for (int i = 0; i < 3; i++) {
+        m_emojis[i].setScale((RECT_SIZE / 600) * 0.5, (RECT_SIZE / 600) * 0.5);
+        m_emojis[i].setOrigin(m_emojis[i].getGlobalBounds().width / 2, m_emojis[i].getGlobalBounds().height / 2);
+        m_emojis[i].setPosition(m_chatIcon.getPosition().x + m_emojis[i].getGlobalBounds().width / 4, y);
+        y -= m_emojis[i].getGlobalBounds().height * 1.6;
+    }
+    m_circleIndicator.setRadius(RECT_SIZE * 0.4);
+    m_circleIndicator.setFillColor(sf::Color(10, 10, 10, 100));
+    m_circleIndicator.setOrigin(RECT_SIZE * 0.4, RECT_SIZE * 0.4);
+    m_circleIndicator.setPosition(-RECT_SIZE * RECT_SIZE, -RECT_SIZE * RECT_SIZE);
+    m_originalCursor.loadFromSystem(sf::Cursor::Arrow);
+    m_cursor.loadFromSystem(sf::Cursor::Hand);
+    m_backButton = TextClass("<-", H2, sf::Vector2f(WINDOW_WIDTH * 0.05,
+                                                    WINDOW_HEIGHT * 0.04)).getText();
+    m_LoadingText = TextClass("Choose Your Own Flag and Hole", H2,
+                              sf::Vector2f(BOARD_FRAME.left + (BOARD_FRAME.width - RECT_SIZE) / 2,
+                                           BOARD_FRAME.top + (BOARD_FRAME.height - RECT_SIZE) / 2)).getText();
+    m_LoadingText.setOutlineThickness(2);
+    m_chatBubble.setTexture(*ResourcesManager::instance().getTexture(ChatBubble));
+    m_chatBubble.setScale(-(m_emojis[Love].getGlobalBounds().width / (m_chatBubble.getGlobalBounds().width * 0.475)),
+                          -(m_emojis[Love].getGlobalBounds().height / (m_chatBubble.getGlobalBounds().height * 0.475)));
+    m_chatBubble.setPosition(m_p2Name.getPosition().x + m_chatBubble.getGlobalBounds().width * 1.5 +
+                             m_p2Name.getGlobalBounds().width * 0.2,
+                             m_p2Name.getPosition().y + m_chatBubble.getGlobalBounds().height * 0.35);
+    m_chatBubble.setOrigin(m_chatBubble.getGlobalBounds().width / 2, m_chatBubble.getGlobalBounds().height / 2);
+    m_enemyEmoji.setScale((RECT_SIZE / 600) * 0.5, (RECT_SIZE / 600) * 0.5);
+    m_enemyEmoji.setOrigin(m_enemyEmoji.getGlobalBounds().width / 2, m_enemyEmoji.getGlobalBounds().height / 2);
+    m_enemyEmoji.setPosition(m_chatBubble.getPosition().x - m_chatBubble.getGlobalBounds().width * 0.548,m_chatBubble.getPosition().y - m_chatBubble.getGlobalBounds().height * 0.63);
+
+    m_pickedEmojiSprite.setScale((RECT_SIZE / 600.f) * 0.5, (RECT_SIZE / 600) * 0.5);
+    m_pickedEmojiSprite.setPosition(m_p1Name.getGlobalBounds().width * 0.8 + m_p1Name.getPosition().x,m_p1Name.getPosition().y - m_p1Name.getGlobalBounds().height /2);
+}
+
+void Controller::handleClick(sf::Event::MouseButtonEvent &click) {
+    SoundFlip::instance().checkIfContains(click);
+    if (!m_isChatPressed && isMyTurn() && m_chatIcon.getGlobalBounds().contains(click.x, click.y)){
+        m_isChatPressed = !m_isFinishUserTurn;
+        return;
+    }
+
+    if (m_isChatPressed && isMyTurn()) {
+        bool isPressed = false;
+        for (int i = 0; i < 3; i++) {
+            if (m_emojis[i].getGlobalBounds().contains(click.x, click.y)) {
+                isPressed = true;
+                m_pickedEmojiSprite.setTexture(*m_emojis[i].getTexture());
+                m_emojiPicked = Emojis(i);
+                m_isChatPressed = false;
+            }
+        }
+        if (!isPressed)
+            m_isChatPressed = false;
+    }
 }

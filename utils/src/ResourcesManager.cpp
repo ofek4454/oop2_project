@@ -53,6 +53,13 @@ ResourcesManager::ResourcesManager() {
     m_texture[UndefinedWar].loadFromFile("tieU.png");
     m_texture[Grass].loadFromFile("grass.jpg");
     m_texture[LandTexture].loadFromFile("land.jpg");
+    m_texture[LoveEmoji].loadFromFile("love.png");
+    m_texture[ThinkingEmoji].loadFromFile("thinking.png");
+    m_texture[TounghEmoji].loadFromFile("toungh.png");
+    m_texture[ChatBubble].loadFromFile("bubble.png");
+    m_texture[ChatMenu].loadFromFile("chat.png");
+
+
 
     m_helpScreenPages[0].loadFromFile("Help-Page1.png");
     m_helpScreenPages[1].loadFromFile("Help-Page2.png");

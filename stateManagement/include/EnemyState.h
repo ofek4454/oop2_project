@@ -19,11 +19,11 @@ public:
         for (auto &warrior: m_warriors)
             warrior.second->draw();
     }
-
+    Emojis getEmoji() const {return m_emoji;}
+    void setEmoji(const Emojis emoji) {m_emoji = emoji;}
     Location extractLocation(const std::string& str);
-protected:
-
 private:
+    Emojis m_emoji = NonEmoji;
     sf::Clock clock;
 };
 

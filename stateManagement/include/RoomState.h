@@ -37,6 +37,8 @@ public:
     void setLastMove(std::string warriorId, Location location, std::string weapon);
     void setLastMoveTie(std::string last_move , Location location,std::string id);
     void setLastMoveMsg(std::string last_move);
+    void setLastEmoji(Emojis emoji) {room.emoji = emoji;}
+    Emojis getLastEmoji() { return room.emoji;}
     void resetRoom();
     bool isRoomReset();
     bool isLoggedOut();
