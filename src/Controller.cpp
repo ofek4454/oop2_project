@@ -740,15 +740,17 @@ void Controller::setSpritesAndTxts() {
                                            BOARD_FRAME.top + (BOARD_FRAME.height - RECT_SIZE) / 2)).getText();
     m_LoadingText.setOutlineThickness(2);
     m_chatBubble.setTexture(*ResourcesManager::instance().getTexture(ChatBubble));
+    m_chatBubble.setPosition(m_p2Name.getPosition().x + m_p2Name.getGlobalBounds().width + RECT_SIZE*0.4,
+                             m_p2Name.getPosition().y);// + m_p2Name.getGlobalBounds().width/2 );
+    m_chatBubble.setOrigin(m_chatBubble.getGlobalBounds().width / 2, m_chatBubble.getGlobalBounds().height / 2);
     m_chatBubble.setScale(-(m_emojis[Love].getGlobalBounds().width / (m_chatBubble.getGlobalBounds().width * 0.475)),
                           -(m_emojis[Love].getGlobalBounds().height / (m_chatBubble.getGlobalBounds().height * 0.475)));
-    m_chatBubble.setPosition(m_p2Name.getPosition().x + m_chatBubble.getGlobalBounds().width * 1.5 +
-                             m_p2Name.getGlobalBounds().width * 0.2,
-                             m_p2Name.getPosition().y + m_chatBubble.getGlobalBounds().height * 0.35);
-    m_chatBubble.setOrigin(m_chatBubble.getGlobalBounds().width / 2, m_chatBubble.getGlobalBounds().height / 2);
+    m_chatBubble.setRotation(-45);
+
     m_enemyEmoji.setScale((RECT_SIZE / 600) * 0.5, (RECT_SIZE / 600) * 0.5);
     m_enemyEmoji.setOrigin(m_enemyEmoji.getGlobalBounds().width / 2, m_enemyEmoji.getGlobalBounds().height / 2);
-    m_enemyEmoji.setPosition(m_chatBubble.getPosition().x - m_chatBubble.getGlobalBounds().width * 0.548,m_chatBubble.getPosition().y - m_chatBubble.getGlobalBounds().height * 0.63);
+    m_enemyEmoji.setPosition(m_chatBubble.getPosition().x - m_chatBubble.getGlobalBounds().width*0.07 ,
+                             m_chatBubble.getPosition().y - m_chatBubble.getGlobalBounds().height*0.22);
 
     m_pickedEmojiSprite.setScale((RECT_SIZE / 600.f) * 0.5, (RECT_SIZE / 600) * 0.5);
     m_pickedEmojiSprite.setPosition(m_p1Name.getGlobalBounds().width * 0.8 + m_p1Name.getPosition().x,m_p1Name.getPosition().y - m_p1Name.getGlobalBounds().height /2);
