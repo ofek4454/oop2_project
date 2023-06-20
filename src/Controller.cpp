@@ -518,8 +518,6 @@ void Controller::handleTie() {
     auto war = m_enemy->getWarrior(id);
     war->setLocation(Location(row, col));
     m_enemy->setSelectedWarriorId(id);
-    auto userWar = m_user->getWarrior(id);
-    userWar->setLocation(Location(row, col));
     m_user->setSelectedWarriorId(id);
     auto warrior = m_user->getWarrior();
     warrior->setWeapon(Undefined_t);

@@ -19,7 +19,7 @@ public:
     ~Warrior() = default;
 
     Weapon *getWeapon() {
-        if (m_weapon != NULL)
+        if (m_weapon.get() != NULL)
             return m_weapon.get();
         else
             return NULL;
