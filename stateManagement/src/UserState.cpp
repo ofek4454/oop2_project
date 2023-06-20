@@ -74,8 +74,8 @@ void UserState::doTurn(sf::Event::MouseButtonEvent *click, sf::Event::KeyEvent *
             }
         } else if (key && key->code == sf::Keyboard::Enter) {
             checkAvailableLocations(indicator);
-            if (!warriorIsNull && m_availableDirection[Up] || m_availableDirection[Down] ||
-            m_availableDirection[Left] || m_availableDirection[Right]) {
+            if (!warriorIsNull && (m_availableDirection[Up] || m_availableDirection[Down] ||
+            m_availableDirection[Left] || m_availableDirection[Right])) {
                 setArrows(indicator, true);
                 m_selectedWarriorId = getWarrior(indicator)->getId();
                 m_playerChose = true;
