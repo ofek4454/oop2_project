@@ -66,8 +66,8 @@ void UserState::doTurn(sf::Event::MouseButtonEvent *click, sf::Event::KeyEvent *
             int row = (click->y - BOARD_TOP_LEFT.top) / RECT_SIZE;
             int col = (click->x - BOARD_TOP_LEFT.left) / RECT_SIZE;
             checkAvailableLocations(Location(row, col));
-            if (!warriorIsNull && m_availableDirection[Up] || m_availableDirection[Down] ||
-                m_availableDirection[Left] || m_availableDirection[Right]) {
+            if (!warriorIsNull && (m_availableDirection[Up] || m_availableDirection[Down] ||
+                m_availableDirection[Left] || m_availableDirection[Right])) {
                 setArrows(Location(row, col), true);
                 m_selectedWarriorId = getWarrior(Location(row, col))->getId();
                 m_playerChose = true;
