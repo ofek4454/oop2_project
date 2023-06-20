@@ -144,7 +144,7 @@ void Controller::checkCollision() {
 void Controller::handleAnimation() {
     static sf::Clock animateWeaponClock;
     auto time1 = animateWeaponClock.getElapsedTime().asSeconds();
-    if (ChosenWarrior && ChosenWarrior->getWeapon() && ((time1 > 4 && !isMyTurn()) || m_animatingWeapon)) {
+    if (ChosenWarrior && ChosenWarrior->getWeapon()!=NULL && ((time1 > 4 && !isMyTurn()) || m_animatingWeapon)) {
         animateWeaponClock.restart();
         animateWeapons();
     }
@@ -518,7 +518,6 @@ void Controller::handleTie() {
     auto war = m_enemy->getWarrior(id);
     war->setLocation(Location(row, col));
     m_enemy->setSelectedWarriorId(id);
-    m_user->setSelectedWarriorId(id);
     auto warrior = m_user->getWarrior();
     warrior->setWeapon(Undefined_t);
 

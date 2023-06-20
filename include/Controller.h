@@ -48,7 +48,7 @@ private:
     Warrior* userHole;
     Warrior* enemyHole;
     Warrior* userFlag;
-    Warrior* ChosenWarrior;
+    Warrior* ChosenWarrior = NULL;
     TimeCounting m_timeCounting;
 
     // booleans
