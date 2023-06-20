@@ -7,12 +7,20 @@ void RoomState::createRoom(PlayerModel &creator) {
         for (int i = 0; i < BOARD_SIZE; i++)
             room.board[row][i] = "2U";
 
+    for (int row = 2; row < ROWS-2; row++)
+        for (int i = 0; i < BOARD_SIZE; i++)
+            room.board[row][i] = "";
+
     for (int row = ROWS - 2; row < ROWS; row++)
         for (int i = 0; i < BOARD_SIZE; i++)
             room.board[row][i] = "1U";
 
     room.creator_uid = creator.m_uid;
+    room.player2_uid = "";
     room.turn = P1;
+    room.enemyLastMove = "";
+    room.loggedOut = false;
+    room.emoji = NonEmoji;
     auto response = RoomService::createRoom(room, creator.m_name);
     room.roomId = response["name"];
 }
