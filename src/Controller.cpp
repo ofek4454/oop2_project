@@ -126,6 +126,7 @@ void Controller::checkCollision() {
                     animateFight(ResourcesManager::instance().getTexture(UndefinedWar), 453, 63, 3, NoSound);
                 m_user->setSelectedWarriorId(p1.second->getId());
                 m_enemy->setSelectedWarriorId(p2.second->getId());
+                m_enemy->getWarrior()->setLocation(p1.second->getLocation());
                 m_collision = true;
                 weapon_of_p2 = p2.second->getSymbol();
                 m_isFinishUserTurn = false;
@@ -518,7 +519,6 @@ void Controller::handleTie() {
     auto war = m_enemy->getWarrior(id);
     war->setLocation(Location(row, col));
     m_enemy->setSelectedWarriorId(id);
-    m_user->setSelectedWarriorId(id);
     auto warrior = m_user->getWarrior();
     warrior->setWeapon(Undefined_t);
 
