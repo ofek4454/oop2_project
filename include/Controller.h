@@ -11,7 +11,11 @@
 #include "GameBar.h"
 #include "TimeCounting.h"
 
-
+enum Cursor_t{
+    OriginalCursor,
+    ClickCursor,
+    TrashCursor,
+};
 class Controller {
 public:
     // C-Tor
@@ -29,11 +33,12 @@ private:
     sf::Text m_backButton;
     sf::Text m_LoadingText;
     sf::Sprite m_chatBubble;
-    sf::Sprite m_emojis[3];
+    sf::Sprite m_emojis[6];
     sf::Sprite m_chatIcon;
     sf::Sprite m_enemyEmoji;
     sf::Sprite m_pickedEmojiSprite;
     sf::Cursor m_cursor;
+    sf::Cursor m_deleteCursor;
     sf::Cursor m_originalCursor;
     sf::CircleShape m_circleIndicator;
     // Board
@@ -67,6 +72,7 @@ private:
     bool m_distruct = false;
     bool m_isChatPressed = false;
     Emojis m_emojiPicked = NonEmoji;
+    Cursor_t m_currentCursor = OriginalCursor;
 
     // private functions:
     void LoadingGame();

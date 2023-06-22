@@ -187,11 +187,29 @@ void Controller::handleAnimation() {
 }
 
 void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
+    if(m_emojiPicked != NonEmoji && m_pickedEmojiSprite.getGlobalBounds().contains(event.x,event.y)){
+        m_currentCursor = TrashCursor;
+        m_window->setMouseCursor(m_deleteCursor);
+    }
+    else{
+        if(m_currentCursor != ClickCursor){
+            m_currentCursor = OriginalCursor;
+            m_window->setMouseCursor(m_originalCursor);
+        }
+    }
+
     bool hoverd = false;
-    if (m_backButton.getGlobalBounds().contains(event.x, event.y))
+
+    if (m_backButton.getGlobalBounds().contains(event.x, event.y)){
+        m_currentCursor = ClickCursor;
         m_window->setMouseCursor(m_cursor);
-    else
-        m_window->setMouseCursor(m_originalCursor);
+    }
+    else{
+        if(m_currentCursor != TrashCursor){
+            m_currentCursor = OriginalCursor;
+            m_window->setMouseCursor(m_originalCursor);
+        }
+    }
     if (BOARD_TOP_LEFT.contains(event.x, event.y)) {
         hoverd = true;
         m_switchPlayerByKey = false;
@@ -201,7 +219,7 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
         m_indicator = Location(row, col);
     }
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 6; i++) {
         if (m_emojis[i].getGlobalBounds().contains(event.x, event.y))
             m_emojis[i].setScale((RECT_SIZE / 600) * 0.6, (RECT_SIZE / 600) * 0.6);
         else
@@ -286,6 +304,8 @@ void Controller::handleEvents() {
                 break;
             }
             case TimeOver: {
+                if(m_user->isAnimating())
+                    return;
                 m_user->setArrows();
                 updateLastMoveAndChangeTurn(true);
                 break;
@@ -721,11 +741,15 @@ void Controller::setSpritesAndTxts() {
     m_chatIcon.setScale((RECT_SIZE / m_chatIcon.getGlobalBounds().width) * 0.9,
                         (RECT_SIZE / m_chatIcon.getGlobalBounds().height) * 0.9);
     m_chatIcon.setPosition(WINDOW_WIDTH * 0.027, WINDOW_HEIGHT * 0.85);
-    m_emojis[Love].setTexture(*ResourcesManager::instance().getTexture(LoveEmoji));
-    m_emojis[Toungh].setTexture(*ResourcesManager::instance().getTexture(TounghEmoji));
-    m_emojis[Thinking].setTexture(*ResourcesManager::instance().getTexture(ThinkingEmoji));
+    m_emojis[Cry].setTexture(*ResourcesManager::instance().getTexture(CryEmoji));
+    m_emojis[Laugh].setTexture(*ResourcesManager::instance().getTexture(LaughEmoji));
+    m_emojis[Angry].setTexture(*ResourcesManager::instance().getTexture(AngryEmoji));
+    m_emojis[Sleep].setTexture(*ResourcesManager::instance().getTexture(SleepEmoji));
+    m_emojis[Finger].setTexture(*ResourcesManager::instance().getTexture(FingerEmoji));
+    m_emojis[Scammer].setTexture(*ResourcesManager::instance().getTexture(ScammerEmoji));
+
     float y = m_chatIcon.getPosition().y - m_chatIcon.getGlobalBounds().height * 0.8;
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 6; i++) {
         m_emojis[i].setScale((RECT_SIZE / 600) * 0.5, (RECT_SIZE / 600) * 0.5);
         m_emojis[i].setOrigin(m_emojis[i].getGlobalBounds().width / 2, m_emojis[i].getGlobalBounds().height / 2);
         m_emojis[i].setPosition(m_chatIcon.getPosition().x + m_emojis[i].getGlobalBounds().width / 4, y);
@@ -737,6 +761,7 @@ void Controller::setSpritesAndTxts() {
     m_circleIndicator.setPosition(-RECT_SIZE * RECT_SIZE, -RECT_SIZE * RECT_SIZE);
     m_originalCursor.loadFromSystem(sf::Cursor::Arrow);
     m_cursor.loadFromSystem(sf::Cursor::Hand);
+    m_deleteCursor.loadFromSystem(sf::Cursor::NotAllowed);
     m_backButton = TextClass("<-", H2, sf::Vector2f(WINDOW_WIDTH * 0.05,
                                                     WINDOW_HEIGHT * 0.04)).getText();
     m_LoadingText = TextClass("Choose Your Own Flag and Hole", H2,
@@ -747,8 +772,8 @@ void Controller::setSpritesAndTxts() {
     m_chatBubble.setPosition(m_p2Name.getPosition().x + m_p2Name.getGlobalBounds().width + RECT_SIZE*0.4,
                              m_p2Name.getPosition().y);// + m_p2Name.getGlobalBounds().width/2 );
     m_chatBubble.setOrigin(m_chatBubble.getGlobalBounds().width / 2, m_chatBubble.getGlobalBounds().height / 2);
-    m_chatBubble.setScale(-(m_emojis[Love].getGlobalBounds().width / (m_chatBubble.getGlobalBounds().width * 0.475)),
-                          -(m_emojis[Love].getGlobalBounds().height / (m_chatBubble.getGlobalBounds().height * 0.475)));
+    m_chatBubble.setScale(-(m_emojis[Cry].getGlobalBounds().width / (m_chatBubble.getGlobalBounds().width * 0.475)),
+                          -(m_emojis[Cry].getGlobalBounds().height / (m_chatBubble.getGlobalBounds().height * 0.475)));
     m_chatBubble.setRotation(-45);
 
     m_enemyEmoji.setScale((RECT_SIZE / 600) * 0.5, (RECT_SIZE / 600) * 0.5);
@@ -761,6 +786,11 @@ void Controller::setSpritesAndTxts() {
 }
 
 void Controller::handleClick(sf::Event::MouseButtonEvent &click) {
+    if(m_emojiPicked != NonEmoji && m_pickedEmojiSprite.getGlobalBounds().contains(click.x,click.y)){
+        m_currentCursor = OriginalCursor;
+        m_emojiPicked = NonEmoji;
+    }
+
     SoundFlip::instance().checkIfContains(click);
     if (!m_isChatPressed && isMyTurn() && m_chatIcon.getGlobalBounds().contains(click.x, click.y)){
         m_isChatPressed = !m_isFinishUserTurn;
@@ -769,7 +799,7 @@ void Controller::handleClick(sf::Event::MouseButtonEvent &click) {
 
     if (m_isChatPressed && isMyTurn()) {
         bool isPressed = false;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 6; i++) {
             if (m_emojis[i].getGlobalBounds().contains(click.x, click.y)) {
                 isPressed = true;
                 m_pickedEmojiSprite.setTexture(*m_emojis[i].getTexture());

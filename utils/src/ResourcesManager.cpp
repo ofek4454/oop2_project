@@ -41,7 +41,6 @@ ResourcesManager::ResourcesManager() {
     m_texture[RoomButton].loadFromFile("button.png");
     m_texture[Trap].loadFromFile("Hole.png");
     m_texture[Trap].setSmooth(true);
-    m_texture[ShuffleButton].loadFromFile("shuffleButton.png");
     m_texture[ScissorsFlip].loadFromFile("ScissorsFlipping.png");
     m_texture[PaperFlip].loadFromFile("PaperFlipping.png");
     m_texture[RockFlip].loadFromFile("RockFlipping.png");
@@ -51,14 +50,14 @@ ResourcesManager::ResourcesManager() {
     m_texture[Logo].loadFromFile("Logo.png");
     m_texture[Logo].setSmooth(true);
     m_texture[UndefinedWar].loadFromFile("tieU.png");
-    m_texture[Grass].loadFromFile("grass.jpg");
-    m_texture[LandTexture].loadFromFile("land.jpg");
-    m_texture[LoveEmoji].loadFromFile("love.png");
-    m_texture[ThinkingEmoji].loadFromFile("thinking.png");
-    m_texture[TounghEmoji].loadFromFile("toungh.png");
+    m_texture[AngryEmoji].loadFromFile("angry.png");
+    m_texture[CryEmoji].loadFromFile("cry.png");
+    m_texture[FingerEmoji].loadFromFile("finger.png");
+    m_texture[LaughEmoji].loadFromFile("laugh.png");
+    m_texture[ScammerEmoji].loadFromFile("scammer.png");
+    m_texture[SleepEmoji].loadFromFile("sleep.png");
     m_texture[ChatBubble].loadFromFile("bubble.png");
     m_texture[ChatMenu].loadFromFile("chat.png");
-
 
 
     m_helpScreenPages[0].loadFromFile("Help-Page1.png");

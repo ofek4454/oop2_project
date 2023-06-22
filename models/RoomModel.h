@@ -10,11 +10,13 @@
 #include "iostream"
 
 enum Emojis{
-    Toungh,
-    Love,
-    Thinking,
+    Cry,
+    Laugh,
+    Finger,
+    Sleep,
+    Scammer,
+    Angry,
     NonEmoji,
-
 };
 using namespace nlohmann::literals;
 
