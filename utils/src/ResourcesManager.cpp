@@ -58,6 +58,9 @@ ResourcesManager::ResourcesManager() {
     m_texture[SleepEmoji].loadFromFile("sleep.png");
     m_texture[ChatBubble].loadFromFile("bubble.png");
     m_texture[ChatMenu].loadFromFile("chat.png");
+    m_texture[PaperUndefined].loadFromFile("papervsund.png");
+    m_texture[RockUndefined].loadFromFile("rockvsund.png");
+    m_texture[ScissorsUndefined].loadFromFile("scivsund.png");
 
 
     m_helpScreenPages[0].loadFromFile("Help-Page1.png");

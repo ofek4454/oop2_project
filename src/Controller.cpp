@@ -99,6 +99,7 @@ void Controller::print(bool printLoad) {
         m_timeCounting.print();
     } else
         m_gameBar.drawStats();
+
     m_window->draw(m_chatIcon);
     if (m_isChatPressed) {
         for (auto &menuEmoji: m_emojis)
@@ -110,6 +111,9 @@ void Controller::print(bool printLoad) {
         m_window->draw(m_chatBubble);
         m_window->draw(m_enemyEmoji);
     }
+    if(m_attackingUndefined)
+        m_window->draw(m_lastFrameWar);
+
     m_window->display();
 }
 
@@ -173,8 +177,10 @@ void Controller::handleAnimation() {
             if (m_switchTurn) {
                 m_switchTurn = false;
                 auto warrior = m_user->getWarrior();
-                RoomState::instance().setLastMove(warrior->getId(), warrior->getLocation(),
-                                                  warrior->getSymbol());
+                if(warrior != NULL){
+                    RoomState::instance().setLastMove(warrior->getId(), warrior->getLocation(),
+                                                      warrior->getSymbol());
+                }
                 RoomState::instance().changeTurn();
                 m_turn = (Turn_t) !myTurn;
                 m_gameBar.resetClock(false);
@@ -244,6 +250,7 @@ void Controller::handleEvents() {
         auto event = EventLoop::instance().popEvent();
         switch (event.getEventType()) {
             case FightRP: {
+                m_attackingUndefined = false;
                 updateLastMoveAndChangeTurn();
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BluePR : RedPR), 980,
                              84, 7, winP);
@@ -252,6 +259,7 @@ void Controller::handleEvents() {
                 break;
             }
             case FightRS: {
+                m_attackingUndefined = false;
                 updateLastMoveAndChangeTurn();
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueRS : RedRS), 994,
                              93, 7, winR);
@@ -260,6 +268,7 @@ void Controller::handleEvents() {
                 break;
             }
             case FightPS:
+                m_attackingUndefined = false;
                 updateLastMoveAndChangeTurn();
                 animateFight(ResourcesManager::instance().getTexture(event.getWinner() == P1Won ? BlueSP : RedSP), 900,
                              96, 6, winS);
@@ -267,20 +276,40 @@ void Controller::handleEvents() {
                     m_switchTurn = true;
                 break;
             case FightRR:
+                m_attackingUndefined = false;
                 animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
                 updateTieCase("tie R");
                 break;
             case FightPP:
+                m_attackingUndefined = false;
                 animateFight(ResourcesManager::instance().getTexture(PaperPaper), 453, 63, 3, tieP);
                 updateTieCase("tie P");
                 break;
             case FightSS:
+                m_attackingUndefined = false;
                 updateTieCase("tie S");
                 animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3, tieS);
                 break;
             case AttackingUndefined: {
+                m_attackingUndefined = true;
                 // attacker only
                 updateLastMoveAndChangeTurn();
+                auto wep = m_user->getWarrior()->getWeapon()->getSymbol();
+                switch(wep[0]){
+                    case 'S':{
+                        animateFight(ResourcesManager::instance().getTexture(ScissorsUndefined), 453, 63, 3, NoSound);
+                        break;
+                    }
+                    case 'R':{
+                        animateFight(ResourcesManager::instance().getTexture(RockUndefined), 453, 63, 3, NoSound);
+                        break;
+                    }
+                    case 'P':{
+                        animateFight(ResourcesManager::instance().getTexture(PaperUndefined), 453, 63, 3, NoSound);
+                        break;
+                    }
+
+                }
                 break;
             }
             case HoleFall: {
@@ -330,6 +359,8 @@ void Controller::handleEvents() {
 void Controller::animateFight(sf::Texture *fightTexture, const int width, const int height, const int frames,
                               Sounds_t soundToPlay) {
     print();
+    if(!m_attackingUndefined)
+        m_lastFrameWar.setPosition(-1000,-1000);
     ResourcesManager::instance().playSound(JumpFight);
     float frameWidth = width / frames;
     float frame = 0;
@@ -340,8 +371,9 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width, const 
             frame += frameWidth;
         arr[i] = frame;
     }
-
+    auto boardBounds = BOARD_FRAME;
     sf::Clock fightAnimationClock;
+
     sf::Texture bg;
     bg.create(WINDOW_WIDTH, WINDOW_HEIGHT);
     bg.update(*m_window);
@@ -349,11 +381,18 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width, const 
     sf::Sprite background(bg);
     sf::Sprite fightSprite(*fightTexture);
 
-    auto boardBounds = BOARD_FRAME;
     fightSprite.setPosition(boardBounds.left + boardBounds.width / 2 - RECT_SIZE / 2,
                             boardBounds.top + boardBounds.height / 2 - RECT_SIZE / 2);
     fightSprite.setOrigin(frameWidth / 2, height);
     fightSprite.setScale(2.2, 2.2);
+    if(m_attackingUndefined){
+        m_lastFrameWar.setTexture(*fightTexture);
+        m_lastFrameWar.setTextureRect(sf::IntRect(arr[frames*7], 0, frameWidth, height));
+        m_lastFrameWar.setPosition(boardBounds.left + boardBounds.width / 2 - RECT_SIZE / 2,
+                                boardBounds.top + boardBounds.height / 2 - RECT_SIZE / 2);
+        m_lastFrameWar.setOrigin(frameWidth / 2, height);
+        m_lastFrameWar.setScale(2.2, 2.2);
+    }
     while (currentFrameCounter < frames * 8) {
         fightSprite.setTextureRect(sf::IntRect(arr[currentFrameCounter], 0, frameWidth, height));
         m_window->clear();

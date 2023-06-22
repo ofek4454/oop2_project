@@ -36,6 +36,7 @@ private:
     sf::Sprite m_emojis[6];
     sf::Sprite m_chatIcon;
     sf::Sprite m_enemyEmoji;
+    sf::Sprite m_lastFrameWar;
     sf::Sprite m_pickedEmojiSprite;
     sf::Cursor m_cursor;
     sf::Cursor m_deleteCursor;
@@ -71,6 +72,7 @@ private:
     bool m_gameDone = false;
     bool m_distruct = false;
     bool m_isChatPressed = false;
+    bool m_attackingUndefined = false;
     Emojis m_emojiPicked = NonEmoji;
     Cursor_t m_currentCursor = OriginalCursor;
 
