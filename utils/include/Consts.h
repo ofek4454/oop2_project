@@ -10,7 +10,7 @@ const int NUM_OF_TEXTURES = 33;
 const int NUM_OF_HELP_SCREEN_PAGES = 4;
 
 // Board Size
-const int NUMBER_OF_SOUNDS = 16;
+const int NUMBER_OF_SOUNDS = 17;
 const int MENU_BUTTONS = 5;
 const int IMAGE_COUNT = 25;
 const int BOARD_SIZE = 8;
@@ -91,8 +91,9 @@ enum Sounds_t{
     WinFight,
     LoseFight,
     JumpFight,
-    GeneratingWeapons,
-    ChooseWeapon,
+    Gong,
+    Win,
+    Lost,
     NoSound,
 };
 

@@ -50,6 +50,12 @@ AfterGameScreen::AfterGameScreen(bool isMeWon, PlayerModel userModel, PlayerMode
 void AfterGameScreen::playLosingAnimation() {
     sf::Clock refAnimationClock, jumpingClock;
     print();
+
+    if(m_isMeWinner)
+        ResourcesManager::instance().playSound(Win);
+    else
+        ResourcesManager::instance().playSound(Lost);
+
     WindowManager::instance().eventHandler(
             [this](auto move, auto exit) {
                 if (!m_waitingForOpponent)

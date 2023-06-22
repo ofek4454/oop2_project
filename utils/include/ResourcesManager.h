@@ -35,7 +35,7 @@ private:
     sf::Font m_font;
     std::string m_sound_file_names[NUMBER_OF_SOUNDS - 1] = {"tieP.wav", "tieR.wav","tieS.wav","winP.wav","winR.wav","winS.wav",
                                                         "blueJump.wav","blueTurn.wav","redJump.wav","redTurn.wav","WinFight.wav"
-                                                        ,"Losefight.wav","Jumpsound.wav","Generatingweapon.wav","Chooseweapon.wav"};
+                                                        ,"Losefight.wav","Jumpsound.wav","gong.wav","win.wav","lost.wav"};
     std::string m_soundstring[2] = {"MusicButton.png","FXButton.png"};
     sf::Texture m_soundButton[2];
     sf::Image m_logo;

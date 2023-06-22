@@ -581,7 +581,7 @@ void Controller::LoadingGame() {
                 print(true);
             }
     );
-
+    ResourcesManager::instance().playSound(Gong);
 }
 
 void Controller::animateWeapons() {
