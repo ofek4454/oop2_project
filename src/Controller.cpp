@@ -82,7 +82,7 @@ void Controller::run() {
     );
 }
 
-void Controller::print(bool printLoad) {
+void Controller::print(bool printLoad, bool fight) {
     m_window->clear();
     m_window->draw(*ResourcesManager::instance().getBackground());
     m_board.print();
@@ -111,7 +111,11 @@ void Controller::print(bool printLoad) {
         m_window->draw(m_chatBubble);
         m_window->draw(m_enemyEmoji);
     }
-    if(m_attackingUndefined)
+    if (fight) {
+        m_tempBackgroundTexture.create(WINDOW_WIDTH, WINDOW_HEIGHT);
+        m_tempBackgroundTexture.update(*m_window);
+    }
+    if (m_attackingUndefined)
         m_window->draw(m_lastFrameWar);
 
     m_window->display();
@@ -149,7 +153,7 @@ void Controller::checkCollision() {
 void Controller::handleAnimation() {
     static sf::Clock animateWeaponClock;
     auto time1 = animateWeaponClock.getElapsedTime().asSeconds();
-    if (ChosenWarrior && ChosenWarrior->getWeapon()!=NULL && ((time1 > 4 && !isMyTurn()) || m_animatingWeapon)) {
+    if (ChosenWarrior && ChosenWarrior->getWeapon() != NULL && ((time1 > 4 && !isMyTurn()) || m_animatingWeapon)) {
         animateWeaponClock.restart();
         animateWeapons();
     }
@@ -177,7 +181,7 @@ void Controller::handleAnimation() {
             if (m_switchTurn) {
                 m_switchTurn = false;
                 auto warrior = m_user->getWarrior();
-                if(warrior != NULL){
+                if (warrior != NULL) {
                     RoomState::instance().setLastMove(warrior->getId(), warrior->getLocation(),
                                                       warrior->getSymbol());
                 }
@@ -193,29 +197,27 @@ void Controller::handleAnimation() {
 }
 
 void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
-    if(m_emojiPicked != NonEmoji && m_pickedEmojiSprite.getGlobalBounds().contains(event.x,event.y)){
+    if (m_emojiPicked != NonEmoji && m_pickedEmojiSprite.getGlobalBounds().contains(event.x, event.y)) {
         m_currentCursor = TrashCursor;
         m_window->setMouseCursor(m_deleteCursor);
+    } else {
+        if (m_currentCursor != ClickCursor) {
+            m_currentCursor = OriginalCursor;
+            m_window->setMouseCursor(m_originalCursor);
+        }
     }
-    else{
-        if(m_currentCursor != ClickCursor){
+
+    if (m_backButton.getGlobalBounds().contains(event.x, event.y)) {
+        m_currentCursor = ClickCursor;
+        m_window->setMouseCursor(m_cursor);
+    } else {
+        if (m_currentCursor != TrashCursor) {
             m_currentCursor = OriginalCursor;
             m_window->setMouseCursor(m_originalCursor);
         }
     }
 
     bool hoverd = false;
-
-    if (m_backButton.getGlobalBounds().contains(event.x, event.y)){
-        m_currentCursor = ClickCursor;
-        m_window->setMouseCursor(m_cursor);
-    }
-    else{
-        if(m_currentCursor != TrashCursor){
-            m_currentCursor = OriginalCursor;
-            m_window->setMouseCursor(m_originalCursor);
-        }
-    }
     if (BOARD_TOP_LEFT.contains(event.x, event.y)) {
         hoverd = true;
         m_switchPlayerByKey = false;
@@ -295,20 +297,19 @@ void Controller::handleEvents() {
                 // attacker only
                 updateLastMoveAndChangeTurn();
                 auto wep = m_user->getWarrior()->getWeapon()->getSymbol();
-                switch(wep[0]){
-                    case 'S':{
+                switch (wep[0]) {
+                    case 'S': {
                         animateFight(ResourcesManager::instance().getTexture(ScissorsUndefined), 453, 63, 3, NoSound);
                         break;
                     }
-                    case 'R':{
+                    case 'R': {
                         animateFight(ResourcesManager::instance().getTexture(RockUndefined), 453, 63, 3, NoSound);
                         break;
                     }
-                    case 'P':{
+                    case 'P': {
                         animateFight(ResourcesManager::instance().getTexture(PaperUndefined), 453, 63, 3, NoSound);
                         break;
                     }
-
                 }
                 break;
             }
@@ -333,7 +334,7 @@ void Controller::handleEvents() {
                 break;
             }
             case TimeOver: {
-                if(m_user->isAnimating())
+                if (m_user->isAnimating())
                     return;
                 m_user->setArrows();
                 updateLastMoveAndChangeTurn(true);
@@ -358,9 +359,7 @@ void Controller::handleEvents() {
 
 void Controller::animateFight(sf::Texture *fightTexture, const int width, const int height, const int frames,
                               Sounds_t soundToPlay) {
-    print();
-    if(!m_attackingUndefined)
-        m_lastFrameWar.setPosition(-1000,-1000);
+    print(false, true);
     ResourcesManager::instance().playSound(JumpFight);
     float frameWidth = width / frames;
     float frame = 0;
@@ -371,32 +370,28 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width, const 
             frame += frameWidth;
         arr[i] = frame;
     }
-    auto boardBounds = BOARD_FRAME;
     sf::Clock fightAnimationClock;
 
-    sf::Texture bg;
-    bg.create(WINDOW_WIDTH, WINDOW_HEIGHT);
-    bg.update(*m_window);
 
-    sf::Sprite background(bg);
+    m_tempBackground.setTexture(m_tempBackgroundTexture);
     sf::Sprite fightSprite(*fightTexture);
 
-    fightSprite.setPosition(boardBounds.left + boardBounds.width / 2 - RECT_SIZE / 2,
-                            boardBounds.top + boardBounds.height / 2 - RECT_SIZE / 2);
+    fightSprite.setPosition(BOARD_FRAME.left + BOARD_FRAME.width / 2 - RECT_SIZE / 2,
+                            BOARD_FRAME.top + BOARD_FRAME.height / 2 - RECT_SIZE / 2);
     fightSprite.setOrigin(frameWidth / 2, height);
     fightSprite.setScale(2.2, 2.2);
-    if(m_attackingUndefined){
+    if (m_attackingUndefined) {
         m_lastFrameWar.setTexture(*fightTexture);
-        m_lastFrameWar.setTextureRect(sf::IntRect(arr[frames*7], 0, frameWidth, height));
-        m_lastFrameWar.setPosition(boardBounds.left + boardBounds.width / 2 - RECT_SIZE / 2,
-                                boardBounds.top + boardBounds.height / 2 - RECT_SIZE / 2);
+        m_lastFrameWar.setTextureRect(sf::IntRect(arr[frames * 7], 0, frameWidth, height));
+        m_lastFrameWar.setPosition(BOARD_FRAME.left + BOARD_FRAME.width / 2 - RECT_SIZE / 2,
+                                   BOARD_FRAME.top + BOARD_FRAME.height / 2 - RECT_SIZE / 2);
         m_lastFrameWar.setOrigin(frameWidth / 2, height);
         m_lastFrameWar.setScale(2.2, 2.2);
     }
     while (currentFrameCounter < frames * 8) {
         fightSprite.setTextureRect(sf::IntRect(arr[currentFrameCounter], 0, frameWidth, height));
         m_window->clear();
-        m_window->draw(background);
+        m_window->draw(m_tempBackground);
         m_window->draw(fightSprite);
         m_window->display();
         if (fightAnimationClock.getElapsedTime().asSeconds() < 0.019 && frames > 5) continue;
@@ -409,8 +404,9 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width, const 
     }
 
     m_window->clear();
-    m_window->draw(background);
+    m_window->draw(m_tempBackground);
     m_window->display();
+
 }
 
 void Controller::initNames() {
@@ -426,7 +422,7 @@ void Controller::initNames() {
     m_p2Name.setOrigin(m_p2Name.getGlobalBounds().width / 2, m_p2Name.getGlobalBounds().height / 2);
     m_p1Name.setPosition(BOARD_TOP_LEFT.left + BOARD_FRAME.width / 2,
                          BOARD_TOP_LEFT.top + BOARD_FRAME.height +
-                                 H3);
+                         H3);
     m_p2Name.setPosition(BOARD_TOP_LEFT.left + BOARD_FRAME.width / 2,
                          BOARD_TOP_LEFT.top - H3 * 1.5);
 }
@@ -808,7 +804,7 @@ void Controller::setSpritesAndTxts() {
                                            BOARD_FRAME.top + (BOARD_FRAME.height - RECT_SIZE) / 2)).getText();
     m_LoadingText.setOutlineThickness(2);
     m_chatBubble.setTexture(*ResourcesManager::instance().getTexture(ChatBubble));
-    m_chatBubble.setPosition(m_p2Name.getPosition().x + m_p2Name.getGlobalBounds().width + RECT_SIZE*0.4,
+    m_chatBubble.setPosition(m_p2Name.getPosition().x + m_p2Name.getGlobalBounds().width + RECT_SIZE * 0.4,
                              m_p2Name.getPosition().y);// + m_p2Name.getGlobalBounds().width/2 );
     m_chatBubble.setOrigin(m_chatBubble.getGlobalBounds().width / 2, m_chatBubble.getGlobalBounds().height / 2);
     m_chatBubble.setScale(-(m_emojis[Cry].getGlobalBounds().width / (m_chatBubble.getGlobalBounds().width * 0.475)),
@@ -817,21 +813,22 @@ void Controller::setSpritesAndTxts() {
 
     m_enemyEmoji.setScale((RECT_SIZE / 600) * 0.5, (RECT_SIZE / 600) * 0.5);
     m_enemyEmoji.setOrigin(m_enemyEmoji.getGlobalBounds().width / 2, m_enemyEmoji.getGlobalBounds().height / 2);
-    m_enemyEmoji.setPosition(m_chatBubble.getPosition().x - m_chatBubble.getGlobalBounds().width*0.07 ,
-                             m_chatBubble.getPosition().y - m_chatBubble.getGlobalBounds().height*0.22);
+    m_enemyEmoji.setPosition(m_chatBubble.getPosition().x - m_chatBubble.getGlobalBounds().width * 0.07,
+                             m_chatBubble.getPosition().y - m_chatBubble.getGlobalBounds().height * 0.22);
 
     m_pickedEmojiSprite.setScale((RECT_SIZE / 600.f) * 0.5, (RECT_SIZE / 600) * 0.5);
-    m_pickedEmojiSprite.setPosition(m_p1Name.getGlobalBounds().width * 0.8 + m_p1Name.getPosition().x,m_p1Name.getPosition().y - m_p1Name.getGlobalBounds().height /2);
+    m_pickedEmojiSprite.setPosition(m_p1Name.getGlobalBounds().width * 0.8 + m_p1Name.getPosition().x,
+                                    m_p1Name.getPosition().y - m_p1Name.getGlobalBounds().height / 2);
 }
 
 void Controller::handleClick(sf::Event::MouseButtonEvent &click) {
-    if(m_emojiPicked != NonEmoji && m_pickedEmojiSprite.getGlobalBounds().contains(click.x,click.y)){
+    if (m_emojiPicked != NonEmoji && m_pickedEmojiSprite.getGlobalBounds().contains(click.x, click.y)) {
         m_currentCursor = OriginalCursor;
         m_emojiPicked = NonEmoji;
     }
 
     SoundFlip::instance().checkIfContains(click);
-    if (!m_isChatPressed && isMyTurn() && m_chatIcon.getGlobalBounds().contains(click.x, click.y)){
+    if (!m_isChatPressed && isMyTurn() && m_chatIcon.getGlobalBounds().contains(click.x, click.y)) {
         m_isChatPressed = !m_isFinishUserTurn;
         return;
     }

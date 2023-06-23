@@ -54,7 +54,7 @@ endif()
 
 if(WIN32)
 
-	add_executable (${CMAKE_PROJECT_NAME} main.cpp screens/src/AfterGameScreen.cpp screens/include/AfterGameScreen.h screens/src/HelpScreen.cpp screens/include/HelpScreen.h screens/include/ErrorScreen.h src/GameBar.cpp include/GameBar.h utils/src/TimeCounting.cpp utils/include/TimeCounting.h utils/src/TextClass.cpp utils/include/TextClass.h)
+	add_executable (${CMAKE_PROJECT_NAME} main.cpp screens/src/AfterGameScreen.cpp screens/include/AfterGameScreen.h screens/src/HelpScreen.cpp screens/include/HelpScreen.h screens/include/ErrorScreen.h src/GameBar.cpp include/GameBar.h utils/src/TimeCounting.cpp utils/include/TimeCounting.h utils/src/TextClass.cpp utils/include/TextClass.h utils/src/factories.cpp)
 
 	target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE $<$<CONFIG:DEBUG>:-fsanitize=address>)
 
