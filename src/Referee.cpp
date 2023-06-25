@@ -1,17 +1,17 @@
 #include "Referee.h"
 
 Referee::Referee(Turn_t turn) : m_window(WindowManager::instance().getWindow()) , m_turn(turn){
-    auto frameRectSize = sf::Vector2f(WINDOW_WIDTH - WINDOW_WIDTH * 0.775,
-                                      WINDOW_HEIGHT * 0.685 - WINDOW_HEIGHT * 0.355);
+    auto frameRectSize = sf::Vector2f(WINDOW_WIDTH - WINDOW_WIDTH * 0.775f,
+                                      WINDOW_HEIGHT * 0.685f - WINDOW_HEIGHT * 0.355f);
     m_sprite.setTexture(*ResourcesManager::instance().getTexture(RefereeTexture));
-    m_sprite.setScale((frameRectSize.x / 263) * 0.6, (frameRectSize.y / 203) * 0.6);
+    m_sprite.setScale((frameRectSize.x / 263.f) * 0.6f, (frameRectSize.y / 203.f) * 0.6f);
     m_sprite.setTextureRect(sf::IntRect(0, 0, 263, 203));
     m_sprite.setPosition(
-            sf::Vector2f(WINDOW_WIDTH * 0.775 + ((WINDOW_WIDTH - WINDOW_WIDTH * 0.775) / 2) -
+            sf::Vector2f(WINDOW_WIDTH * 0.775f + ((WINDOW_WIDTH - WINDOW_WIDTH * 0.775f) / 2.f) -
                          (m_sprite.getGlobalBounds().width / 2),
-                         WINDOW_HEIGHT * 0.355 + ((WINDOW_WIDTH - WINDOW_WIDTH * 0.775,
-                                 WINDOW_HEIGHT * 0.685 - WINDOW_HEIGHT * 0.355) / 2) -
-                         (m_sprite.getGlobalBounds().height / 2)));
+                         WINDOW_HEIGHT * 0.355f + ((WINDOW_WIDTH - WINDOW_WIDTH * 0.775f,
+                                 WINDOW_HEIGHT * 0.685f - WINDOW_HEIGHT * 0.355f) / 2.f) -
+                         (m_sprite.getGlobalBounds().height / 2.f)));
     m_rect = (turn == P1) ? 0 : 789;
     m_sprite.setTextureRect(sf::IntRect(m_rect, 0, 263, 203));
 }
