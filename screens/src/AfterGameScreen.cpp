@@ -118,7 +118,7 @@ void AfterGameScreen::print() {
 
 void AfterGameScreen::handleHover(sf::Event::MouseMoveEvent &event) {
     bool hover = false;
-    for (auto btn: m_yesNoTexts) {
+    for (auto &btn: m_yesNoTexts) {
         if (btn.getGlobalBounds().contains(event.x, event.y)) {
             btn.setScale(1.1, 1.1);
             m_window->setMouseCursor(m_clickable);
