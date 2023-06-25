@@ -23,7 +23,7 @@ public:
     void setEmoji(const Emojis emoji) {m_emoji = emoji;}
     Location extractLocation(const std::string& str);
 private:
-    Emojis m_emoji = NonEmoji;
+    Emojis m_emoji = NonEmoji_t;
     sf::Clock clock;
 };
 

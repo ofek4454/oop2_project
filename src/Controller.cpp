@@ -60,9 +60,9 @@ void Controller::run() {
             [](auto type, auto exit) { return false; },
             [](auto offset, auto exit) { return false; },
             [this](auto &exit) {
-                if (m_enemy->getEmoji() != NonEmoji && m_chatClock.getElapsedTime().asSeconds() > 4) {
-                    m_enemy->setEmoji(NonEmoji);
-                    m_emojiPicked = NonEmoji;
+                if (m_enemy->getEmoji() != NonEmoji_t && m_chatClock.getElapsedTime().asSeconds() > 4) {
+                    m_enemy->setEmoji(NonEmoji_t);
+                    m_emojiPicked = NonEmoji_t;
                 }
 
                 if (!isMyTurn() && !m_enemy->isAnimating()) {
@@ -105,9 +105,9 @@ void Controller::print(bool printLoad, bool fight) {
         for (auto &menuEmoji: m_emojis)
             m_window->draw(menuEmoji);
     }
-    if (m_emojiPicked != NonEmoji)
+    if (m_emojiPicked != NonEmoji_t)
         m_window->draw(m_pickedEmojiSprite);
-    if (m_enemy->getEmoji() != NonEmoji) {
+    if (m_enemy->getEmoji() != NonEmoji_t) {
         m_window->draw(m_chatBubble);
         m_window->draw(m_enemyEmoji);
     }
@@ -191,13 +191,13 @@ void Controller::handleAnimation() {
             }
             m_indicator = Location(m_user->getFirstWarrior()->getLocation().row,
                                    m_user->getFirstWarrior()->getLocation().col);
-            m_emojiPicked = NonEmoji;
+            m_emojiPicked = NonEmoji_t;
         }
     }
 }
 
 void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
-    if (m_emojiPicked != NonEmoji && m_pickedEmojiSprite.getGlobalBounds().contains(event.x, event.y)) {
+    if (m_emojiPicked != NonEmoji_t && m_pickedEmojiSprite.getGlobalBounds().contains(event.x, event.y)) {
         m_currentCursor = TrashCursor;
         m_window->setMouseCursor(m_deleteCursor);
     } else {
@@ -379,14 +379,14 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width, const 
     fightSprite.setPosition(BOARD_FRAME.left + BOARD_FRAME.width / 2 - RECT_SIZE / 2,
                             BOARD_FRAME.top + BOARD_FRAME.height / 2 - RECT_SIZE / 2);
     fightSprite.setOrigin(frameWidth / 2, height);
-    fightSprite.setScale(2.2, 2.2);
+    fightSprite.setScale(BOARD_FRAME.width*0.5/ frameWidth, BOARD_FRAME.width * 0.5 / frameWidth); // 2.2,2.2 FIXME
     if (m_attackingUndefined) {
         m_lastFrameWar.setTexture(*fightTexture);
         m_lastFrameWar.setTextureRect(sf::IntRect(arr[frames * 7], 0, frameWidth, height));
         m_lastFrameWar.setPosition(BOARD_FRAME.left + BOARD_FRAME.width / 2 - RECT_SIZE / 2,
                                    BOARD_FRAME.top + BOARD_FRAME.height / 2 - RECT_SIZE / 2);
         m_lastFrameWar.setOrigin(frameWidth / 2, height);
-        m_lastFrameWar.setScale(2.2, 2.2);
+        m_lastFrameWar.setScale(BOARD_FRAME.width * 0.5 / frameWidth, BOARD_FRAME.width * 0.5 / frameWidth);
     }
     while (currentFrameCounter < frames * 8) {
         fightSprite.setTextureRect(sf::IntRect(arr[currentFrameCounter], 0, frameWidth, height));
@@ -696,7 +696,7 @@ void Controller::enemyTurn(bool &exit) {
                 handleTie();
             } else {
                 m_enemy->doTurn();
-                if (m_enemy->getEmoji() != NonEmoji) {
+                if (m_enemy->getEmoji() != NonEmoji_t) {
                     m_chatClock.restart();
                     m_enemyEmoji.setTexture(*m_emojis[m_enemy->getEmoji()].getTexture());
                 }
@@ -777,12 +777,12 @@ void Controller::setSpritesAndTxts() {
     m_chatIcon.setScale((RECT_SIZE / m_chatIcon.getGlobalBounds().width) * 0.9,
                         (RECT_SIZE / m_chatIcon.getGlobalBounds().height) * 0.9);
     m_chatIcon.setPosition(WINDOW_WIDTH * 0.027, WINDOW_HEIGHT * 0.85);
-    m_emojis[Cry].setTexture(*ResourcesManager::instance().getTexture(CryEmoji));
-    m_emojis[Laugh].setTexture(*ResourcesManager::instance().getTexture(LaughEmoji));
-    m_emojis[Angry].setTexture(*ResourcesManager::instance().getTexture(AngryEmoji));
-    m_emojis[Sleep].setTexture(*ResourcesManager::instance().getTexture(SleepEmoji));
-    m_emojis[Finger].setTexture(*ResourcesManager::instance().getTexture(FingerEmoji));
-    m_emojis[Scammer].setTexture(*ResourcesManager::instance().getTexture(ScammerEmoji));
+    m_emojis[Cry_t].setTexture(*ResourcesManager::instance().getTexture(CryEmoji));
+    m_emojis[Laugh_t].setTexture(*ResourcesManager::instance().getTexture(LaughEmoji));
+    m_emojis[Angry_t].setTexture(*ResourcesManager::instance().getTexture(AngryEmoji));
+    m_emojis[Sleep_t].setTexture(*ResourcesManager::instance().getTexture(SleepEmoji));
+    m_emojis[Finger_t].setTexture(*ResourcesManager::instance().getTexture(FingerEmoji));
+    m_emojis[Scammer_t].setTexture(*ResourcesManager::instance().getTexture(ScammerEmoji));
 
     float y = m_chatIcon.getPosition().y - m_chatIcon.getGlobalBounds().height * 0.8;
     for (int i = 0; i < 6; i++) {
@@ -808,8 +808,8 @@ void Controller::setSpritesAndTxts() {
     m_chatBubble.setPosition(m_p2Name.getPosition().x + m_p2Name.getGlobalBounds().width + RECT_SIZE * 0.4,
                              m_p2Name.getPosition().y);// + m_p2Name.getGlobalBounds().width/2 );
     m_chatBubble.setOrigin(m_chatBubble.getGlobalBounds().width / 2, m_chatBubble.getGlobalBounds().height / 2);
-    m_chatBubble.setScale(-(m_emojis[Cry].getGlobalBounds().width / (m_chatBubble.getGlobalBounds().width * 0.475)),
-                          -(m_emojis[Cry].getGlobalBounds().height / (m_chatBubble.getGlobalBounds().height * 0.475)));
+    m_chatBubble.setScale(-(m_emojis[Cry_t].getGlobalBounds().width / (m_chatBubble.getGlobalBounds().width * 0.475)),
+                          -(m_emojis[Cry_t].getGlobalBounds().height / (m_chatBubble.getGlobalBounds().height * 0.475)));
     m_chatBubble.setRotation(-45);
 
     m_enemyEmoji.setScale((RECT_SIZE / 600) * 0.5, (RECT_SIZE / 600) * 0.5);
@@ -823,9 +823,9 @@ void Controller::setSpritesAndTxts() {
 }
 
 void Controller::handleClick(sf::Event::MouseButtonEvent &click) {
-    if (m_emojiPicked != NonEmoji && m_pickedEmojiSprite.getGlobalBounds().contains(click.x, click.y)) {
+    if (m_emojiPicked != NonEmoji_t && m_pickedEmojiSprite.getGlobalBounds().contains(click.x, click.y)) {
         m_currentCursor = OriginalCursor;
-        m_emojiPicked = NonEmoji;
+        m_emojiPicked = NonEmoji_t;
     }
 
     SoundFlip::instance().checkIfContains(click);

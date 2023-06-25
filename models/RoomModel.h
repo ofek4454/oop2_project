@@ -9,15 +9,6 @@
 #include "ostream"
 #include "iostream"
 
-enum Emojis{
-    Cry,
-    Laugh,
-    Finger,
-    Sleep,
-    Scammer,
-    Angry,
-    NonEmoji,
-};
 using namespace nlohmann::literals;
 
 class RoomModel{
