@@ -28,7 +28,7 @@ Warrior::Warrior(const std::string id, const sf::Vector2f pos, const bool isMine
 
     if (isMine) {
         m_throwTexture = *ResourcesManager::instance().getTexture(ThrowPlayer);
-        m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x + m_sprite.getGlobalBounds().width * 0.2, m_sprite.getPosition().y + m_sprite.getGlobalBounds().height * 0.125));
+        m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x + m_sprite.getGlobalBounds().width * 0.15, m_sprite.getPosition().y + m_sprite.getGlobalBounds().height * 0.125));
     }
     m_weapon->setVisible(false);
     m_weapon->setOwner(this);
@@ -158,7 +158,7 @@ void Warrior::setWeapon(Weapons_t weapon, bool visible) {
         default:
             break;
     }
-    new_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x + m_sprite.getGlobalBounds().width * 0.25, m_sprite.getPosition().y + m_sprite.getGlobalBounds().height * 0.125));
+    new_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x + m_sprite.getGlobalBounds().width * 0.15, m_sprite.getPosition().y + m_sprite.getGlobalBounds().height * 0.125));
     new_weapon->setOwner(this);
     m_weapon = std::move(new_weapon);
 }

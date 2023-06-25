@@ -37,6 +37,8 @@ private:
     sf::Sprite m_chatIcon;
     sf::Sprite m_enemyEmoji;
     sf::Sprite m_lastFrameWar;
+    sf::Texture m_tempBackgroundTexture;
+    sf::Sprite m_tempBackground;
     sf::Sprite m_pickedEmojiSprite;
     sf::Cursor m_cursor;
     sf::Cursor m_deleteCursor;
@@ -81,7 +83,7 @@ private:
     void handleKeyboard(sf::Event::KeyEvent &type);
     void incPlayer();
     void initGame();
-    void print(bool printLoad = false);
+    void print(bool printLoad = false,bool fight = false);
     void handleEvents();
     void initNames();
     void checkCollision();
