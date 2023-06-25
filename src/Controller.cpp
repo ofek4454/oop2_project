@@ -710,7 +710,8 @@ void Controller::enemyTurn(bool &exit) {
 }
 
 Controller::~Controller() {
-    RoomState::instance().logout();
+    if(!m_gameDone)
+        RoomState::instance().logout();
 }
 
 void Controller::handleKeyboard(sf::Event::KeyEvent &type) {
