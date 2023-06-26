@@ -333,7 +333,7 @@ void Controller::handleEvents() {
         }
         ResourcesManager::instance().playSound(
                 event.getWinner() == P1Won ? WinFight : event.getWinner() == P2Won ? LoseFight : NUMBER_OF_SOUNDS - 1);
-        if (event.getWinner() != Tie && event.getWinner() != NoneEvent) {
+        if (event.getWinner() != Tie && event.getWinner() != NoWinner) {
             auto user_war = m_user->getWarrior();
             auto enemy_war = m_enemy->getWarrior();
             if(user_war)
