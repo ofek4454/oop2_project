@@ -35,8 +35,6 @@ enum Weapons_t{
     Rock_t,
     Paper_t,
     Scissors_t,
-    Flag_t,
-    Hole_t,
     Undefined_t,
 };
 
@@ -124,7 +122,6 @@ enum EventType_t{
     HoleFall,
     Rematch,
     TimeOver,
-    Test // TODO remove
 };
 
 enum Turn_t{
@@ -136,7 +133,7 @@ enum Winner_t{
     P1Won,
     P2Won,
     Tie,
-    NoneEvent
+    NoWinner
 };
 
 enum Emojis {
