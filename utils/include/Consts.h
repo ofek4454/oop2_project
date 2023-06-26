@@ -80,7 +80,6 @@ enum Textures_t{
     UndefinedScissors,
 };
 
-
 enum Sounds_t{
     tieP,
     tieR,
