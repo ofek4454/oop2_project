@@ -22,9 +22,14 @@ public:
     Emojis getEmoji() const {return m_emoji;}
     void setEmoji(const Emojis emoji) {m_emoji = emoji;}
     Location extractLocation(const std::string& str);
+    bool isTie() const {return m_tie;}
+    void setTieFalse() {m_tie = false;}
+    std::string getPrevWeapon() const {return m_prevWeapon;}
 private:
+    std::string m_prevWeapon;
     Emojis m_emoji = NonEmoji;
     sf::Clock clock;
+    bool m_tie = false;
 };
 
 

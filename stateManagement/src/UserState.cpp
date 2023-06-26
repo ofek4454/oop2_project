@@ -82,8 +82,6 @@ void UserState::doTurn(sf::Event::MouseButtonEvent *click, sf::Event::KeyEvent *
             }
         }
     }
-
-
 }
 
 
@@ -144,19 +142,13 @@ void UserState::print() {
 }
 
 bool UserState::move() {
-    if (m_direction == Non_Direction) {
-        m_isAnimating = false;
-        return true;
-    }
-
     static int imageCounter = 0;
     static float shadowOffsetX = -1;
     static int shadowOffsetY = 4;
 
     auto warrior = getWarrior();
-    if (warrior == NULL) {
-        return true;
-    }
+    if(warrior == NULL)
+        std::cout << "warrior null user turn\n";
 
     if (m_direction == Up)
         warrior->setSpriteLocation(sf::Vector2f(0, -m_pixelOffset), sf::Vector2f(shadowOffsetX, shadowOffsetY));

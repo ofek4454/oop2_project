@@ -129,21 +129,30 @@ void Controller::checkCollision() {
     for (auto &p1: *p1_vec)
         for (auto &p2: *p2_vec)
             if (p1.second->getLocation() == p2.second->getLocation()) {
-                if ((p1.second->getSymbol() == "U" && p2.second->getSymbol() != "H") ||
-                    (p1.second->getSymbol() == "U" && p2.second->getSymbol() != "F"))
+                p1.second->setNeedToBeDraw(false);
+                p2.second->setNeedToBeDraw(false);
+                if (m_enemy->isTie()) {
+                    m_enemy->setTieFalse();
+                    auto wep = m_enemy->getPrevWeapon();
+                    switchFunction(ResourcesManager::instance().getTexture(ScissorsScissors),
+                                   ResourcesManager::instance().getTexture(RockRock),
+                                   ResourcesManager::instance().getTexture(PaperPaper), wep);
+                    p1.second->setWeapon(Undefined_t);
+                }
+                if(p1.second->getSymbol() == "U" && p2.second->getSymbol() == "U")
                     animateFight(ResourcesManager::instance().getTexture(UndefinedWar), 453, 63, 3, NoSound);
+                else if (((p1.second->getSymbol() == "U" && p2.second->getSymbol() != "H") ||
+                           (p1.second->getSymbol() == "U" && p2.second->getSymbol() != "F")) && m_meAttacked){
+                    switchFunction(ResourcesManager::instance().getTexture(UndefinedScissors),
+                                   ResourcesManager::instance().getTexture(UndefinedRock),
+                                   ResourcesManager::instance().getTexture(UndefinedPaper), p2.second->getSymbol());
+                }
                 m_user->setSelectedWarriorId(p1.second->getId());
                 m_enemy->setSelectedWarriorId(p2.second->getId());
-                m_enemy->getWarrior()->setLocation(p1.second->getLocation());
                 m_collision = true;
                 weapon_of_p2 = p2.second->getSymbol();
                 m_isFinishUserTurn = false;
                 p2.second->getWeapon()->fight(*p1.second->getWeapon());
-                m_currentP1 = p1.second.get();
-                m_currentP2 = p2.second.get();
-                m_currentP1->setNeedToBeDraw(false);
-                m_currentP2->setNeedToBeDraw(false);
-
             }
     if ((!m_collision && m_meAttacked) || (m_meAttacked && weapon_of_p2 == "U"))
         m_meAttacked = false;
@@ -151,12 +160,6 @@ void Controller::checkCollision() {
 }
 
 void Controller::handleAnimation() {
-    static sf::Clock animateWeaponClock;
-    auto time1 = animateWeaponClock.getElapsedTime().asSeconds();
-    if (ChosenWarrior && ChosenWarrior->getWeapon() != NULL && ((time1 > 4 && !isMyTurn()) || m_animatingWeapon)) {
-        animateWeaponClock.restart();
-        animateWeapons();
-    }
     m_referee.animate((Turn_t) !isMyTurn());
     if (m_playHoleAnimation) {
         animateHole();
@@ -178,17 +181,8 @@ void Controller::handleAnimation() {
             while (m_window->pollEvent(event));
             m_turn = (Turn_t) myTurn;
             m_gameBar.resetClock(true);
-            if (m_switchTurn) {
-                m_switchTurn = false;
-                auto warrior = m_user->getWarrior();
-                if (warrior != NULL) {
-                    RoomState::instance().setLastMove(warrior->getId(), warrior->getLocation(),
-                                                      warrior->getSymbol());
-                }
-                RoomState::instance().changeTurn();
-                m_turn = (Turn_t) !myTurn;
-                m_gameBar.resetClock(false);
-            }
+            if (m_switchTurn)
+                extraSwitchTurnUpdate();
             m_indicator = Location(m_user->getFirstWarrior()->getLocation().row,
                                    m_user->getFirstWarrior()->getLocation().col);
             m_emojiPicked = NonEmoji;
@@ -242,10 +236,12 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
 
 void Controller::handleEvents() {
     if (m_isFinishUserTurn && !EventLoop::instance().hasEvent()) {
+        m_attackingUndefined = false;
         RoomState::instance().setLastEmoji(m_emojiPicked);
         RoomState::instance().changeTurn();
         m_turn = (Turn_t) !myTurn;
         m_gameBar.resetClock(false);
+        m_meAttacked = false;
         m_isFinishUserTurn = false;
     }
     while (EventLoop::instance().hasEvent() && !m_gameDone) {
@@ -278,39 +274,31 @@ void Controller::handleEvents() {
                     m_switchTurn = true;
                 break;
             case FightRR:
-                m_attackingUndefined = false;
+                m_attackingUndefined = true;
                 animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
-                updateTieCase("tie R");
+                m_user->getWarrior()->setWeapon(Undefined_t);
+                updateLastMoveAndChangeTurn(false, true, "R");
                 break;
             case FightPP:
-                m_attackingUndefined = false;
+                m_attackingUndefined = true;
                 animateFight(ResourcesManager::instance().getTexture(PaperPaper), 453, 63, 3, tieP);
-                updateTieCase("tie P");
+                m_user->getWarrior()->setWeapon(Undefined_t);
+                updateLastMoveAndChangeTurn(false, true, "P");
                 break;
             case FightSS:
-                m_attackingUndefined = false;
-                updateTieCase("tie S");
+                m_attackingUndefined = true;
                 animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3, tieS);
+                m_user->getWarrior()->setWeapon(Undefined_t);
+                updateLastMoveAndChangeTurn(false, true, "S");
                 break;
             case AttackingUndefined: {
                 m_attackingUndefined = true;
                 // attacker only
                 updateLastMoveAndChangeTurn();
                 auto wep = m_user->getWarrior()->getWeapon()->getSymbol();
-                switch (wep[0]) {
-                    case 'S': {
-                        animateFight(ResourcesManager::instance().getTexture(ScissorsUndefined), 453, 63, 3, NoSound);
-                        break;
-                    }
-                    case 'R': {
-                        animateFight(ResourcesManager::instance().getTexture(RockUndefined), 453, 63, 3, NoSound);
-                        break;
-                    }
-                    case 'P': {
-                        animateFight(ResourcesManager::instance().getTexture(PaperUndefined), 453, 63, 3, NoSound);
-                        break;
-                    }
-                }
+                switchFunction(ResourcesManager::instance().getTexture(ScissorsUndefined),
+                               ResourcesManager::instance().getTexture(RockUndefined),
+                               ResourcesManager::instance().getTexture(PaperUndefined), wep);
                 break;
             }
             case HoleFall: {
@@ -346,11 +334,16 @@ void Controller::handleEvents() {
         ResourcesManager::instance().playSound(
                 event.getWinner() == P1Won ? WinFight : event.getWinner() == P2Won ? LoseFight : NUMBER_OF_SOUNDS - 1);
         if (event.getWinner() != Tie && event.getWinner() != NoneEvent) {
+            auto user_war = m_user->getWarrior();
+            auto enemy_war = m_enemy->getWarrior();
+            if(user_war)
+                user_war->setNeedToBeDraw(true);
+            if(enemy_war)
+                enemy_war->setNeedToBeDraw(true);
+            if (P2Won) {
+                m_enemy->getWarrior()->getWeapon()->setVisible(true);
+            }
             m_collision = false;
-            m_currentP1->setNeedToBeDraw(true);
-            m_currentP2->setNeedToBeDraw(true);
-            m_currentP1->getWeapon()->setVisible(true);
-            m_currentP2->getWeapon()->setVisible(true);
         }
     }
     m_user->checkDeletion();
@@ -520,68 +513,28 @@ void Controller::initGame() {
 
 }
 
-void Controller::updateLastMoveAndChangeTurn(bool timesUp) {
+void Controller::updateLastMoveAndChangeTurn(bool timesUp, bool undefinedTie, std::string prevWeapon) {
     auto warrior = m_user->getWarrior();
+    if (warrior == NULL)
+        std::cout << "warrior null update last move\n";
     if (!timesUp) {
+        auto str = warrior->getSymbol();
+        if (undefinedTie) {
+            str.append(&str[0]);
+            str[0] = prevWeapon[0];
+        }
         RoomState::instance().setBoardCell(warrior->getLocation(),
                                            m_user->getPlayerSymbol() + warrior->getSymbol());
         RoomState::instance().setLastMove(warrior->getId(), warrior->getLocation(),
-                                          warrior->getSymbol());
+                                          str);
         RoomState::instance().setLastEmoji(m_emojiPicked);
     } else {
         RoomState::instance().setLastMoveMsg("TimeUp");
     }
+    m_isFinishUserTurn = false;
     RoomState::instance().changeTurn();
     m_turn = (Turn_t) !myTurn;
     m_gameBar.resetClock(false);
-}
-
-void Controller::updateTieCase(std::string msg) {
-    // attacked only
-    RoomState::instance().setLastMoveTie(msg, m_user->getWarrior()->getLocation(), m_user->getWarrior()->getId());
-    RoomState::instance().changeTurn();
-    m_turn = (Turn_t) !myTurn;
-    m_gameBar.resetClock(false);
-
-    auto warrior = m_user->getWarrior();
-    warrior->setWeapon(Undefined_t);
-
-    auto enemy = m_enemy->getWarrior();
-    enemy->setWeapon(Undefined_t);
-}
-
-void Controller::handleTie() {
-    std::string lastMove = RoomState::instance().getRoom().getLastMove();
-    switch (lastMove[lastMove.size() - 7]) {
-        case 'R':
-            animateFight(ResourcesManager::instance().getTexture(RockRock), 327, 53, 3, tieR);
-            break;
-        case 'P':
-            animateFight(ResourcesManager::instance().getTexture(PaperPaper), 453, 63, 3, tieP);
-            break;
-        case 'S':
-            animateFight(ResourcesManager::instance().getTexture(ScissorsScissors), 306, 59, 3, tieS);
-            break;
-    }
-    std::string id = lastMove.substr(6, 2);
-
-    int row = myTurn == P1 ? std::atoi(&lastMove[lastMove.size() - 3])
-                           : ROWS - 1 - std::atoi(&lastMove[lastMove.size() - 3]);
-
-    int col = myTurn == P1 ? std::atoi(&lastMove[lastMove.size() - 1])
-                           : BOARD_SIZE - 1 - std::atoi(&lastMove[lastMove.size() - 1]);
-
-    auto war = m_enemy->getWarrior(id);
-    war->setLocation(Location(row, col));
-    m_enemy->setSelectedWarriorId(id);
-    auto warrior = m_user->getWarrior();
-    warrior->setWeapon(Undefined_t);
-
-    auto enemy = m_enemy->getWarrior();
-    enemy->setWeapon(Undefined_t);
-
-    m_turn = myTurn;
-    m_gameBar.resetClock(true);
 }
 
 void Controller::LoadingGame() {
@@ -639,35 +592,6 @@ void Controller::LoadingGame() {
     ResourcesManager::instance().playSound(Gong);
 }
 
-void Controller::animateWeapons() {
-    static bool chose = false;
-    if (!chose) {
-        ChosenWarrior = m_user->pickRandomWarrior();
-        if (ChosenWarrior != NULL && ChosenWarrior->getLocation() != userHole->getLocation() &&
-            ChosenWarrior->getLocation() != userFlag->getLocation()) {
-            m_animatingWeapon = true;
-            ChosenWarrior->setTexture();
-            chose = true;
-        }
-    } else {
-        static sf::Clock clock;
-        auto time = clock.getElapsedTime().asSeconds();
-        if (time > 0.04) {
-            clock.restart();
-            if (ChosenWarrior->getWeapon() == NULL) { // check if weapon null
-                chose = false;
-                m_animatingWeapon = false;
-            }
-            if (ChosenWarrior->getWeapon()->animateWeapon()) {
-                chose = false;
-                m_animatingWeapon = false;
-                ChosenWarrior->setTexture(true);
-            }
-
-        }
-    }
-}
-
 void Controller::animateHole() {
     static sf::Clock clock;
     auto time = clock.getElapsedTime().asSeconds();
@@ -691,14 +615,18 @@ void Controller::enemyTurn(bool &exit) {
             if (RoomState::instance().getRoom().getLastMove().starts_with("TimeUp")) {
                 m_turn = myTurn;
                 m_gameBar.resetClock(true);
-            } else if (RoomState::instance().getRoom().getLastMove().starts_with("tie")) {
-                // attacker only
-                handleTie();
+
             } else {
                 m_enemy->doTurn();
                 if (m_enemy->getEmoji() != NonEmoji) {
                     m_chatClock.restart();
                     m_enemyEmoji.setTexture(*m_emojis[m_enemy->getEmoji()].getTexture());
+                }
+                if (!m_enemy->isAnimating() && !m_switchTurn) {
+                    m_turn = myTurn;
+                    m_gameBar.resetClock(true);
+                } else if (!m_enemy->isAnimating() && m_switchTurn) {
+                    extraSwitchTurnUpdate();
                 }
             }
         }
@@ -846,4 +774,37 @@ void Controller::handleClick(sf::Event::MouseButtonEvent &click) {
         if (!isPressed)
             m_isChatPressed = false;
     }
+}
+
+void Controller::extraSwitchTurnUpdate() {
+    m_isFinishUserTurn = false;
+    m_meAttacked = false;
+    m_switchTurn = false;
+    auto warrior = m_user->getWarrior();
+    if (warrior != NULL) {
+        RoomState::instance().setLastMove(warrior->getId(), warrior->getLocation(),
+                                          warrior->getSymbol());
+    }
+    RoomState::instance().changeTurn();
+    m_turn = (Turn_t) !myTurn;
+    m_gameBar.resetClock(false);
+}
+
+void Controller::switchFunction(sf::Texture *firstTexture, sf::Texture *secondTexture, sf::Texture *thirdTexture,
+                                std::string switchVar, Sounds_t soundToPlay) {
+    switch (switchVar[0]) {
+        case 'S': {
+            animateFight(firstTexture, 453, 63, 3, soundToPlay);
+            break;
+        }
+        case 'R': {
+            animateFight(secondTexture, 453, 63, 3, soundToPlay);
+            break;
+        }
+        case 'P': {
+            animateFight(thirdTexture, 453, 63, 3, soundToPlay);
+            break;
+        }
+    }
+
 }

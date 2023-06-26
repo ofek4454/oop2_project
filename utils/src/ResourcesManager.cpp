@@ -61,6 +61,9 @@ ResourcesManager::ResourcesManager() {
     m_texture[PaperUndefined].loadFromFile("papervsund.png");
     m_texture[RockUndefined].loadFromFile("rockvsund.png");
     m_texture[ScissorsUndefined].loadFromFile("scivsund.png");
+    m_texture[UndefinedPaper].loadFromFile("undvspaper.png");
+    m_texture[UndefinedRock].loadFromFile("undvsrock.png");
+    m_texture[UndefinedScissors].loadFromFile("undvssci.png");
 
 
     m_helpScreenPages[0].loadFromFile("Help-Page1.png");

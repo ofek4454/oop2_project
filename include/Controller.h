@@ -50,13 +50,10 @@ private:
     // Players
     std::unique_ptr<UserState> m_user;
     std::unique_ptr<EnemyState> m_enemy;
-    Warrior* m_currentP1 = nullptr;
-    Warrior* m_currentP2 = nullptr;
     Referee m_referee;
     Warrior* userHole;
     Warrior* enemyHole;
     Warrior* userFlag;
-    Warrior* ChosenWarrior = NULL;
     TimeCounting m_timeCounting;
 
     // booleans
@@ -79,6 +76,7 @@ private:
     Cursor_t m_currentCursor = OriginalCursor;
 
     // private functions:
+    void extraSwitchTurnUpdate();
     void LoadingGame();
     void handleKeyboard(sf::Event::KeyEvent &type);
     void incPlayer();
@@ -90,11 +88,9 @@ private:
     void handleHover(sf::Event::MouseMoveEvent &click);
     void handleAnimation();
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
-    void updateLastMoveAndChangeTurn(bool timesUp = false);
-    void updateTieCase(std::string msg);
-    void handleTie();
-    void animateWeapons();
+    void updateLastMoveAndChangeTurn(bool timesUp = false,bool undefinedTie = false,std::string prevWeapon = "");
     void animateHole();
+    void switchFunction(sf::Texture *firstTexture,sf::Texture *secondTexture,sf::Texture *thirdTexture,std::string switchVar,Sounds_t soundToPlay = NoSound);
     void enemyTurn(bool &exit);
     void setSpritesAndTxts();
     void handleClick(sf::Event::MouseButtonEvent &click);
