@@ -15,7 +15,7 @@ public:
     sf::Sprite *getRefereeSprite() {return &m_sprite;}
 private:
     sf::Sprite m_sprite;
-    float m_rect;
+    int m_rect;
     sf::RenderWindow *m_window;
     Turn_t m_turn;
 

@@ -229,9 +229,9 @@ void Controller::handleHover(sf::Event::MouseMoveEvent &event) {
 
     for (int i = 0; i < 6; i++) {
         if (m_emojis[i].getGlobalBounds().contains(event.x, event.y))
-            m_emojis[i].setScale((RECT_SIZE / 600) * 0.6, (RECT_SIZE / 600) * 0.6);
+            m_emojis[i].setScale((RECT_SIZE / 600.f) * 0.6f, (RECT_SIZE / 600.f) * 0.6f);
         else
-            m_emojis[i].setScale((RECT_SIZE / 600) * 0.5, (RECT_SIZE / 600) * 0.5);
+            m_emojis[i].setScale((RECT_SIZE / 600.f) * 0.5f, (RECT_SIZE / 600.f) * 0.5f);
 
     }
 
@@ -324,12 +324,12 @@ void Controller::handleEvents() {
             }
             case Won: {
                 updateLastMoveAndChangeTurn();
-                AfterGameScreen(true, m_user->getPlayerModel(), m_enemy->getPlayerModel(), myTurn);
+                auto afterScreen = AfterGameScreen(true, m_user->getPlayerModel(), m_enemy->getPlayerModel(), myTurn);
                 m_gameDone = true;
                 break;
             }
             case Lose: {
-                AfterGameScreen(false, m_user->getPlayerModel(), m_enemy->getPlayerModel(), myTurn);
+                auto afterScreen = AfterGameScreen(false, m_user->getPlayerModel(), m_enemy->getPlayerModel(), myTurn);
                 m_gameDone = true;
                 break;
             }
@@ -357,11 +357,11 @@ void Controller::handleEvents() {
     m_enemy->checkDeletion();
 }
 
-void Controller::animateFight(sf::Texture *fightTexture, const int width, const int height, const int frames,
+void Controller::animateFight(sf::Texture *fightTexture, int width, int height, int frames,
                               Sounds_t soundToPlay) {
     print(false, true);
     ResourcesManager::instance().playSound(JumpFight);
-    float frameWidth = width / frames;
+    float frameWidth = (float)width / frames;
     float frame = 0;
     int currentFrameCounter = 0;
     std::vector<float> arr(frames * 8);
@@ -376,17 +376,17 @@ void Controller::animateFight(sf::Texture *fightTexture, const int width, const 
     m_tempBackground.setTexture(m_tempBackgroundTexture);
     sf::Sprite fightSprite(*fightTexture);
 
-    fightSprite.setPosition(BOARD_FRAME.left + BOARD_FRAME.width / 2 - RECT_SIZE / 2,
-                            BOARD_FRAME.top + BOARD_FRAME.height / 2 - RECT_SIZE / 2);
-    fightSprite.setOrigin(frameWidth / 2, height);
-    fightSprite.setScale(BOARD_FRAME.width*0.5/ frameWidth, BOARD_FRAME.width * 0.5 / frameWidth); // 2.2,2.2 FIXME
+    fightSprite.setPosition(BOARD_FRAME.left + BOARD_FRAME.width / 2.f - RECT_SIZE / 2.f,
+                            BOARD_FRAME.top + BOARD_FRAME.height / 2.f - RECT_SIZE / 2.f);
+    fightSprite.setOrigin(frameWidth / 2.f, height);
+    fightSprite.setScale(BOARD_FRAME.width*0.5f/ frameWidth, BOARD_FRAME.width * 0.5f / frameWidth); // 2.2,2.2 FIXME
     if (m_attackingUndefined) {
         m_lastFrameWar.setTexture(*fightTexture);
         m_lastFrameWar.setTextureRect(sf::IntRect(arr[frames * 7], 0, frameWidth, height));
-        m_lastFrameWar.setPosition(BOARD_FRAME.left + BOARD_FRAME.width / 2 - RECT_SIZE / 2,
-                                   BOARD_FRAME.top + BOARD_FRAME.height / 2 - RECT_SIZE / 2);
-        m_lastFrameWar.setOrigin(frameWidth / 2, height);
-        m_lastFrameWar.setScale(BOARD_FRAME.width * 0.5 / frameWidth, BOARD_FRAME.width * 0.5 / frameWidth);
+        m_lastFrameWar.setPosition(BOARD_FRAME.left + BOARD_FRAME.width / 2.f - RECT_SIZE / 2.f,
+                                   BOARD_FRAME.top + BOARD_FRAME.height / 2.f - RECT_SIZE / 2.f);
+        m_lastFrameWar.setOrigin(frameWidth / 2.f, height);
+        m_lastFrameWar.setScale(BOARD_FRAME.width * 0.5f / frameWidth, BOARD_FRAME.width * 0.5f / frameWidth);
     }
     while (currentFrameCounter < frames * 8) {
         fightSprite.setTextureRect(sf::IntRect(arr[currentFrameCounter], 0, frameWidth, height));

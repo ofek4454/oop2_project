@@ -6,7 +6,7 @@
 
 class Flag : public Weapon{
 public:
-    Flag(bool visible = true);
+    Flag();
     ~Flag() = default;
     virtual void fight(Weapon& other) override;
     virtual void fight(Scissors& other) override;

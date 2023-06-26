@@ -10,34 +10,34 @@ SettingsScreen::SettingsScreen(sf::RenderWindow &window) : m_window(window) {
     m_cursor.loadFromSystem(sf::Cursor::Hand);
 
     auto volume = SettingsManager::instance().getVolume();
-    m_volume_text = TextClass("Volume: ",30,sf::Vector2f(WINDOW_WIDTH/2 , WINDOW_HEIGHT*0.4)).getText();
+    m_volume_text = TextClass("Volume: ",H2 ,sf::Vector2f(WINDOW_WIDTH/2 , WINDOW_HEIGHT*0.4f)).getText();
 
-    m_volume_line.setSize(sf::Vector2f((WINDOW_WIDTH - (m_volume_text.getPosition().x + m_volume_text.getGlobalBounds().width))*0.5,5));
+    m_volume_line.setSize(sf::Vector2f((WINDOW_WIDTH - (m_volume_text.getPosition().x + m_volume_text.getGlobalBounds().width))*0.5f ,5.f));
     m_volume_line.setFillColor(sf::Color::White);
-    m_volume_line.setPosition(m_volume_text.getPosition().x+m_volume_text.getGlobalBounds().width*1.3, m_volume_text.getPosition().y+(m_volume_text.getGlobalBounds().height/2)-5);
+    m_volume_line.setPosition(m_volume_text.getPosition().x+m_volume_text.getGlobalBounds().width*1.3f, m_volume_text.getPosition().y+(m_volume_text.getGlobalBounds().height/2.f)-5.f);
 
     auto width = (m_volume_line.getPosition().x + m_volume_line.getGlobalBounds().width)- m_volume_text.getPosition().x;
-    m_volume_text.move(-(width/2),0);
-    m_volume_line.move(-(width/2),0);
+    m_volume_text.move(-(width/2.f),0.f);
+    m_volume_line.move(-(width/2.f),0.f);
 
-    m_volume_drag.setRadius(20);
-    m_volume_drag.setPosition(m_volume_line.getPosition().x + ((m_volume_line.getGlobalBounds().width)* volume/100) ,m_volume_line.getPosition().y-m_volume_line.getSize().y);
-    m_volume_drag.setOrigin(m_volume_drag.getRadius()/2,m_volume_drag.getRadius()/2);
+    m_volume_drag.setRadius(20.f);
+    m_volume_drag.setPosition(m_volume_line.getPosition().x + ((m_volume_line.getGlobalBounds().width)* volume/100.f) ,m_volume_line.getPosition().y-m_volume_line.getSize().y);
+    m_volume_drag.setOrigin(m_volume_drag.getRadius()/2.f,m_volume_drag.getRadius()/2.f);
     m_volume_drag.setFillColor(sf::Color::White);
 
-    m_music_text = TextClass("Music :",30,sf::Vector2f(m_volume_text.getPosition().x , m_volume_text.getPosition().y + (m_volume_text.getGlobalBounds().height*4))).getText();
+    m_music_text = TextClass("Music :",H2,sf::Vector2f(m_volume_text.getPosition().x , m_volume_text.getPosition().y + (m_volume_text.getGlobalBounds().height*4.f))).getText();
     volume = SettingsManager::instance().getBGMVolume();
 
     m_music_line.setSize(m_volume_line.getSize());
     m_music_line.setFillColor(sf::Color::White);
-    m_music_line.setPosition(m_volume_line.getPosition().x, m_music_text.getPosition().y+(m_music_text.getGlobalBounds().height/2)-5);
+    m_music_line.setPosition(m_volume_line.getPosition().x, m_music_text.getPosition().y+(m_music_text.getGlobalBounds().height/2.f)-5.f);
 
-    m_music_drag.setRadius(20);
-    m_music_drag.setPosition(m_music_line.getPosition().x + ((m_music_line.getGlobalBounds().width)* volume/100) ,m_music_line.getPosition().y-m_music_line.getSize().y);
-    m_music_drag.setOrigin(m_music_drag.getRadius()/2,m_music_drag.getRadius()/2);
+    m_music_drag.setRadius(20.f);
+    m_music_drag.setPosition(m_music_line.getPosition().x + ((m_music_line.getGlobalBounds().width)* volume/100.f) ,m_music_line.getPosition().y-m_music_line.getSize().y);
+    m_music_drag.setOrigin(m_music_drag.getRadius()/2.f,m_music_drag.getRadius()/2.f);
     m_music_drag.setFillColor(sf::Color::White);
 
-    m_backBtn = TextClass("<-",H2,sf::Vector2f(WINDOW_WIDTH * 0.05,WINDOW_WIDTH * 0.05)).getText();
+    m_backBtn = TextClass("<-",H2,sf::Vector2f(WINDOW_WIDTH * 0.05f,WINDOW_WIDTH * 0.05f)).getText();
 
     run();
 }

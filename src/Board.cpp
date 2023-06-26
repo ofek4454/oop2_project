@@ -21,15 +21,15 @@ Board::Board() {
 
     for (auto &spr: m_arrows) {
         spr.setTexture(*ResourcesManager::instance().getTexture(Arrow));
-        spr.setScale(RECT_SIZE / 1024, RECT_SIZE / 1024);
+        spr.setScale(RECT_SIZE / 1024.f, RECT_SIZE / 1024.f);
         spr.setColor(sf::Color::Transparent);
     }
 
     setFrames();
 
     m_logo.setTexture(ResourcesManager::instance().getTexture(Logo));
-    m_logo.setSize(sf::Vector2f(2 * CIRCLE_RADIUS, 2 * CIRCLE_RADIUS));
-    m_logo.setPosition(CLOCK_CIRCLE_CENTER.x, WINDOW_HEIGHT * 0.355 - 1.1 * CIRCLE_RADIUS);
+    m_logo.setSize(sf::Vector2f(2.f * CIRCLE_RADIUS, 2.f * CIRCLE_RADIUS));
+    m_logo.setPosition(CLOCK_CIRCLE_CENTER.x, WINDOW_HEIGHT * 0.355f - 1.1f * CIRCLE_RADIUS);
     m_logo.setOrigin(CIRCLE_RADIUS, CIRCLE_RADIUS);
 }
 
@@ -50,30 +50,30 @@ void Board::print() {
 
 void Board::setFrames() {
     // board white frame
-    m_boardFrame[0].setSize(sf::Vector2f(RECT_SIZE * 8, RECT_SIZE * 6));
-    m_boardFrame[0].setPosition(sf::Vector2f(m_matrix[0][0].getPosition().x - RECT_SIZE / 2,
-                                             m_matrix[0][0].getPosition().y - RECT_SIZE / 2));
+    m_boardFrame[0].setSize(sf::Vector2f(RECT_SIZE * BOARD_SIZE, RECT_SIZE * ROWS));
+    m_boardFrame[0].setPosition(sf::Vector2f(m_matrix[0][0].getPosition().x - RECT_SIZE / 2.f,
+                                             m_matrix[0][0].getPosition().y - RECT_SIZE / 2.f));
     m_boardFrame[0].setFillColor(sf::Color::Transparent);
     m_boardFrame[0].setOutlineColor(LIGHT_BLUE_COLOR);
     m_boardFrame[0].setOutlineThickness(7);
 
     // window frame
-    m_boardFrame[1].setSize(sf::Vector2f(WINDOW_WIDTH * 0.95, WINDOW_HEIGHT * 0.95));
-    m_boardFrame[1].setPosition(sf::Vector2f(WINDOW_WIDTH * 0.025, WINDOW_HEIGHT * 0.025));
+    m_boardFrame[1].setSize(sf::Vector2f(WINDOW_WIDTH * 0.95f, WINDOW_HEIGHT * 0.95f));
+    m_boardFrame[1].setPosition(sf::Vector2f(WINDOW_WIDTH * 0.025f, WINDOW_HEIGHT * 0.025f));
     m_boardFrame[1].setFillColor(sf::Color::Transparent);
     m_boardFrame[1].setOutlineColor(LIGHT_BLUE_COLOR);
-    m_boardFrame[1].setOutlineThickness(10);
+    m_boardFrame[1].setOutlineThickness(10.f);
 
     // game info frame
-    m_boardFrame[2].setSize(sf::Vector2f(WINDOW_WIDTH * 0.20, 10));
-    m_boardFrame[2].setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775, WINDOW_HEIGHT * 0.355));
+    m_boardFrame[2].setSize(sf::Vector2f(WINDOW_WIDTH * 0.20f, 10.f));
+    m_boardFrame[2].setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775f, WINDOW_HEIGHT * 0.355f));
     m_boardFrame[2].setFillColor(LIGHT_BLUE_COLOR);
 
-    m_boardFrame[3].setSize(sf::Vector2f(WINDOW_WIDTH * 0.20, 10));
-    m_boardFrame[3].setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775, WINDOW_HEIGHT * 0.685));
+    m_boardFrame[3].setSize(sf::Vector2f(WINDOW_WIDTH * 0.20f, 10.f));
+    m_boardFrame[3].setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775f, WINDOW_HEIGHT * 0.685f));
     m_boardFrame[3].setFillColor(LIGHT_BLUE_COLOR);
 
-    m_boardFrame[4].setSize(sf::Vector2f(10, WINDOW_HEIGHT * 0.95));
-    m_boardFrame[4].setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775, WINDOW_HEIGHT * 0.025));
+    m_boardFrame[4].setSize(sf::Vector2f(10, WINDOW_HEIGHT * 0.95f));
+    m_boardFrame[4].setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775f, WINDOW_HEIGHT * 0.025f));
     m_boardFrame[4].setFillColor(LIGHT_BLUE_COLOR);
 }

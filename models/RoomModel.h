@@ -14,7 +14,7 @@ using namespace nlohmann::literals;
 class RoomModel{
     friend class RoomState;
 public:
-    RoomModel(){}
+    RoomModel() {};
     static RoomModel fromJson(std::string id, nlohmann::json data) {
         return RoomModel{id, data};
     }
@@ -43,9 +43,9 @@ private:
     std::string creator_uid;
     std::string player2_uid;
     std::array<std::array<std::string, BOARD_SIZE>,ROWS> board;
-    Turn_t turn;
+    Turn_t turn = P1;
     std::string enemyLastMove = "";
-    Emojis emoji;
+    Emojis emoji = NonEmoji_t;
     bool loggedOut = false;
 
     RoomModel(std::string id, nlohmann::json &data){
