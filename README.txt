@@ -90,6 +90,17 @@ Vector of UniquePtr.    -     Holds the user/opponents warriors.
 --------------------------------
 Algorithms:
 
+Calculating Counting Clock Circle's - Using trigonometric functions to calculate circles around the number using
+                                      2 * Pi / Num of Circles for each half of the circle.
+                                      Each little circle calculated relative to the previous one until reached the base.
+
+Mirroring The Board Among The Users - Using a mirroring algorithm to parse the board according to player's real id based
+                                      on whether he opened the room or not.
+
+Screen Capture During Fight's Animations - To keep the fight real until the result the data is transferred between the users
+                                           and to keep the indication for the user that fight is being handled, we used
+                                           window->update function to keep the last frame while the other user is fighting.
+
 --------------------------------
 Known bugs:
 With poor internet connection the game may not work properly.
