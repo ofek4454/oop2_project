@@ -14,8 +14,7 @@ public:
     PlayerState(PlayerModel &player);
     virtual ~PlayerState() = default;
     virtual void init() = 0;
-    virtual void hoverFlag(const int row, const int col) = 0;
-    virtual void hoverHole(const int row, const int col) = 0;
+
     virtual void doTurn(sf::Event::MouseButtonEvent *click = NULL,sf::Event::KeyEvent *key = NULL,Location indicator = Location(-1, -1)) = 0;
     virtual void print() = 0;
 

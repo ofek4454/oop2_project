@@ -139,6 +139,16 @@ enum Winner_t{
     NoneEvent
 };
 
+enum Emojis {
+    Cry_t,
+    Laugh_t,
+    Finger_t,
+    Sleep_t,
+    Scammer_t,
+    Angry_t,
+    NonEmoji_t,
+};
+
 const sf::Color BLUE_COLOR = sf::Color(64,138,209);
 const sf::Color LIGHT_BLUE_COLOR = sf::Color(181,215,244);
 const sf::Color GRAY_COLOR = sf::Color(182,  220, 225);
@@ -146,3 +156,5 @@ const sf::Color GRAY_COLOR = sf::Color(182,  220, 225);
 const float H1 = WINDOW_HEIGHT * 0.065f;
 const float H2 = WINDOW_HEIGHT * 0.055f;
 const float H3 = WINDOW_HEIGHT * 0.04f;
+
+const float WEAPON_SCALE_FACTOR = 0.7f;

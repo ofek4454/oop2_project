@@ -20,7 +20,7 @@ void RoomState::createRoom(PlayerModel &creator) {
     room.turn = P1;
     room.enemyLastMove = "";
     room.loggedOut = false;
-    room.emoji = NonEmoji;
+    room.emoji = NonEmoji_t;
     auto response = RoomService::createRoom(room, creator.m_name);
     room.roomId = response["name"];
 }

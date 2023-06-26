@@ -17,18 +17,18 @@ Warrior::Warrior(const std::string id, const sf::Vector2f pos, const bool isMine
             isMine ? sf::IntRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT) : sf::IntRect(0, IMAGE_HEIGHT * 3, IMAGE_WIDTH,
                                                                                 IMAGE_HEIGHT));
     m_sprite.setScale(RECT_SIZE / IMAGE_WIDTH, RECT_SIZE / IMAGE_WIDTH);
-    m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2, m_sprite.getLocalBounds().height / 2);
-    m_sprite.setPosition(sf::Vector2f(pos.x, pos.y));
+    m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2.f, m_sprite.getLocalBounds().height / 2.f);
+    m_sprite.setPosition(pos);
     m_initialIntRect = m_sprite.getTextureRect();
     m_initialTexture = *m_sprite.getTexture();
     m_shadow.setColor(sf::Color(0, 0, 0, 30)); // Set shadow color and transparency
-    m_shadow.setScale(0.7, 0.35);
-    m_shadow.setPosition(m_sprite.getPosition().x - RECT_SIZE / 2 - 30, m_sprite.getPosition().y - RECT_SIZE / 2 + 50);
+    m_shadow.setScale(0.7f, 0.35f);
+    m_shadow.setPosition(m_sprite.getPosition().x - RECT_SIZE / 2.f - 30.f, m_sprite.getPosition().y - RECT_SIZE / 2.f + 50.f);
     m_shadow.setTextureRect(sf::IntRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT));
 
     if (isMine) {
         m_throwTexture = *ResourcesManager::instance().getTexture(ThrowPlayer);
-        m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x + m_sprite.getGlobalBounds().width * 0.15, m_sprite.getPosition().y + m_sprite.getGlobalBounds().height * 0.125));
+        m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x + m_sprite.getGlobalBounds().width * 0.15f, m_sprite.getPosition().y + m_sprite.getGlobalBounds().height * 0.125f));
     }
     m_weapon->setVisible(false);
     m_weapon->setOwner(this);
@@ -53,7 +53,7 @@ void Warrior::setSpriteLocation(const sf::Vector2f &offset, const sf::Vector2f &
 
 void Warrior::setHighlighted(bool isHighlighted) {
     if (isHighlighted) {
-        m_sprite.setScale(RECT_SIZE / IMAGE_WIDTH * 1.1, RECT_SIZE / IMAGE_WIDTH * 1.1);
+        m_sprite.setScale(RECT_SIZE / IMAGE_WIDTH * 1.1f, RECT_SIZE / IMAGE_WIDTH * 1.1f);
     } else {
         m_sprite.setScale(RECT_SIZE / IMAGE_WIDTH, RECT_SIZE / IMAGE_WIDTH);
     }
@@ -85,8 +85,8 @@ void Warrior::setLocation(Direction_t direction) {
         case Direction_t::Non_Direction:
             break;
     }
-    m_shadow.setPosition(m_sprite.getPosition().x - RECT_SIZE / 2 - 30, m_sprite.getPosition().y - RECT_SIZE / 2 + 50);
-    m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x + m_sprite.getGlobalBounds().width * 0.25, m_sprite.getPosition().y + m_sprite.getGlobalBounds().height * 0.125));
+    m_shadow.setPosition(m_sprite.getPosition().x - RECT_SIZE / 2.f - 30.f, m_sprite.getPosition().y - RECT_SIZE / 2.f + 50.f);
+    m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x + m_sprite.getGlobalBounds().width * 0.25f, m_sprite.getPosition().y + m_sprite.getGlobalBounds().height * 0.125f));
 }
 
 void Warrior::setTextureFlag(bool isHighlighted) {
@@ -158,7 +158,7 @@ void Warrior::setWeapon(Weapons_t weapon, bool visible) {
         default:
             break;
     }
-    new_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x + m_sprite.getGlobalBounds().width * 0.15, m_sprite.getPosition().y + m_sprite.getGlobalBounds().height * 0.125));
+    new_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x + m_sprite.getGlobalBounds().width * 0.15f, m_sprite.getPosition().y + m_sprite.getGlobalBounds().height * 0.125f));
     new_weapon->setOwner(this);
     m_weapon = std::move(new_weapon);
 }
@@ -197,7 +197,7 @@ bool Warrior::setHoleIntRect(bool isMe) {
 void Warrior::setTexture(bool reset) {
     if (reset) {
         m_sprite.setTexture(m_initialTexture);
-        m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x + m_sprite.getGlobalBounds().width * 0.25, m_sprite.getPosition().y + m_sprite.getGlobalBounds().height * 0.125));
+        m_weapon->setSpriteLoc(sf::Vector2f(m_sprite.getPosition().x + m_sprite.getGlobalBounds().width * 0.25f, m_sprite.getPosition().y + m_sprite.getGlobalBounds().height * 0.125f));
 
         return;
     } else {

@@ -4,7 +4,7 @@
 
 #include "TextClass.h"
 
-TextClass::TextClass(const std::string& str,const int size,const sf::Vector2f &pos,const sf::Color &color) {
+TextClass::TextClass(const std::string& str, float size, const sf::Vector2f &pos, const sf::Color &color) {
     m_text.setFont(*ResourcesManager::instance().getFont());
     m_text.setString(str);
     m_text.setCharacterSize(size);

@@ -44,8 +44,8 @@ public:
     bool isLoggedOut();
     void logout();
 private:
-    RoomState(){}
+    RoomState(){};
     RoomModel room;
 
-    bool m_isMeP1;
+    bool m_isMeP1 = false;
 };

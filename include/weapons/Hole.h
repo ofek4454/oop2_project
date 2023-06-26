@@ -14,5 +14,3 @@ public:
     virtual void fight(Flag& other) override{}
 
 };
-
-

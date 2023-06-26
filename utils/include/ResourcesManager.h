@@ -15,12 +15,12 @@ public:
     sf::Texture *getTexture(Textures_t);
     sf::RectangleShape *getBackground();
     sf::Font *getFont();
-    void playSound(const int index);
+    void playSound(int index);
     void updateSounds();
     void playBackgroundMusic();
     void pauseBackgroundMusic();
     bool isBGMusicPlaying();
-    sf::Texture *getSoundButton(const int loc);
+    sf::Texture *getSoundButton(int loc);
     sf::Texture* getHelpScreenPages();
     sf::Image* getLogo();
 

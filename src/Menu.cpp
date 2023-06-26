@@ -75,11 +75,11 @@ void Menu::handleClick(sf::Event::MouseButtonEvent *event) {
     if (m_indicator >= 0 && m_indicator < MENU_BUTTONS) {
         switch (m_indicator) {
             case 0: {
-                EnterNameScreen(Mode_t(0));
+                auto nameScreen = EnterNameScreen(Mode_t(0));
                 break;
             }
             case 1: {
-                EnterNameScreen(Mode_t(1));
+                auto nameScreen = EnterNameScreen(Mode_t(1));
                 break;
             }
             case 2: {

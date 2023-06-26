@@ -72,7 +72,7 @@ private:
     bool m_distruct = false;
     bool m_isChatPressed = false;
     bool m_attackingUndefined = false;
-    Emojis m_emojiPicked = NonEmoji;
+    Emojis m_emojiPicked = NonEmoji_t;
     Cursor_t m_currentCursor = OriginalCursor;
 
     // private functions:

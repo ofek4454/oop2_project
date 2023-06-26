@@ -8,6 +8,8 @@ Undefined::Undefined() : Weapon("U")  {
     m_weapon_sprite.setTexture(*weapon);
     m_weapon_sprite.setTextureRect(sf::IntRect(0, 0, WEP_WIDTH, WEP_HEIGHT));
     m_weapon_sprite.setOrigin(m_weapon_sprite.getGlobalBounds().width / 2,m_weapon_sprite.getGlobalBounds().height / 2);
+    m_weapon_sprite.setScale(RECT_SIZE * WEAPON_SCALE_FACTOR / m_weapon_sprite.getGlobalBounds().width,
+                             RECT_SIZE * WEAPON_SCALE_FACTOR / m_weapon_sprite.getGlobalBounds().height);
     m_weaponIntRect = m_weapon_sprite.getTextureRect();
 }
 
