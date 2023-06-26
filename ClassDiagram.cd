@@ -1,0 +1,347 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Board" Collapsed="true">
+    <Position X="18.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAAABAAAAAAAEAAAAAAAAAAAAAAQAAAAAUACAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\Board.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Controller" Collapsed="true">
+    <Position X="20" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CZQAAiAGCQAgABgBTpwIAIEYCMOZIkBgFBwXQJiwAIE=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\Controller.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameBar" Collapsed="true">
+    <Position X="18.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAQAAAAAAAICAAAAAAAIAgAAAAAAAAEAAAAIAAEAQ=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\GameBar.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Menu" Collapsed="true">
+    <Position X="16.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAACBAAAAAABAAAAAAgAAICAAIAAAAAAARAAAQAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\Menu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Referee" Collapsed="true">
+    <Position X="20" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAACAAAAAAAAABAAAAAAAgAAAEAAAAAAQiAAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\Referee.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Warrior" Collapsed="true">
+    <Position X="16.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AiIAoACIAEIgCAAAABIKIAQgBSAAADWoAQAAIAACEAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\Warrior.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Flag" Collapsed="true">
+    <Position X="1" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAADAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\weapons\Flag.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hole" Collapsed="true">
+    <Position X="3.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\weapons\Hole.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Paper" Collapsed="true">
+    <Position X="5.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\weapons\Paper.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rock" Collapsed="true">
+    <Position X="7.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\weapons\Rock.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Scissors" Collapsed="true">
+    <Position X="10" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACBAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\weapons\Scissors.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Undefined" Collapsed="true">
+    <Position X="12.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\weapons\Undefined.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Weapon" Collapsed="true">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>jCgAgggADEAAAACICBIBAAAAACCAQIgAAABAEAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\weapons\Weapon.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Event" Collapsed="true">
+    <Position X="14.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAACAAAAAAgAAAAAAAAAAQAEAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\events\Event.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventLoop" Collapsed="true">
+    <Position X="16.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAQAAAAARQAAIAAAAAAAAAAAQ=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\events\EventLoop.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameException" Collapsed="true">
+    <Position X="20" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAIAACA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\exceptions\GameException.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HttpException" Collapsed="true">
+    <Position X="23.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAEAAAACA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\exceptions\HttpException.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HttpRequestsManager" Collapsed="true">
+    <Position X="14.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAIgAAAAAAAAAAIBAAAAAAAABAgWAAAACgEAEAABA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\HttpRequestsManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ResourcesManager" Collapsed="true">
+    <Position X="21.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gCAAAQABIEAAAgAAAhAAAAYCAABIAQAoQAQiAAAQoAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\ResourcesManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SettingsManager" Collapsed="true">
+    <Position X="16.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAQgAAAAgAgAAAAAAEBAAAEBIAAAAAAgogAABIAg=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\SettingsManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SoundFlip" Collapsed="true">
+    <Position X="20" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAQgAAAAIAAAAgAABAAAAAAAAggAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\SoundFlip.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextClass" Collapsed="true">
+    <Position X="21.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAgAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\TextClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeCounting" Collapsed="true">
+    <Position X="23.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAAAQAEQAAAAAAAAAAAAAggAAAAAAAAEAAQAAIAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\TimeCounting.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WindowManager" Collapsed="true">
+    <Position X="18.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CIAAAAAAAIAAAACAAAAAAAAAAABAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\WindowManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlayerModel" Collapsed="true">
+    <Position X="18.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAABAAAAAAAAIAAAAAAAAIAAIAACAAAAIAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\models\PlayerModel.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RoomModel" Collapsed="true">
+    <Position X="23.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAACAAAADAgIIAAAAAAIAAAAgAQAAoBYAAAgAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\models\RoomModel.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EnemyState" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAQQAAAAAAAACADIAAEAAAIgAAAAABIAAAACAFAAABA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\stateManagement\include\EnemyState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlayerState" Collapsed="true">
+    <Position X="1.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQQEBAIQBADAACgAAAEgAICKAKAAiIAAAjAAAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\stateManagement\include\PlayerState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RoomState" Collapsed="true">
+    <Position X="14.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABQQAAAhQIRAAAACAAAASBFDOQAAAEAAoAAKQAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\stateManagement\include\RoomState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UserState" Collapsed="true">
+    <Position X="2.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQQQAhAAAAAAAKBAAAAACAAAAAAACKAAAAQAAAACAE=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\stateManagement\include\UserState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AfterGameScreen" Collapsed="true">
+    <Position X="14.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAgAABQBIAAgARAMAAAYkACAAAQAAAAAIQQAEUAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\screens\include\AfterGameScreen.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AvailableRooms" Collapsed="true">
+    <Position X="16.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQEAAAAQAAAAwAAAAAACBEAAEgACAIAAEAgAAAQAAI=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\screens\include\AvailableRooms.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EnterNameScreen" Collapsed="true">
+    <Position X="21.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>GAQAAAAAAAAAEBAgAAQAAAAAAAAAAAIgAAAAAAAQAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\screens\include\EnterNameScreen.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ErrorScreen" Collapsed="true">
+    <Position X="23.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\screens\include\ErrorScreen.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelpScreen" Collapsed="true">
+    <Position X="21.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAAgAAAgAAAAEAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\screens\include\HelpScreen.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SettingsScreen" Collapsed="true">
+    <Position X="18.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KAAEggAAAIkAAQCQAAAAAEHAAAAAEAAAAAAQAAAQAIA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\screens\include\SettingsScreen.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WaitingRoom" Collapsed="true">
+    <Position X="14.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAEAAAAAAAAAAgAAAAAAAAAAAEAAAAIAAEAAIAAQAAI=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\screens\include\WaitingRoom.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Location" Collapsed="true">
+    <Position X="14.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAQACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\Location.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="Cursor_t" Collapsed="true">
+    <Position X="14.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAggAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\include\Controller.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Weapons_t" Collapsed="true">
+    <Position X="20" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGIAAAEAAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\Consts.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Textures_t" Collapsed="true">
+    <Position X="16.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ERBAGYIAEAAoGAAAAgAAmIQBgIACEgMGAAggAQEAAAg=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\Consts.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Sounds_t" Collapsed="true">
+    <Position X="14.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAA4ACAAIAAAEAAAEACAAAAQAAAAABwAEAACAAAgAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\Consts.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Direction_t" Collapsed="true">
+    <Position X="16.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAQAAAAAAAAAAAAAAACACAAAAAAAI=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\Consts.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EventType_t" Collapsed="true">
+    <Position X="20" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAABAAAAQgAAAAAAAAAAQAAAAAAAAQAAACwA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\Consts.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Turn_t" Collapsed="true">
+    <Position X="18.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\Consts.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Winner_t" Collapsed="true">
+    <Position X="21.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACIAAAAAAAACAAAAAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\Consts.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Emojis" Collapsed="true">
+    <Position X="18.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EBAAAAAgAAAABAAAAAAAAAAEAAAQAAAAAAAAAAABAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\Consts.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Sound_buttons_t" Collapsed="true">
+    <Position X="23.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\utils\include\SoundFlip.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Mode_t" Collapsed="true">
+    <Position X="21.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\ofekgor\source\repos\oop2_project\screens\include\EnterNameScreen.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
