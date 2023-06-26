@@ -132,6 +132,7 @@ void Weapon::initChooseBox() {
 }
 
 bool Weapon::animateWeapon() {
+    std::cout << "Animating" << std::endl;
     static bool middle = false;
     static int offset = 22;
     if (!middle)

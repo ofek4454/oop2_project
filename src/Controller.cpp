@@ -160,6 +160,13 @@ void Controller::checkCollision() {
 }
 
 void Controller::handleAnimation() {
+    static sf::Clock animateWeaponClock;
+    auto time1 = animateWeaponClock.getElapsedTime().asSeconds();
+    if ((time1 > 4 && !isMyTurn()) || m_animatingWeapon) {
+        std::cout << "handle animation" << std::endl;
+        animateWeaponClock.restart();
+        animateWeapons();
+    }
     m_referee.animate((Turn_t) !isMyTurn());
     if (m_playHoleAnimation) {
         animateHole();
@@ -808,4 +815,33 @@ void Controller::switchFunction(sf::Texture *firstTexture, sf::Texture *secondTe
         }
     }
 
+}
+void Controller::animateWeapons() {
+    static bool chose = false;
+    if (!chose) {
+        std::cout << "Chosen" << std::endl;
+        ChosenWarrior = m_user->pickRandomWarrior();
+        if (ChosenWarrior != NULL && ChosenWarrior->getLocation() != userHole->getLocation() &&
+            ChosenWarrior->getLocation() != userFlag->getLocation()) {
+            m_animatingWeapon = true;
+            ChosenWarrior->setTexture();
+            chose = true;
+        }
+    } else {
+        static sf::Clock clock;
+        auto time = clock.getElapsedTime().asSeconds();
+        if (time > 0.04) {
+            clock.restart();
+            if (!ChosenWarrior || ChosenWarrior->getWeapon() == NULL) { // check if weapon null
+                chose = false;
+                m_animatingWeapon = false;
+            }
+            else if (ChosenWarrior->getWeapon()->animateWeapon()) {
+                chose = false;
+                m_animatingWeapon = false;
+                ChosenWarrior->setTexture(true);
+            }
+
+        }
+    }
 }

@@ -54,6 +54,7 @@ private:
     Warrior* userHole;
     Warrior* enemyHole;
     Warrior* userFlag;
+    Warrior* ChosenWarrior = NULL;
     TimeCounting m_timeCounting;
 
     // booleans
@@ -90,6 +91,7 @@ private:
     void animateFight(sf::Texture *fightTexture, const int width,const int height, const int frames, Sounds_t soundToPlay = NoSound);
     void updateLastMoveAndChangeTurn(bool timesUp = false,bool undefinedTie = false,std::string prevWeapon = "");
     void animateHole();
+    void animateWeapons();
     void switchFunction(sf::Texture *firstTexture,sf::Texture *secondTexture,sf::Texture *thirdTexture,std::string switchVar,Sounds_t soundToPlay = NoSound);
     void enemyTurn(bool &exit);
     void setSpritesAndTxts();
