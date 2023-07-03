@@ -16,7 +16,7 @@ public:
 private:
     sf::Sprite m_sprite;
     int m_rect;
-    sf::RenderWindow *m_window;
+    std::shared_ptr<sf::RenderWindow> m_window;
     Turn_t m_turn;
 
 };

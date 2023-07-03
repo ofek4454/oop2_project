@@ -9,7 +9,8 @@ AfterGameScreen::AfterGameScreen(bool isMeWon, PlayerModel userModel, PlayerMode
         : m_isMeWinner(isMeWon), m_userModel(userModel),
           m_enemyModel(enemyModel), m_myServerTurn(myTurn), m_window(
                 WindowManager::instance().getWindow()) {
-    m_background = *ResourcesManager::instance().getBackground();
+    m_background.setTexture(ResourcesManager::instance().getTexture(Background));
+    m_background.setSize(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
     m_playerJump.setTexture(*ResourcesManager::instance().getTexture(WinningJump));
     if (m_isMeWinner)
         m_playerJump.setTextureRect(sf::IntRect(0, 0, 70, 90));

@@ -10,6 +10,8 @@
 #include "AfterGameScreen.h"
 #include "GameBar.h"
 #include "TimeCounting.h"
+#include "SettingsScreen.h"
+#include <thread>
 
 enum Cursor_t{
     OriginalCursor,
@@ -27,11 +29,13 @@ public:
 
 private:
     // private members
-    sf::RenderWindow *m_window;
+    std::shared_ptr<sf::RenderWindow> m_window;
     sf::Texture m_fightTexture;
     sf::Text m_p1Name, m_p2Name;
     sf::Text m_backButton;
+    sf::Text m_songName;
     sf::Text m_LoadingText;
+    sf::Sprite m_musicButtons[3];
     sf::Sprite m_chatBubble;
     sf::Sprite m_emojis[6];
     sf::Sprite m_chatIcon;
@@ -40,6 +44,7 @@ private:
     sf::Texture m_tempBackgroundTexture;
     sf::Sprite m_tempBackground;
     sf::Sprite m_pickedEmojiSprite;
+    sf::Clock m_songNameClock;
     sf::Cursor m_cursor;
     sf::Cursor m_deleteCursor;
     sf::Cursor m_originalCursor;
@@ -56,7 +61,7 @@ private:
     Warrior* userFlag;
     Warrior* ChosenWarrior = NULL;
     TimeCounting m_timeCounting;
-
+    int m_turnTime;
     // booleans
     Turn_t m_turn = P1;
     const Turn_t myTurn;
@@ -70,6 +75,7 @@ private:
     bool m_meAttacked = false;
     bool m_collision = false;
     bool m_gameDone = false;
+    bool m_songNameShow = false;
     bool m_distruct = false;
     bool m_isChatPressed = false;
     bool m_attackingUndefined = false;

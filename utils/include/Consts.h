@@ -6,9 +6,10 @@
 const float WINDOW_WIDTH = sf::VideoMode::getDesktopMode().width * 0.75f;
 const float WINDOW_HEIGHT = sf::VideoMode::getDesktopMode().height * 0.75f;
 
-const int NUM_OF_TEXTURES = 39;
+const int NUM_OF_TEXTURES = 44;
 const int NUM_OF_HELP_SCREEN_PAGES = 4;
 
+const int NUM_OF_SONGS = 4;
 // Board Size
 const int NUMBER_OF_SOUNDS = 17;
 const int MENU_BUTTONS = 5;
@@ -78,6 +79,11 @@ enum Textures_t{
     UndefinedPaper,
     UndefinedRock,
     UndefinedScissors,
+    GameSeconds,
+    ScrollSprite,
+    NextSong,
+    PrevSong,
+    StopPlay,
 };
 
 

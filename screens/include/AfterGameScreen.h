@@ -20,7 +20,7 @@ private:
     void handleClick(sf::Event::MouseButtonEvent &event,bool &exit);
     void changeRefereeTextureRect();
     void changeJumpingTextureRect();
-    sf::RenderWindow* m_window;
+    std::shared_ptr<sf::RenderWindow> m_window;
     sf::Text m_text;
     sf::RectangleShape m_background;
     sf::Sprite m_refereeFlag;

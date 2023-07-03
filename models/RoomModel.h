@@ -27,6 +27,7 @@ public:
         data["turn"] = int(turn);
         data["enemy_last_move"] = enemyLastMove;
         data["emoji"] = emoji;
+        data["game_time"] = m_gameTime;
 
         return data;
     }
@@ -37,6 +38,7 @@ public:
     std::array<std::string, BOARD_SIZE> getBoardRow(int row) const {return board[row];}
     std::string getLastMove() {return enemyLastMove;}
     Emojis getEmoji() const {return emoji;}
+    int getGameTime() const {return m_gameTime;}
 
 private:
     std::string roomId;
@@ -46,6 +48,7 @@ private:
     Turn_t turn = P1;
     std::string enemyLastMove = "";
     Emojis emoji = NonEmoji_t;
+    int m_gameTime;
     bool loggedOut = false;
 
     RoomModel(std::string id, nlohmann::json &data){
@@ -57,5 +60,6 @@ private:
         enemyLastMove = data["enemy_last_move"];
         loggedOut = data.contains("logged_out") ? true : false;
         emoji = Emojis(data["emoji"]);
+        m_gameTime = data["game_time"];
     }
 };

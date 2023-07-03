@@ -12,7 +12,7 @@ public:
 private:
     int m_currentPage = 0;
     sf::Texture *m_pages;
-    sf::RenderWindow *m_window;
+    std::shared_ptr<sf::RenderWindow> m_window;
 
     void run();
     void print();

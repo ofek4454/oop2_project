@@ -1,7 +1,7 @@
 #include "RoomState.h"
 #include "GameException.h"
 
-void RoomState::createRoom(PlayerModel &creator) {
+void RoomState::createRoom(PlayerModel &creator,int gameTime) {
     m_isMeP1 = true;
     for (int row = 0; row < 2; row++)
         for (int i = 0; i < BOARD_SIZE; i++)
@@ -20,6 +20,7 @@ void RoomState::createRoom(PlayerModel &creator) {
     room.turn = P1;
     room.enemyLastMove = "";
     room.loggedOut = false;
+    room.m_gameTime = gameTime;
     room.emoji = NonEmoji_t;
     auto response = RoomService::createRoom(room, creator.m_name);
     room.roomId = response["name"];

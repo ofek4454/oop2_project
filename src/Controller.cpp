@@ -3,6 +3,7 @@
 #include "RoomState.h"
 #include "exception"
 
+
 Controller::Controller(PlayerModel p1, PlayerModel p2, bool isMeP1) : m_window(
         WindowManager::instance().getWindow()), m_user(std::make_unique<UserState>(p1)),
                                                                       m_enemy(std::make_unique<EnemyState>(p2)),
@@ -27,7 +28,7 @@ void Controller::run() {
         sf::Event event;
         while (m_window->pollEvent(event));
     }
-    m_gameBar.resetClock(myTurn == P1);
+    m_gameBar.resetClock(myTurn == P1, m_turnTime);
 
     print();
     WindowManager::instance().eventHandler(
@@ -51,6 +52,7 @@ void Controller::run() {
                 return false;
             },
             [this](auto key, auto exit) {
+                SoundFlip::instance().checkIfKeyboard(key);
                 if (isMyTurn() && !m_user->isAnimating()) {
                     handleKeyboard(key);
                     incPlayer();
@@ -99,13 +101,19 @@ void Controller::print(bool printLoad, bool fight) {
         m_timeCounting.print();
     } else
         m_gameBar.drawStats();
-
+    for (int i = 0; i < 3; i++)
+        m_window->draw(m_musicButtons[i]);
     m_window->draw(m_chatIcon);
     if (m_isChatPressed) {
         for (auto &menuEmoji: m_emojis)
             m_window->draw(menuEmoji);
     }
-    if (m_emojiPicked != NonEmoji_t)
+    if(m_songNameShow){
+        m_window->draw(m_songName);
+        if(m_songNameClock.getElapsedTime().asSeconds() > 2)
+            m_songNameShow = false;
+    }
+    if (m_emojiPicked != NonEmoji_t && !m_songNameShow)
         m_window->draw(m_pickedEmojiSprite);
     if (m_enemy->getEmoji() != NonEmoji_t) {
         m_window->draw(m_chatBubble);
@@ -139,10 +147,10 @@ void Controller::checkCollision() {
                                    ResourcesManager::instance().getTexture(PaperPaper), wep);
                     p1.second->setWeapon(Undefined_t);
                 }
-                if(p1.second->getSymbol() == "U" && p2.second->getSymbol() == "U")
+                if (p1.second->getSymbol() == "U" && p2.second->getSymbol() == "U")
                     animateFight(ResourcesManager::instance().getTexture(UndefinedWar), 453, 63, 3, NoSound);
                 else if (((p1.second->getSymbol() == "U" && p2.second->getSymbol() != "H") ||
-                           (p1.second->getSymbol() == "U" && p2.second->getSymbol() != "F")) && m_meAttacked){
+                          (p1.second->getSymbol() == "U" && p2.second->getSymbol() != "F")) && m_meAttacked) {
                     switchFunction(ResourcesManager::instance().getTexture(UndefinedScissors),
                                    ResourcesManager::instance().getTexture(UndefinedRock),
                                    ResourcesManager::instance().getTexture(UndefinedPaper), p2.second->getSymbol());
@@ -187,7 +195,7 @@ void Controller::handleAnimation() {
             sf::Event event;
             while (m_window->pollEvent(event));
             m_turn = (Turn_t) myTurn;
-            m_gameBar.resetClock(true);
+            m_gameBar.resetClock(true, m_turnTime);
             if (m_switchTurn)
                 extraSwitchTurnUpdate();
             m_indicator = Location(m_user->getFirstWarrior()->getLocation().row,
@@ -247,7 +255,7 @@ void Controller::handleEvents() {
         RoomState::instance().setLastEmoji(m_emojiPicked);
         RoomState::instance().changeTurn();
         m_turn = (Turn_t) !myTurn;
-        m_gameBar.resetClock(false);
+        m_gameBar.resetClock(false, m_turnTime);
         m_meAttacked = false;
         m_isFinishUserTurn = false;
     }
@@ -343,9 +351,9 @@ void Controller::handleEvents() {
         if (event.getWinner() != Tie && event.getWinner() != NoWinner) {
             auto user_war = m_user->getWarrior();
             auto enemy_war = m_enemy->getWarrior();
-            if(user_war)
+            if (user_war)
                 user_war->setNeedToBeDraw(true);
-            if(enemy_war)
+            if (enemy_war)
                 enemy_war->setNeedToBeDraw(true);
             if (P2Won) {
                 m_enemy->getWarrior()->getWeapon()->setVisible(true);
@@ -361,7 +369,7 @@ void Controller::animateFight(sf::Texture *fightTexture, int width, int height, 
                               Sounds_t soundToPlay) {
     print(false, true);
     ResourcesManager::instance().playSound(JumpFight);
-    float frameWidth = (float)width / frames;
+    float frameWidth = (float) width / frames;
     float frame = 0;
     int currentFrameCounter = 0;
     std::vector<float> arr(frames * 8);
@@ -379,7 +387,7 @@ void Controller::animateFight(sf::Texture *fightTexture, int width, int height, 
     fightSprite.setPosition(BOARD_FRAME.left + BOARD_FRAME.width / 2.f - RECT_SIZE / 2.f,
                             BOARD_FRAME.top + BOARD_FRAME.height / 2.f - RECT_SIZE / 2.f);
     fightSprite.setOrigin(frameWidth / 2.f, height);
-    fightSprite.setScale(BOARD_FRAME.width*0.5f/ frameWidth, BOARD_FRAME.width * 0.5f / frameWidth); // 2.2,2.2 FIXME
+    fightSprite.setScale(BOARD_FRAME.width * 0.5f / frameWidth, BOARD_FRAME.width * 0.5f / frameWidth); // 2.2,2.2 FIXME
     if (m_attackingUndefined) {
         m_lastFrameWar.setTexture(*fightTexture);
         m_lastFrameWar.setTextureRect(sf::IntRect(arr[frames * 7], 0, frameWidth, height));
@@ -446,7 +454,7 @@ void Controller::initGame() {
                 return false;
             },
             [this, &flagChoosed](auto click, auto &exit) {
-                SoundFlip::instance().checkIfContains(click);
+                SoundFlip::instance().checkIfMouseContains(click);
                 if (m_backButton.getGlobalBounds().contains(click.x, click.y)) {
                     m_distruct = true;
                     exit = true;
@@ -470,7 +478,10 @@ void Controller::initGame() {
 
                 return false;
             },
-            [](auto key, auto exit) { return false; },
+            [this](auto key, auto exit) {
+                SoundFlip::instance().checkIfKeyboard(key);
+                return false;
+            },
             [](auto type, auto &exit) { return false; },
             [](auto offset, auto exit) { return false; },
             [this](auto exit) {
@@ -506,6 +517,8 @@ void Controller::initGame() {
 
     m_turn = P1;
 
+    RoomState::instance().getTurn();
+    m_turnTime = RoomState::instance().getRoom().getGameTime();
     Location flagLoc = myTurn == P1 ? opponentFlagAndHole.first
                                     : Location(ROWS - opponentFlagAndHole.first.row - 1,
                                                BOARD_SIZE - opponentFlagAndHole.first.col - 1);
@@ -541,7 +554,7 @@ void Controller::updateLastMoveAndChangeTurn(bool timesUp, bool undefinedTie, st
     m_isFinishUserTurn = false;
     RoomState::instance().changeTurn();
     m_turn = (Turn_t) !myTurn;
-    m_gameBar.resetClock(false);
+    m_gameBar.resetClock(false, m_turnTime);
 }
 
 void Controller::LoadingGame() {
@@ -561,10 +574,13 @@ void Controller::LoadingGame() {
     WindowManager::instance().eventHandler(
             [this](auto move, auto exit) { return false; },
             [this](auto click, auto exit) {
-                SoundFlip::instance().checkIfContains(click);
+                SoundFlip::instance().checkIfMouseContains(click);
                 return false;
             },
-            [](auto key, auto exit) { return false; },
+            [](auto key, auto exit) {
+                SoundFlip::instance().checkIfKeyboard(key);
+                return false;
+            },
             [](auto type, auto &exit) { return false; },
             [](auto offset, auto exit) { return false; },
             [this, &clock, &arr](auto &exit) {
@@ -621,7 +637,7 @@ void Controller::enemyTurn(bool &exit) {
         if (RoomState::instance().getTurn() == myTurn) {
             if (RoomState::instance().getRoom().getLastMove().starts_with("TimeUp")) {
                 m_turn = myTurn;
-                m_gameBar.resetClock(true);
+                m_gameBar.resetClock(true, m_turnTime);
 
             } else {
                 m_enemy->doTurn();
@@ -631,7 +647,7 @@ void Controller::enemyTurn(bool &exit) {
                 }
                 if (!m_enemy->isAnimating() && !m_switchTurn) {
                     m_turn = myTurn;
-                    m_gameBar.resetClock(true);
+                    m_gameBar.resetClock(true, m_turnTime);
                 } else if (!m_enemy->isAnimating() && m_switchTurn) {
                     extraSwitchTurnUpdate();
                 }
@@ -641,7 +657,7 @@ void Controller::enemyTurn(bool &exit) {
 }
 
 Controller::~Controller() {
-    if(!m_gameDone)
+    if (!m_gameDone)
         RoomState::instance().logout();
 }
 
@@ -708,6 +724,29 @@ void Controller::incPlayer() {
 }
 
 void Controller::setSpritesAndTxts() {
+    m_songName = TextClass("Now Playing: " + ResourcesManager::instance().getMusicPlaying(),H3*0.5,
+                           sf::Vector2f(m_p1Name.getGlobalBounds().width * 0.8 + m_p1Name.getPosition().x,
+                                        m_p1Name.getPosition().y + m_p1Name.getGlobalBounds().height * 1.5)).getText();
+    m_musicButtons[0].setTexture(*ResourcesManager::instance().getTexture(StopPlay));
+    m_musicButtons[1].setTexture(*ResourcesManager::instance().getTexture(PrevSong));
+    m_musicButtons[2].setTexture(*ResourcesManager::instance().getTexture(NextSong));
+    m_musicButtons[0].setTextureRect(sf::IntRect(0, 0, 168, 181));
+    m_musicButtons[0].setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775f + ((WINDOW_WIDTH - WINDOW_WIDTH * 0.775f) / 2.f) -
+                                               (200 / 2),
+                                               WINDOW_HEIGHT * 0.355f + ((WINDOW_WIDTH - WINDOW_WIDTH * 0.775f,
+                                                       WINDOW_HEIGHT * 0.685f - WINDOW_HEIGHT * 0.355f) / 2.f) -
+                                               (210)));
+    m_musicButtons[1].setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775f + ((WINDOW_WIDTH - WINDOW_WIDTH * 0.775f) / 2.f) -
+                                               (200 / 2) - m_musicButtons[1].getGlobalBounds().width,
+                                               WINDOW_HEIGHT * 0.355f + ((WINDOW_WIDTH - WINDOW_WIDTH * 0.775f,
+                                                       WINDOW_HEIGHT * 0.685f - WINDOW_HEIGHT * 0.355f) / 2.f) -
+                                               (200)));
+    m_musicButtons[2].setPosition(sf::Vector2f(WINDOW_WIDTH * 0.775f + ((WINDOW_WIDTH - WINDOW_WIDTH * 0.775f) / 2.f) -
+                                               (210 / 2) + m_musicButtons[0].getGlobalBounds().width * 0.13 +
+                                               m_musicButtons[2].getGlobalBounds().width,
+                                               WINDOW_HEIGHT * 0.355f + ((WINDOW_WIDTH - WINDOW_WIDTH * 0.775f,
+                                                       WINDOW_HEIGHT * 0.685f - WINDOW_HEIGHT * 0.355f) / 2.f) -
+                                               (210)));
     m_chatIcon.setTexture(*ResourcesManager::instance().getTexture(ChatMenu));
     m_chatIcon.setScale((RECT_SIZE / m_chatIcon.getGlobalBounds().width) * 0.9,
                         (RECT_SIZE / m_chatIcon.getGlobalBounds().height) * 0.9);
@@ -744,7 +783,8 @@ void Controller::setSpritesAndTxts() {
                              m_p2Name.getPosition().y);// + m_p2Name.getGlobalBounds().width/2 );
     m_chatBubble.setOrigin(m_chatBubble.getGlobalBounds().width / 2, m_chatBubble.getGlobalBounds().height / 2);
     m_chatBubble.setScale(-(m_emojis[Cry_t].getGlobalBounds().width / (m_chatBubble.getGlobalBounds().width * 0.475)),
-                          -(m_emojis[Cry_t].getGlobalBounds().height / (m_chatBubble.getGlobalBounds().height * 0.475)));
+                          -(m_emojis[Cry_t].getGlobalBounds().height /
+                            (m_chatBubble.getGlobalBounds().height * 0.475)));
     m_chatBubble.setRotation(-45);
 
     m_enemyEmoji.setScale((RECT_SIZE / 600) * 0.5, (RECT_SIZE / 600) * 0.5);
@@ -758,12 +798,35 @@ void Controller::setSpritesAndTxts() {
 }
 
 void Controller::handleClick(sf::Event::MouseButtonEvent &click) {
+    for(int i = 0 ; i < 3 ;i++){
+        if(m_musicButtons[i].getGlobalBounds().contains(click.x,click.y)){
+            if(i == 1){
+                m_songNameShow = true;
+                m_songNameClock.restart();
+                ResourcesManager::instance().switchSong(-1);
+                ResourcesManager::instance().updateSounds();
+                m_songName.setString("Now Playing: " + ResourcesManager::instance().getMusicPlaying());
+            }
+            if(i == 0){
+                SettingsManager::instance().flipMusicSwitch();
+                ResourcesManager::instance().updateSounds();
+            }
+            if(i == 2){
+                m_songNameShow = true;
+                m_songNameClock.restart();
+                ResourcesManager::instance().switchSong(1);
+                ResourcesManager::instance().updateSounds();
+                m_songName.setString("Now Playing: " + ResourcesManager::instance().getMusicPlaying());
+            }
+
+        }
+    }
     if (m_emojiPicked != NonEmoji_t && m_pickedEmojiSprite.getGlobalBounds().contains(click.x, click.y)) {
         m_currentCursor = OriginalCursor;
         m_emojiPicked = NonEmoji_t;
     }
 
-    SoundFlip::instance().checkIfContains(click);
+    SoundFlip::instance().checkIfMouseContains(click);
     if (!m_isChatPressed && isMyTurn() && m_chatIcon.getGlobalBounds().contains(click.x, click.y)) {
         m_isChatPressed = !m_isFinishUserTurn;
         return;
@@ -795,7 +858,7 @@ void Controller::extraSwitchTurnUpdate() {
     }
     RoomState::instance().changeTurn();
     m_turn = (Turn_t) !myTurn;
-    m_gameBar.resetClock(false);
+    m_gameBar.resetClock(false, m_turnTime);
 }
 
 void Controller::switchFunction(sf::Texture *firstTexture, sf::Texture *secondTexture, sf::Texture *thirdTexture,
@@ -816,6 +879,7 @@ void Controller::switchFunction(sf::Texture *firstTexture, sf::Texture *secondTe
     }
 
 }
+
 void Controller::animateWeapons() {
     static bool chose = false;
     if (!chose) {
@@ -835,8 +899,7 @@ void Controller::animateWeapons() {
             if (!ChosenWarrior || ChosenWarrior->getWeapon() == NULL) { // check if weapon null
                 chose = false;
                 m_animatingWeapon = false;
-            }
-            else if (ChosenWarrior->getWeapon()->animateWeapon()) {
+            } else if (ChosenWarrior->getWeapon()->animateWeapon()) {
                 chose = false;
                 m_animatingWeapon = false;
                 ChosenWarrior->setTexture(true);

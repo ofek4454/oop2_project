@@ -21,7 +21,8 @@ public:
     SoundFlip operator=(const SoundFlip &other) = delete;
 
     void draw(sf::RenderWindow &window);
-    void checkIfContains(const sf::Event::MouseButtonEvent& event);
+    void checkIfMouseContains(const sf::Event::MouseButtonEvent& event);
+    void checkIfKeyboard(const sf::Event::KeyEvent &event);
 private:
     // private C-Tor
     SoundFlip();

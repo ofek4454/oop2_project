@@ -9,11 +9,11 @@ void WindowManager::eventHandler(std::function<bool(sf::Event::MouseMoveEvent, b
                                  std::function<void(bool &exit)> afterFunction) {
 
     bool exit = false;
-    while (m_window.isOpen()) {
+    while (m_window->isOpen()) {
         sf::Event event;
-        while (m_window.pollEvent(event)) {
+        while (m_window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
-                m_window.close();
+                m_window->close();
             }
             if (event.type == sf::Event::MouseButtonReleased) {
                 if (clickHandler(event.mouseButton, exit)) continue;

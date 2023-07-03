@@ -25,7 +25,7 @@ public:
     int isOpponentWantsToRematch();
     std::pair<Location,Location> getOpponentFlagAndHole();
 
-    void createRoom(PlayerModel &creator);
+    void createRoom(PlayerModel &creator,int gameTime);
     void joinRoom(std::string roomId,std::string uid);
     void deleteRoom();
     void uploadFlagAndHole();

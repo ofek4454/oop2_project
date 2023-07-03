@@ -18,7 +18,7 @@ private:
     int m_countLength = -1;
     int numLines;
     const int numSegments = 60; // Number of line segments
-    sf::RenderWindow *m_window;
+    std::shared_ptr<sf::RenderWindow> m_window;
 };
 
 

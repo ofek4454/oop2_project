@@ -15,7 +15,7 @@ public:
     WindowManager(const WindowManager &other) = delete;
     WindowManager operator=(const WindowManager &other) = delete;
 
-    sf::RenderWindow *getWindow() { return &m_window; }
+    std::shared_ptr<sf::RenderWindow> getWindow() { return m_window; }
 
     void eventHandler(std::function<bool(sf::Event::MouseMoveEvent, bool &exit)> moveHandler,
                       std::function<bool(sf::Event::MouseButtonEvent, bool &exit)> clickHandler,
@@ -25,15 +25,15 @@ public:
                       std::function<void(bool &exit)> afterFunction);
 
 private:
-    sf::RenderWindow m_window;
+    std::shared_ptr<sf::RenderWindow> m_window;
 
-    WindowManager() : m_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
-                               "Even juk", sf::Style::Close | sf::Style::Titlebar) {
+    WindowManager() : m_window(std::make_shared<sf::RenderWindow>(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
+                                                                  "Even juk", sf::Style::Close | sf::Style::Titlebar)) {
 
         sf::Image image = (*ResourcesManager::instance().getLogo());
-        m_window.setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
+        m_window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
 
-        m_window.setFramerateLimit(60);
+        m_window->setFramerateLimit(60);
     }
 };
 

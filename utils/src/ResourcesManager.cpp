@@ -10,7 +10,10 @@ ResourcesManager &ResourcesManager::instance() {
 }
 
 ResourcesManager::ResourcesManager() {
-    m_backgroundMusic.openFromFile("BackGroundMusic.wav");
+    m_backgroundMusic[Classic].openFromFile("BackGroundMusic.wav");
+    m_backgroundMusic[NamalCity].openFromFile("eyalgolanbackgroundmusic.wav");
+    m_backgroundMusic[Sigaliot].openFromFile("sigaliot.wav");
+    m_backgroundMusic[Acordim].openFromFile("acordim.wav");
     m_texture[Warriors].loadFromFile("warriors2.png");
     m_texture[Warriors].setSmooth(true);
     m_texture[Rps].loadFromFile("weapons.png");
@@ -64,6 +67,13 @@ ResourcesManager::ResourcesManager() {
     m_texture[UndefinedPaper].loadFromFile("undvspaper.png");
     m_texture[UndefinedRock].loadFromFile("undvsrock.png");
     m_texture[UndefinedScissors].loadFromFile("undvssci.png");
+    m_texture[GameSeconds].loadFromFile("seconds.png");
+    m_texture[ScrollSprite].loadFromFile("scroll.png");
+    m_texture[StopPlay].loadFromFile("stopPlayButton.png");
+    m_texture[NextSong].loadFromFile("nextSong.png");
+    m_texture[PrevSong].loadFromFile("prevSong.png");
+
+
 
 
     m_helpScreenPages[0].loadFromFile("Help-Page1.png");
@@ -115,39 +125,28 @@ void ResourcesManager::playBackgroundMusic() {
     if(!SettingsManager::instance().getMusicSwitch())
         return;
 
-    m_backgroundMusic.setVolume(SettingsManager::instance().getBGMVolume());
-    m_backgroundMusic.setLoop(true);
-    m_backgroundMusic.play();
+    m_backgroundMusic[selectMusic].setVolume(SettingsManager::instance().getBGMVolume());
+    m_backgroundMusic[selectMusic].setLoop(true);
+    m_backgroundMusic[selectMusic].play();
 }
 
 
 void ResourcesManager::updateSounds() {
     if(!SettingsManager::instance().getMusicSwitch()){
-        m_backgroundMusic.stop();
+        m_backgroundMusic[selectMusic].stop();
         return;
     }
 
-    if(m_backgroundMusic.getStatus() != sf::Music::Status::Playing)
-        m_backgroundMusic.play();
+    if(m_backgroundMusic[selectMusic].getStatus() != sf::Music::Status::Playing)
+        m_backgroundMusic[selectMusic].play();
 
-    m_backgroundMusic.setVolume(SettingsManager::instance().getBGMVolume());
-    m_backgroundMusic.setLoop(true);
+    m_backgroundMusic[selectMusic].setVolume(SettingsManager::instance().getBGMVolume());
+    m_backgroundMusic[selectMusic].setLoop(true);
 
 }
 
 sf::Texture *ResourcesManager::getSoundButton(const int loc) {
     return &m_soundButton[loc];
-}
-
-void ResourcesManager::pauseBackgroundMusic() {
-    m_backgroundMusic.pause();
-}
-
-/**
- * is the background music currently playing.
- */
-bool ResourcesManager::isBGMusicPlaying() {
-    return m_backgroundMusic.getStatus() == sf::Music::Playing;
 }
 
 sf::Texture *ResourcesManager::getHelpScreenPages() {
@@ -156,4 +155,30 @@ sf::Texture *ResourcesManager::getHelpScreenPages() {
 
 sf::Image *ResourcesManager::getLogo() {
     return &m_logo;
+}
+
+void ResourcesManager::setMusic(MusicMenu music) {
+    if((int)music == -1)
+        music = MusicMenu(NUM_OF_SONGS - 1);
+    if(music != selectMusic){
+        m_backgroundMusic[selectMusic].stop();
+        selectMusic = music;}
+}
+
+std::string ResourcesManager::getMusicPlaying() const {
+    switch (selectMusic) {
+        case Acordim:
+            return "Osher Cohen - Acordim in the Nights";
+            break;
+        case NamalCity:
+            return "Eyal Golan - City Of Namal";
+            break;
+        case Classic:
+            return "Classic Game Music";
+            break;
+        case Sigaliot:
+            return "Omer Adam & David Broza - Sigaliot";
+        default:
+            return "";
+    }
 }

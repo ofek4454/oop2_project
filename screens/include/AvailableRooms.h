@@ -14,6 +14,9 @@ public:
     AvailableRooms(PlayerModel player);
 
 private:
+    sf::Clock animationClock;
+    int m_rect = 0;
+    bool m_animation = false;
     PlayerModel p;
     PlayerModel enemy;
     sf::Text m_text;
@@ -25,8 +28,12 @@ private:
     std::vector<sf::Text> m_texts;
     sf::Cursor m_originalCursor;
     sf::Cursor m_clickable;
+    int m_offset = 0;
+    sf::Sprite m_scrollSprite;
+    sf::Vector2f m_originalScale;
 
     void print(int offset = 0);
+    void animation();
     void init();
     void chooseRoom();
     void clickHandler(sf::Event::MouseButtonEvent &click, bool &exit);

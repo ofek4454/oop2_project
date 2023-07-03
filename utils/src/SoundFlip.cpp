@@ -51,7 +51,7 @@ void SoundFlip::draw(sf::RenderWindow &window) {
  * check if one of the button got pressed, update the settings if needed.
  * @param event click event.
  */
-void SoundFlip::checkIfContains(const sf::Event::MouseButtonEvent &event) {
+void SoundFlip::checkIfMouseContains(const sf::Event::MouseButtonEvent &event) {
     for (int i = 0; i < 2; i++) {
         if (m_soundButtons[i].getGlobalBounds().contains(event.x, event.y)) {
             if(i == MUSIC){
@@ -64,5 +64,13 @@ void SoundFlip::checkIfContains(const sf::Event::MouseButtonEvent &event) {
                 SettingsManager::instance().flipFXSwitch();
             }
         }
+    }
+}
+
+void SoundFlip::checkIfKeyboard(const sf::Event::KeyEvent &event) {
+    if(event.code == sf::Keyboard::M){
+        m_musicClicked = !m_musicClicked;
+        SettingsManager::instance().flipMusicSwitch();
+        ResourcesManager::instance().updateSounds();
     }
 }

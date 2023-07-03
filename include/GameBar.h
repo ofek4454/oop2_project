@@ -17,11 +17,11 @@ public:
     // Functions
     void updateGameBar(int userWarriors, int enemyWarriors);
     void drawStats();
-    void resetClock(bool myTurn);
+    void resetClock(bool myTurn,int turnTime);
     void setClock(int time);
 private:
     // members
-    sf::RenderWindow *m_window;
+    std::shared_ptr<sf::RenderWindow> m_window;
     sf::Clock m_gameTimer;
     TimeCounting m_timer;
     sf::Text m_statsText[2];

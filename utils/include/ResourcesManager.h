@@ -4,7 +4,12 @@
 #include "SFML/Audio.hpp"
 #include "SettingsManager.h"
 #include "Consts.h"
-
+enum MusicMenu{
+    Classic,
+    NamalCity,
+    Sigaliot,
+    Acordim,
+};
 class ResourcesManager {
 public:
     static ResourcesManager &instance();
@@ -18,20 +23,22 @@ public:
     void playSound(int index);
     void updateSounds();
     void playBackgroundMusic();
-    void pauseBackgroundMusic();
-    bool isBGMusicPlaying();
+    void setMusic(MusicMenu music);
+    void switchSong(int i) {
+        setMusic(MusicMenu((selectMusic + i) % NUM_OF_SONGS));}
     sf::Texture *getSoundButton(int loc);
     sf::Texture* getHelpScreenPages();
     sf::Image* getLogo();
-
+    std::string getMusicPlaying() const;
 private:
     ResourcesManager();
+    enum MusicMenu selectMusic = Classic;
     sf::Sound m_sounds[NUMBER_OF_SOUNDS];
     sf::SoundBuffer m_sounds_buffs[NUMBER_OF_SOUNDS];
     sf::Texture m_texture[NUM_OF_TEXTURES];
     sf::Texture m_helpScreenPages[NUM_OF_HELP_SCREEN_PAGES];
     sf::RectangleShape m_background;
-    sf::Music m_backgroundMusic;
+    sf::Music m_backgroundMusic[NUM_OF_SONGS];
     sf::Font m_font;
     std::string m_sound_file_names[NUMBER_OF_SOUNDS - 1] = {"tieP.wav", "tieR.wav","tieS.wav","winP.wav","winR.wav","winS.wav",
                                                         "blueJump.wav","blueTurn.wav","redJump.wav","redTurn.wav","WinFight.wav"

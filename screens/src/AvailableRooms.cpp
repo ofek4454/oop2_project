@@ -1,11 +1,16 @@
 
 #include "../include/AvailableRooms.h"
+#include "SoundFlip.h"
 
-AvailableRooms::AvailableRooms(PlayerModel player) : p(player), m_window(*WindowManager::instance().getWindow()),
-                                                     m_background(*ResourcesManager::instance().getBackground()) {
+AvailableRooms::AvailableRooms(PlayerModel player) : p(player), m_window(*WindowManager::instance().getWindow()) {
     m_loadingText = TextClass("Waiting For The Second Player...",40,sf::Vector2f(WINDOW_WIDTH / 2 - m_loadingText.getGlobalBounds().width / 2, WINDOW_HEIGHT / 2)).getText();
     m_originalCursor.loadFromSystem(sf::Cursor::Arrow);
     m_clickable.loadFromSystem(sf::Cursor::Hand);
+    m_scrollSprite.setTexture(*ResourcesManager::instance().getTexture(ScrollSprite));
+    m_scrollSprite.setTextureRect(sf::IntRect(0,m_rect,237,264));
+    m_originalScale = m_scrollSprite.getScale();
+    m_scrollSprite.setScale(sf::Vector2f(-m_originalScale.x,-m_originalScale.y));
+    m_scrollSprite.setPosition(sf::Vector2f(WINDOW_WIDTH * 0.88 + m_scrollSprite.getGlobalBounds().width,WINDOW_HEIGHT * 0.7 + m_scrollSprite.getGlobalBounds().height));
 
     init();
     chooseRoom();
@@ -18,9 +23,13 @@ void AvailableRooms::init() {
         std::string roomName = room["name"];
         availableRooms[roomId] = roomName;
     }
+    if(availableRooms.size() > 3)
+        m_animation = true;
 
     m_text = TextClass("Choose room to join",H2,sf::Vector2f (WINDOW_WIDTH / 2, WINDOW_HEIGHT * 0.1)).getText();
-    m_background = *ResourcesManager::instance().getBackground();
+    m_background.setTexture(ResourcesManager::instance().getTexture(Background));
+    m_background.setSize(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
+
 
     float start_y = m_text.getGlobalBounds().top + m_text.getGlobalBounds().height * 2 + WINDOW_HEIGHT * 0.1;
     for (int i = 0; i < availableRooms.size(); i++) {
@@ -53,10 +62,12 @@ void AvailableRooms::chooseRoom() {
                 return false;
             },
             [this](auto click, auto &exit) {
+                SoundFlip::instance().checkIfMouseContains(click);
                 clickHandler(click, exit);
                 return false;
             },
             [this](auto key, auto &exit) {
+                SoundFlip::instance().checkIfKeyboard(key);
                 if (key.code == sf::Keyboard::Escape) {
                     exit = true;
                     UserService::deleteUser(p.m_uid);
@@ -68,13 +79,20 @@ void AvailableRooms::chooseRoom() {
                 if (!availableRooms.empty()) print(offset);
                 return false;
             },
-            [](auto &exit) {}
+            [this](auto &exit) {
+                print(0);
+            }
     );
 }
 
 void AvailableRooms::print(int offset) {
     m_window.clear();
     m_window.draw(m_background);
+    SoundFlip::instance().draw(m_window);
+    if(m_animation){
+        animation();
+        m_window.draw(m_scrollSprite);
+    }
     if (m_buttons.empty()) {
         m_text.setString("No Available room to join in...");
         m_text.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
@@ -83,17 +101,24 @@ void AvailableRooms::print(int offset) {
         m_window.display();
         return;
     }
-
-    if ((m_buttons[0].getGlobalBounds().height * m_buttons.size() * 1.5) < WINDOW_HEIGHT * 0.85)
+    if ((m_buttons[0].getGlobalBounds().height * m_buttons.size() * 1.5) < WINDOW_HEIGHT * 0.65)
         offset = 0;
-    else if (m_buttons[0].getPosition().y + offset > (WINDOW_HEIGHT * 0.15))
-        offset = WINDOW_HEIGHT * 0.15 - m_buttons[0].getPosition().y;
-    else if (m_buttons[m_buttons.size() - 1].getPosition().y + offset < WINDOW_HEIGHT * 0.85)
-        offset = WINDOW_HEIGHT * 0.85 - m_buttons[m_buttons.size() - 1].getPosition().y;
+    else if (m_buttons[0].getPosition().y + offset > (WINDOW_HEIGHT * 0.35)){
+        m_scrollSprite.setScale(sf::Vector2f(-m_originalScale.x,-m_originalScale.y));
+        m_scrollSprite.setPosition(sf::Vector2f(WINDOW_WIDTH * 0.88 + m_scrollSprite.getGlobalBounds().width,WINDOW_HEIGHT * 0.7 + m_scrollSprite.getGlobalBounds().height));
+        offset = WINDOW_HEIGHT * 0.35 - m_buttons[0].getPosition().y;
+    }
+    else if (m_buttons[m_buttons.size() - 1].getPosition().y + offset < WINDOW_HEIGHT * 0.65){
+        m_scrollSprite.setScale(m_originalScale);
+        m_scrollSprite.setPosition(sf::Vector2f(WINDOW_WIDTH * 0.88,WINDOW_HEIGHT * 0.7));
+        offset = WINDOW_HEIGHT * 0.65 - m_buttons[m_buttons.size() - 1].getPosition().y;
+    }
 
     for (int i = 0; i < m_buttons.size(); i++) {
         m_buttons[i].move(sf::Vector2f(0, offset));
         m_texts[i].move(sf::Vector2f(0, offset));
+        if(m_buttons[i].getPosition().y - m_buttons[i].getGlobalBounds().height/2 <= m_text.getPosition().y + m_text.getGlobalBounds().height /2)
+            continue;
         m_window.draw(m_buttons[i]);
         m_window.draw(m_texts[i]);
     }
@@ -133,4 +158,14 @@ void AvailableRooms::hoverHandler(sf::Event::MouseMoveEvent &move){
         }
     }
     m_window.setMouseCursor(hover ? m_clickable : m_originalCursor);
+}
+
+void AvailableRooms::animation() {
+    if(animationClock.getElapsedTime().asSeconds() > 0.2){
+        animationClock.restart();
+        m_scrollSprite.setTextureRect(sf::IntRect(0,m_rect,237,264));
+        m_rect+= 264;
+        if(m_rect == 264 * 6)
+            m_rect = 0;
+    }
 }

@@ -9,6 +9,7 @@
 #include "Controller.h"
 #include "WaitingRoom.h"
 #include "TextClass.h"
+#include "SoundFlip.h"
 
 enum Mode_t{
     Create,
@@ -25,9 +26,16 @@ private:
     sf::RectangleShape m_background;
     sf::Text m_title;
     sf::Text m_nameText;
-    sf::RenderWindow *m_window;
-
+    sf::Text m_quitText;
+    sf::Sprite m_timeMenu;
+    sf::Text m_Navigation[2];
+    std::shared_ptr<sf::RenderWindow> m_window;
+    float m_rect[3] = {238, 510, 780};
+    int indicator = 0;
+    int gameTime = 30;
     void init();
     void handleEvents();
     void print();
+    void setIndicatorTextAndTime();
+    void clickHandler(auto click);
 };

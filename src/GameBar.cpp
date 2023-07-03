@@ -51,8 +51,8 @@ void GameBar::updateGameBar(int userWarriors, int enemyWarriors) {
 }
 
 
-void GameBar::resetClock(bool myTurn) {
-    m_timer.setCount(30);
+void GameBar::resetClock(bool myTurn,int turnTime) {
+    m_timer.setCount(turnTime);
     m_timer.setColor(myTurn ? sf::Color::White : sf::Color::Red);
 }
 

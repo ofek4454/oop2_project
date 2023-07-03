@@ -3,6 +3,7 @@
 
 Board::Board() {
 
+    m_window = WindowManager::instance().getWindow();
     float x = BOARD_FRAME.left;
     float y = BOARD_FRAME.top;
     for (int i = 0; i < ROWS; i++) {
@@ -35,17 +36,16 @@ Board::Board() {
 
 void Board::print() {
 
-    sf::RenderWindow *window = WindowManager::instance().getWindow();
     for (const auto &row: m_matrix) {
         for (const auto &rect: row) {
-            window->draw(rect);
+            m_window->draw(rect);
         }
     }
 
     for (auto &frame: m_boardFrame) {
-        window->draw(frame);
+        m_window->draw(frame);
     }
-    window->draw(m_logo);
+    m_window->draw(m_logo);
 }
 
 void Board::setFrames() {

@@ -14,6 +14,7 @@ public:
     void print();
     sf::Vector2f getRectPosition(const Location &location)const {return m_matrix[location.row][location.col].getPosition();}
 private:
+    std::shared_ptr<sf::RenderWindow> m_window;
     void setFrames();
     std::array<std::array<sf::RectangleShape,BOARD_SIZE>,BOARD_SIZE> m_matrix;
     std::array<sf::Sprite,4> m_arrows;
