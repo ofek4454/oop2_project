@@ -173,3 +173,8 @@ With poor internet connection the game may not work properly.
 This game is a multiplayer network game,
 run the game twice, in the first window create a room than join with the another one.
 make sure you have an internet connection that is stable.
+
+# Video:
+https://github.com/ofek4454/oop2_project/assets/17598441/cf5233b7-8990-4203-ac8d-1bf28dbf32d8
+
+
